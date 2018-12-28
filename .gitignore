@@ -1,0 +1,13 @@
+node_modules/
+coverage/
+lib/
+dist/
+es5/
+build/
+deploy/
+public/
+tmp/
+.cache/
+.DS_Store
+*-debug.log
+*-error.log
