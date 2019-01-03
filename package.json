@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "lerna run docz --stream",
     "prepublish": "lerna run prepublish"
   },
   "devDependencies": {
