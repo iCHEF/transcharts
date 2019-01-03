@@ -1,6 +1,7 @@
 {
   "name": "@ichef/transcharts-docz",
   "version": "0.0.0",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "docz": "docz dev"
@@ -8,5 +9,8 @@
   "devDependencies": {
     "docz": "^0.13.7",
     "docz-theme-default": "^0.13.7"
+  },
+  "dependencies": {
+    "@ichef/transcharts-graph": "^0.0.0"
   }
 }
