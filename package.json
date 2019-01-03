@@ -5,8 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "prepublish": "lerna run prepublish",
-    "start": "lerna run storybook --stream"
+    "prepublish": "lerna run prepublish"
   },
   "devDependencies": {
     "@types/react": "^16.7.18",
