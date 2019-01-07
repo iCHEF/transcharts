@@ -5,12 +5,14 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "lerna run docz --stream",
+    "start": "docz dev",
     "prepublish": "lerna run prepublish"
   },
   "devDependencies": {
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
+    "docz": "^0.13.7",
+    "docz-theme-default": "^0.13.7",
     "lerna": "^3.8.0",
     "npm-run-all": "^4.1.5",
     "prop-types": "^15.6.2",
