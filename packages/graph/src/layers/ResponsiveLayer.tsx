@@ -1,4 +1,5 @@
 import * as React from "react";
+import { debounce } from "lodash-es";
 
 export interface ResponsiveState {
   width: number;
@@ -18,13 +19,35 @@ export class ResponsiveLayer extends React.Component<ResponsiveProps, Responsive
       children: () => null,
     };
 
-    constructor(props: ResponsiveProps) {
-      super(props);
-      this.state = {
-        width: 0,
-        height: 0,
-      };
+    state: ResponsiveState = {
+      width: 0,
+      height: 0,
+    };
+
+    private layerRef = React.createRef<HTMLDivElement>();
+
+    componentDidMount() {
+      this._resize();
+      window.addEventListener('resize', this._debouncedResize);
     }
+
+    componentWillUnmount() {
+      window.removeEventListener('resize', this._debouncedResize);
+    }
+
+    private _resize = () => {
+      const layerNode = this.layerRef.current;
+      if (layerNode) {
+        const boundingRect: ClientRect =  layerNode.getBoundingClientRect();
+        const { width, height } = boundingRect;
+        this.setState({
+          width,
+          height,
+        });
+      }
+    };
+
+    private _debouncedResize = debounce(this._resize, this.props.debounceTime);
 
     render() {
         const {
@@ -41,11 +64,12 @@ export class ResponsiveLayer extends React.Component<ResponsiveProps, Responsive
 
         return (
           <div
+            ref={this.layerRef}
             style={{ ...style, width: '100%', height: '100%' }}
             className={className}
             {...restProps}
           >
-            {children({width, height })}
+            {children({ width, height })}
           </div>
         );
     }

@@ -36,5 +36,9 @@
   },
   "bugs": {
     "url": "https://github.com/iCHEF/transcharts/issues"
+  },
+  "dependencies": {
+    "@types/lodash-es": "^4.17.1",
+    "lodash-es": "^4.17.11"
   }
 }
