@@ -3,7 +3,7 @@ name: Getting Started
 route: /
 ---
 
-import { Foo } from '@ichef/transcharts-graph'
+import { Foo, ResponsiveLayer } from '@ichef/transcharts-graph'
 
 # Getting Started
 
@@ -13,4 +13,10 @@ Test
 
 ## Hello
 
-Test 2
+<ResponsiveLayer>
+  {({ width, height }) => (
+    <div>
+      {width}, {height}
+    </div>
+  )}
+</ResponsiveLayer>
