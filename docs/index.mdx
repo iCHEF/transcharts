@@ -3,12 +3,20 @@ name: Getting Started
 route: /
 ---
 
+import { Playground, PropsTable } from 'docz'
 import { Foo, ResponsiveLayer } from '@ichef/transcharts-graph'
 
 # Getting Started
 
 Test
-<Foo framework="web"/>
+
+
+## Props
+<PropsTable of={Foo} />
+
+<Playground>
+  <Foo framework="web"/>
+</Playground>
 
 
 ## Hello

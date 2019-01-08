@@ -8,7 +8,20 @@ const modifyBundlerConfig = config => {
 };
 
 export default {
-  title: 'transchart',
+  title: 'Transchart',
   typescript: true,
   modifyBundlerConfig,
+  themeConfig: {
+    mode: 'light',
+    colors: {
+      primary: '#ff7049',
+      background: '#e3e5e5',
+      sidebarBg: '#eff0f0',
+    },
+    styles: {
+      playground: {
+        background: '#ffffff',
+      },
+    },
+  },
 };
