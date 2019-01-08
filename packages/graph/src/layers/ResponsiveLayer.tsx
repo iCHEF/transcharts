@@ -1,25 +1,25 @@
 import { debounce } from 'lodash-es';
 import * as React from 'react';
 
-export interface ResponsiveState {
+export interface IResponsiveState {
   width: number;
   height: number;
 }
 
-export interface ResponsiveProps {
+export interface IResponsiveProps {
   className?: string;
   style?: React.CSSProperties;
   debounceTime?: number;
   children: (nodeSize: {width: number, height: number}) => React.ReactNode;
 }
 
-export class ResponsiveLayer extends React.Component<ResponsiveProps, ResponsiveState> {
-  public static defaultProps: ResponsiveProps = {
+export class ResponsiveLayer extends React.Component<IResponsiveProps, IResponsiveState> {
+  public static defaultProps: IResponsiveProps = {
     debounceTime: 300,
     children: () => null,
   };
 
-  public state: ResponsiveState = {
+  public state: IResponsiveState = {
     width: 0,
     height: 0,
   };
