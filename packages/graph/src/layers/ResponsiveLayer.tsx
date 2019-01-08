@@ -1,5 +1,6 @@
 import { debounce } from 'lodash-es';
 import * as React from 'react';
+import ResizeObserver from 'resize-observer-polyfill';
 
 export interface IResponsiveState {
   width: number;
@@ -13,7 +14,14 @@ export interface IResponsiveProps {
   children: (nodeSize: {width: number, height: number}) => React.ReactNode;
 }
 
+interface IResizeObserverEntry {
+  readonly target: Element;
+  readonly contentRect: DOMRectReadOnly;
+}
+
 export class ResponsiveLayer extends React.Component<IResponsiveProps, IResponsiveState> {
+  resizeObsr: ResizeObserver;
+  animaFrameID: number;
   public static defaultProps: IResponsiveProps = {
     debounceTime: 300,
     children: () => null,
@@ -27,25 +35,33 @@ export class ResponsiveLayer extends React.Component<IResponsiveProps, IResponsi
   private layerRef = React.createRef<HTMLDivElement>();
 
   public componentDidMount() {
-    this.resize();
-    window.addEventListener('resize', this.debouncedResize);
+    const layerNode = this.layerRef.current;
+    this.resizeObsr = new ResizeObserver(this.debouncedResize);
+    this.resizeObsr.observe(layerNode!);
   }
 
   public componentWillUnmount() {
-    window.removeEventListener('resize', this.debouncedResize);
+    window.cancelAnimationFrame(this.animaFrameID);
+    this.resizeObsr.disconnect();
   }
 
-  private resize = () => {
-    const layerNode = this.layerRef.current;
-    if (layerNode) {
-      const boundingRect: ClientRect =  layerNode.getBoundingClientRect();
-      const { width, height } = boundingRect;
+  private resize = (entries: IResizeObserverEntry[], observer: ResizeObserver) => {
+    for (const entry of entries) {
+      const {
+        width, height,
+      } = entry.contentRect;
+        this.updateDimension(width, height);
+    }
+  };
+
+  private updateDimension = (width: number, height: number) => {
+    this.animaFrameID = window.requestAnimationFrame(() => {
       this.setState({
         width,
         height,
-      });
-    }
-  }
+      })
+    });
+  };
 
   private debouncedResize = debounce(this.resize, this.props.debounceTime);
 
