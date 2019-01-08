@@ -1,2 +1,2 @@
-export * from "./components/Foo";
-export { ResponsiveLayer, ResponsiveProps } from "./layers/ResponsiveLayer";
+export * from './components/Foo';
+export { ResponsiveLayer, ResponsiveProps } from './layers/ResponsiveLayer';

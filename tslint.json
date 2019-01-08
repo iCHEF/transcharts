@@ -3,9 +3,12 @@
     "extends": [
         "tslint:recommended",
         "tslint-config-airbnb",
-        "tslint-react"
+        "tslint-react",
+        "tslint-config-prettier"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "object-literal-sort-keys": false,
+    },
     "rulesDirectory": []
 }

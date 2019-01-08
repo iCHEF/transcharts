@@ -1,5 +1,5 @@
-import * as React from "react";
-import { debounce } from "lodash-es";
+import { debounce } from 'lodash-es';
+import * as React from 'react';
 
 export interface ResponsiveState {
   width: number;
@@ -14,55 +14,55 @@ export interface ResponsiveProps {
 }
 
 export class ResponsiveLayer extends React.Component<ResponsiveProps, ResponsiveState> {
-    static defaultProps: ResponsiveProps = {
-      debounceTime: 300,
-      children: () => null,
-    };
+  public static defaultProps: ResponsiveProps = {
+    debounceTime: 300,
+    children: () => null,
+  };
 
-    state: ResponsiveState = {
-      width: 0,
-      height: 0,
-    };
+  public state: ResponsiveState = {
+    width: 0,
+    height: 0,
+  };
 
-    private layerRef = React.createRef<HTMLDivElement>();
+  private layerRef = React.createRef<HTMLDivElement>();
 
-    componentDidMount() {
-      this._resize();
-      window.addEventListener('resize', this._debouncedResize);
+  public componentDidMount() {
+    this.resize();
+    window.addEventListener('resize', this.debouncedResize);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener('resize', this.debouncedResize);
+  }
+
+  private resize = () => {
+    const layerNode = this.layerRef.current;
+    if (layerNode) {
+      const boundingRect: ClientRect =  layerNode.getBoundingClientRect();
+      const { width, height } = boundingRect;
+      this.setState({
+        width,
+        height,
+      });
     }
+  }
 
-    componentWillUnmount() {
-      window.removeEventListener('resize', this._debouncedResize);
-    }
+  private debouncedResize = debounce(this.resize, this.props.debounceTime);
 
-    private _resize = () => {
-      const layerNode = this.layerRef.current;
-      if (layerNode) {
-        const boundingRect: ClientRect =  layerNode.getBoundingClientRect();
-        const { width, height } = boundingRect;
-        this.setState({
-          width,
-          height,
-        });
-      }
-    };
-
-    private _debouncedResize = debounce(this._resize, this.props.debounceTime);
-
-    render() {
-        const {
+  public render() {
+    const {
           className,
           style,
           children,
           debounceTime,
           ...restProps
         } = this.props;
-        const {
+    const {
           width,
           height,
         } = this.state;
 
-        return (
+    return (
           <div
             ref={this.layerRef}
             style={{ ...style, width: '100%', height: '100%' }}
@@ -71,6 +71,6 @@ export class ResponsiveLayer extends React.Component<ResponsiveProps, Responsive
           >
             {children({ width, height })}
           </div>
-        );
-    }
+    );
+  }
 }
