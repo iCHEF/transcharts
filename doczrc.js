@@ -13,6 +13,7 @@ export default {
   modifyBundlerConfig,
   themeConfig: {
     mode: 'light',
+    showPlaygroundEditor: true, // always display the code in <Playground>
     colors: {
       primary: '#ff7049',
       background: '#e3e5e5',
