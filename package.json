@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "start": "docz dev",
+    "build": "docz build",
     "prepublish": "lerna run prepublish",
     "lint": "lerna run lint --parallel --stream"
   },
