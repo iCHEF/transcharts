@@ -10,14 +10,28 @@ const modifyBundlerConfig = config => {
 export default {
   title: 'Transchart',
   typescript: true,
+  htmlContext: {
+    head: {
+      links: [{
+        rel: 'stylesheet',
+        href: 'https://codemirror.net/theme/monokai.css'
+      }]
+    }
+  },
   modifyBundlerConfig,
   themeConfig: {
+    // See: https://github.com/pedronauck/docz/blob/5fbea6a1469d2e258402621ba81f74f898af906a/packages/docz-theme-default/README.md#default-themeconfig
     mode: 'light',
+    codemirrorTheme: 'monokai',
     showPlaygroundEditor: true, // always display the code in <Playground>
     colors: {
       primary: '#ff7049',
       background: '#e3e5e5',
-      sidebarBg: '#eff0f0',
+      blue: '#2f98f7',
+      sidebarBg: '#e3e5e5',
+      codeBg: '#ffffff',
+      codeColor: '#ff7049',
+      theadColor: '#555e6d',
     },
     styles: {
       playground: {

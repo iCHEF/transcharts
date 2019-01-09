@@ -1,30 +1,26 @@
 ---
-name: Getting Started
+name: Introduction
 route: /
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Foo, ResponsiveLayer } from '@ichef/transcharts-graph'
+import { Foo } from '@ichef/transcharts-graph'
 
-# Getting Started
+# Introduction
 
-Test
+`Transchart` is a highly customizable React data visualization library made by iCHEF.
 
+It provides:
+* Ready-to-use charts 
+* Composable `layers` to make the custom charts that suit your needs.
 
-## Props
-<PropsTable of={Foo} />
+## Development
+
+You may take a look at the example file under `/src/components/Foo` to start developing Transchart library.
 
 <Playground>
   <Foo framework="web"/>
 </Playground>
 
-
-## Hello
-
-<ResponsiveLayer>
-  {({ width, height }) => (
-    <div>
-      {width}, {height}
-    </div>
-  )}
-</ResponsiveLayer>
+### Props
+<PropsTable of={Foo} />
