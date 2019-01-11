@@ -11,7 +11,7 @@ export interface ResponsiveProps {
   className?: string;
   style?: React.CSSProperties;
   debounceTime?: number;
-  children: (nodeSize: {width: number, height: number}) => React.ReactNode;
+  children: (dimension: {width: number, height: number}) => React.ReactNode;
 }
 
 interface ResizeObserverEntry {
