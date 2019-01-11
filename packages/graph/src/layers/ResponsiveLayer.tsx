@@ -2,32 +2,32 @@ import { debounce } from 'lodash-es';
 import * as React from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
 
-export interface IResponsiveState {
+export interface ResponsiveState {
   width: number;
   height: number;
 }
 
-export interface IResponsiveProps {
+export interface ResponsiveProps {
   className?: string;
   style?: React.CSSProperties;
   debounceTime?: number;
   children: (nodeSize: {width: number, height: number}) => React.ReactNode;
 }
 
-interface IResizeObserverEntry {
+interface ResizeObserverEntry {
   readonly target: Element;
   readonly contentRect: DOMRectReadOnly;
 }
 
-export class ResponsiveLayer extends React.Component<IResponsiveProps, IResponsiveState> {
+export class ResponsiveLayer extends React.Component<ResponsiveProps, ResponsiveState> {
   resizeObsr: ResizeObserver;
   animaFrameID: number;
-  public static defaultProps: IResponsiveProps = {
+  public static defaultProps: ResponsiveProps = {
     debounceTime: 300,
     children: () => null,
   };
 
-  public state: IResponsiveState = {
+  public state: ResponsiveState = {
     width: 0,
     height: 0,
   };
@@ -45,7 +45,7 @@ export class ResponsiveLayer extends React.Component<IResponsiveProps, IResponsi
     this.resizeObsr.disconnect();
   }
 
-  private resize = (entries: IResizeObserverEntry[], observer: ResizeObserver) => {
+  private resize = (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
     for (const entry of entries) {
       const {
         width, height,
