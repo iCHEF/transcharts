@@ -6,11 +6,18 @@ menu: Charts
 
 import { Playground, PropsTable } from 'docz'
 import { LineChart } from '@ichef/transcharts-chart'
+import lineData from '../sampleData/lineData';
 
 # Line Chart
 
 <Playground>
-  <LineChart framework="web"/>
+  <LineChart
+    data={lineData}
+    scaleX={{ type: 'point' }}
+    scaleY={{ type: 'linear' }}
+    fieldX={{ name: 'x' }}
+    fieldsY={[{ name: 'y' }]}
+  />
 </Playground>
 
 
