@@ -5,7 +5,9 @@
   "author": "garfieldduck <garfieldduck@gmail.com>",
   "homepage": "https://github.com/iCHEF/transcharts#readme",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "typings": "lib/esm/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -21,9 +23,24 @@
     "url": "git+https://github.com/iCHEF/transcharts.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "prepublish": "npm run clean && npm run build",
+    "build": "run-p \"build:*\"",
+    "build:esm": "tsc -p ./src",
+    "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
+    "clean": "rimraf ./dist ./lib ./es5 ./deploy",
+    "lint": "tslint ../../tslint.json"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.6.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
   },
   "bugs": {
     "url": "https://github.com/iCHEF/transcharts/issues"
+  },
+  "dependencies": {
+    "@types/lodash-es": "^4.17.1",
+    "lodash-es": "^4.17.11",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }
