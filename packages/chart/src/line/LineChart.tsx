@@ -1,13 +1,5 @@
-import { ResponsiveLayer } from '@ichef/transcharts-graph';
+import { Field, ResponsiveLayer, Scale } from '@ichef/transcharts-graph';
 import * as React from 'react';
-
-export interface Scale {
-  type: 'point' | 'time' | 'linear';
-}
-export interface Field {
-  name: string;
-  color: string;
-}
 
 export interface LineChartProps {
   margin?: {
@@ -19,7 +11,7 @@ export interface LineChartProps {
   data: object[];
   scaleX: Scale;
   scaleY: Scale;
-  fieldX: Field;
+  fieldsX: Field[];
   fieldsY: Field[];
 }
 

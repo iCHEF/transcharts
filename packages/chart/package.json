@@ -37,6 +37,7 @@
     "url": "https://github.com/iCHEF/transcharts/issues"
   },
   "dependencies": {
+    "@ichef/transcharts-graph": "^0.0.0",
     "@types/lodash-es": "^4.17.1",
     "lodash-es": "^4.17.11",
     "resize-observer-polyfill": "^1.5.1"
