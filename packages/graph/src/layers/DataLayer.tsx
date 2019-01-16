@@ -5,8 +5,9 @@ import {
   scalePoint,
   ScalePoint,
   scaleTime,
-  ScaleTime,
- } from 'd3-scale';
+  ScaleTime
+} from 'd3-scale';
+import memoizeOne from 'memoize-one';
 import * as React from 'react';
 
 export interface Scale {
@@ -56,46 +57,60 @@ export interface DataLayerProps {
     dimension: {
       xAxis: Axis;
       yAxis: Axis;
-  }) => React.ReactNode;
+    }
+  ) => React.ReactNode;
 }
 
 export interface DataLayerState {
   activeDataIndices: number[];
-  xAxis: Axis;
-  yAxis: Axis;
 }
 
-function getAxisConfig(min: number, max: number, data: object[], scale: Scale, fields: Field[]): Axis {
+function getAxisConfig(
+  min: number,
+  max: number,
+  data: object[],
+  scale: Scale,
+  fields: Field[]
+): Axis {
   const range: Axis['range'] = [min, max];
 
   const dataVals: any[] = [];
-  fields.forEach(({name}) => {
-    const val = data[name];
-    if (val) {
-      dataVals.push(val);
-    }
+  fields.forEach(({ name }) => {
+    data.forEach(row => {
+      const val = row[name];
+      if (val !== undefined && val !== null) {
+        dataVals.push(val);
+      }
+    });
   });
 
   let domain: Axis['domain'];
   let d3Scale: Axis['d3Scale'];
 
-  switch(scale.type) {
+  switch (scale.type) {
     case 'point': {
       domain = dataVals;
-      d3Scale = scalePoint().domain(domain).range(range);
+      d3Scale = scalePoint()
+        .domain(domain)
+        .range(range);
       break;
     }
     case 'time': {
       domain = d3Extent(dataVals.map(time => new Date(time)));
-      d3Scale = scaleTime().domain(domain).range(range);
+      d3Scale = scaleTime()
+        .domain(domain)
+        .range(range);
       break;
     }
     case 'linear': {
       domain = d3Extent(dataVals);
-      d3Scale = scaleLinear().domain(domain).range(range);
+      d3Scale = scaleLinear()
+        .domain(domain)
+        .range(range);
       break;
     }
     default:
+      // TODO: unify the way handling the errors
       throw new Error('Unsupported scale type');
   }
 
@@ -103,7 +118,7 @@ function getAxisConfig(min: number, max: number, data: object[], scale: Scale, f
     fields,
     range,
     domain,
-    d3Scale,
+    d3Scale
   };
 }
 
@@ -111,8 +126,20 @@ export class DataLayer extends React.PureComponent<
   DataLayerProps,
   DataLayerState
 > {
-  public constructor(props: DataLayerProps) {
-    super(props);
+  public state: DataLayerState = {
+    activeDataIndices: []
+  };
+
+  private getXYAxes = memoizeOne(
+    (width, height, data, scaleX, scaleY, fieldsX, fieldsY) => {
+      return {
+        xAxis: getAxisConfig(0, width, data, scaleX, fieldsX),
+        yAxis: getAxisConfig(height, 0, data, scaleY, fieldsY)
+      };
+    }
+  );
+
+  public render() {
     const {
       width,
       height,
@@ -121,17 +148,17 @@ export class DataLayer extends React.PureComponent<
       scaleY,
       fieldsX,
       fieldsY,
-     } = this.props;
-    this.state = {
-      activeDataIndices: [],
-      xAxis: getAxisConfig(0, width, data, scaleX, fieldsX),
-      yAxis: getAxisConfig(height, 0, data, scaleY, fieldsY),
-    };
-  }
-
-  public render() {
-    const { children } = this.props;
-    const { xAxis, yAxis } = this.state;
+      children
+    } = this.props;
+    const { xAxis, yAxis } = this.getXYAxes(
+      width,
+      height,
+      data,
+      scaleX,
+      scaleY,
+      fieldsX,
+      fieldsY
+    );
     return children({ xAxis, yAxis });
   }
 }

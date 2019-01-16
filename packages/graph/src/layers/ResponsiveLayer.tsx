@@ -45,7 +45,7 @@ export class ResponsiveLayer extends React.Component<
       const { width, height } = entry.contentRect;
       this.updateDimension(width, height);
     }
-  };
+  }
 
   private debouncedResize = debounce(this.resize, this.props.debounceTime);
 
@@ -56,7 +56,7 @@ export class ResponsiveLayer extends React.Component<
         height
       });
     });
-  };
+  }
 
   public componentDidMount() {
     const layerNode = this.layerRef.current;

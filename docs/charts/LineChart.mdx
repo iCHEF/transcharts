@@ -13,10 +13,10 @@ import lineData from '../sampleData/lineData';
 <Playground>
   <LineChart
     data={lineData}
-    scaleX={{ type: 'point' }}
+    scaleX={{ type: 'linear' }}
     scaleY={{ type: 'linear' }}
-    fieldX={{ name: 'x' }}
-    fieldsY={[{ name: 'y' }]}
+    fieldsX={[{name: 'x'}]}
+    fieldsY={[{name: 'y'}]}
   />
 </Playground>
 
