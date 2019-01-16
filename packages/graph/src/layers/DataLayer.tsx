@@ -52,7 +52,11 @@ export interface DataLayerProps {
   scaleY: Scale;
   fieldsX: Field[];
   fieldsY: Field[];
-  children: (dimension: { width: number; height: number }) => React.ReactNode;
+  children: (
+    dimension: {
+      xAxis: Axis;
+      yAxis: Axis;
+  }) => React.ReactNode;
 }
 
 export interface DataLayerState {
@@ -103,7 +107,7 @@ function getAxisConfig(min: number, max: number, data: object[], scale: Scale, f
   };
 }
 
-export class DataLayer extends React.Component<
+export class DataLayer extends React.PureComponent<
   DataLayerProps,
   DataLayerState
 > {
@@ -125,4 +129,9 @@ export class DataLayer extends React.Component<
     };
   }
 
+  public render() {
+    const { children } = this.props;
+    const { xAxis, yAxis } = this.state;
+    return children({ xAxis, yAxis });
+  }
 }
