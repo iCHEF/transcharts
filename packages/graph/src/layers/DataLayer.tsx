@@ -1,6 +1,12 @@
-import { scaleLinear, scalePoint, scaleTime } from '@vx/scale';
 import { extent as d3Extent } from 'd3-array';
-import * as d3Scale from 'd3-scale';
+import {
+  scaleLinear,
+  ScaleLinear,
+  scalePoint,
+  ScalePoint,
+  scaleTime,
+  ScaleTime,
+ } from 'd3-scale';
 import * as React from 'react';
 
 export interface Scale {
@@ -28,13 +34,14 @@ export interface Axis {
 
   /**
    * Range of the axis: [min, max]
+   * it should match the inner width and height of the graph
    */
-  range: any[];
+  range: [number, number];
 
   /**
    * d3's Scaling function employed in this axis
    */
-  d3Scale: d3Scale.ScaleContinuousNumeric<number[], number>; // d3 scale function
+  d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
 }
 
 export interface DataLayerProps {
@@ -55,47 +62,45 @@ export interface DataLayerState {
 }
 
 function getAxisConfig(min: number, max: number, data: object[], scale: Scale, fields: Field[]): Axis {
-  const range = [min, max];
-  const fieldsAndRange = {
-    fields,
-    range,
-  };
+  const range: Axis['range'] = [min, max];
+
   const dataVals: any[] = [];
   fields.forEach(({name}) => {
     const val = data[name];
     if (val) {
-      dataVals.push(val)
+      dataVals.push(val);
     }
   });
 
+  let domain: Axis['domain'];
+  let d3Scale: Axis['d3Scale'];
+
   switch(scale.type) {
     case 'point': {
-      const domain = dataVals;
-      return {
-        ...fieldsAndRange,
-        domain,
-        d3Scale: scalePoint({domain, range }),
-      };
+      domain = dataVals;
+      d3Scale = scalePoint().domain(domain).range(range);
+      break;
     }
     case 'time': {
-      const domain = d3Extent(dataVals.map(time => new Date(time)));
-      return {
-        ...fieldsAndRange,
-        domain,
-        d3Scale: scaleTime({domain, range }),
-      };
+      domain = d3Extent(dataVals.map(time => new Date(time)));
+      d3Scale = scaleTime().domain(domain).range(range);
+      break;
     }
     case 'linear': {
-      const domain = d3Extent(dataVals);
-      return {
-        ...fieldsAndRange,
-        domain,
-        d3Scale: scaleLinear({domain, range }),
-      };
+      domain = d3Extent(dataVals);
+      d3Scale = scaleLinear().domain(domain).range(range);
+      break;
     }
     default:
       throw new Error('Unsupported scale type');
   }
+
+  return {
+    fields,
+    range,
+    domain,
+    d3Scale,
+  };
 }
 
 export class DataLayer extends React.Component<

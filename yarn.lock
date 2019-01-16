@@ -1911,13 +1911,6 @@
     "@types/unist" "*"
     "@types/vfile-message" "*"
 
-"@vx/scale@^0.0.182":
-  version "0.0.182"
-  resolved "https://registry.yarnpkg.com/@vx/scale/-/scale-0.0.182.tgz#22f4423c7188cc8be0b6dbfe9db3e1544d639a98"
-  integrity sha512-QFNWElBUscZD40SZoBOJtzqNU9fS5RAZypvYYJE1mipcEMLXLa8MExpeu/VushAbkSBz2B3T6K9myBL0QYi2xQ==
-  dependencies:
-    d3-scale "^2.0.0"
-
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.11.tgz#b988582cafbb2b095e8b556526f30c90d057cace"
@@ -3782,7 +3775,7 @@ d3-interpolate@1:
   dependencies:
     d3-color "1"
 
-d3-scale@^2.0.0, d3-scale@^2.1.2:
+d3-scale@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-2.1.2.tgz#4e932b7b60182aee9073ede8764c98423e5f9a94"
   integrity sha512-bESpd64ylaKzCDzvULcmHKZTlzA/6DGSVwx7QSDj/EnX9cpSevsdiwdHFYI9ouo9tNBbV3v5xztHS2uFeOzh8Q==
