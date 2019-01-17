@@ -10,27 +10,32 @@ import {
 import memoizeOne from 'memoize-one';
 import * as React from 'react';
 
+
+/**
+ * Name of the scale which should be consistent with the naming of d3 fuctions.
+ * Ref: https://github.com/d3/d3-scale#api-reference
+ */
 export interface Scale {
   type: 'point' | 'time' | 'linear';
 }
 
+/**
+ * Stores the name and other configurations for the fields to be painted on the axis.
+ * Its name should be the same with the key in the data.
+ * e.g., two lines are going to be painted => each line should have its field config
+ */
 export interface Field {
-  /**
-   * Name of the field, which corresponds to the field name in the data
-   */
+  /** Name of the field, which corresponds to the field name in the data */
   name: string;
+  /** Custom color config */
   color: string; // TODO: accept a function?: (index, value) => {...}
 }
 
 export interface Axis {
-  /**
-   * List of fields appear in this axis
-   */
+  /**  List of fields appear in this axis */
   fields: Field[];
 
-  /**
-   * Domain of the axis: [min, max]
-   */
+  /*  Domain of the axis: [min, max] */
   domain: any[];
 
   /**
@@ -39,20 +44,38 @@ export interface Axis {
    */
   range: [number, number];
 
-  /**
-   * d3's Scaling function employed in this axis
-   */
+  /** d3's Scaling function employed in this axis */
   d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
 }
 
 export interface DataLayerProps {
+  /** Width of the inner graph */
   width: number;
+
+  /** height of the inner graph */
   height: number;
+
+  /**
+   * Data for computing the axis config.
+   * If there are multiple fields appear in the axes (like multi-series line charts),
+   * then all of the data related to the fields will be included in the computations
+   * @example [{ x: 1, y: 0 }, { x: 0, y: 1 }, ...]
+   */
   data: object[];
+
+  /** Scale config of the x-axis */
   scaleX: Scale;
+
+  /** Scale config of the y-axis */
   scaleY: Scale;
+
+  /** Fields of the x-axis */
   fieldsX: Field[];
+
+  /** Fields of the y-axis */
   fieldsY: Field[];
+
+  /** Render props with the computed configurations for the axes */
   children: (
     dimension: {
       xAxis: Axis;
@@ -62,9 +85,14 @@ export interface DataLayerProps {
 }
 
 export interface DataLayerState {
+  /** TODO: records the indices of data selected by users from the interaction layer */
   activeDataIndices: number[];
 }
 
+/**
+ * Computes and returns the configurations for the axis,
+ * such as its range and d3 scale functions
+ */
 function getAxisConfig(
   min: number,
   max: number,
@@ -90,23 +118,17 @@ function getAxisConfig(
   switch (scale.type) {
     case 'point': {
       domain = dataVals;
-      d3Scale = scalePoint()
-        .domain(domain)
-        .range(range);
+      d3Scale = scalePoint().domain(domain).range(range);
       break;
     }
     case 'time': {
       domain = d3Extent(dataVals.map(time => new Date(time)));
-      d3Scale = scaleTime()
-        .domain(domain)
-        .range(range);
+      d3Scale = scaleTime().domain(domain).range(range);
       break;
     }
     case 'linear': {
       domain = d3Extent(dataVals);
-      d3Scale = scaleLinear()
-        .domain(domain)
-        .range(range);
+      d3Scale = scaleLinear().domain(domain).range(range);
       break;
     }
     default:
@@ -122,6 +144,9 @@ function getAxisConfig(
   };
 }
 
+/**
+ * The layer is responsible for computing axis data in order to draw a graph
+ */
 export class DataLayer extends React.PureComponent<
   DataLayerProps,
   DataLayerState
