@@ -1,4 +1,5 @@
 import { DataLayer, Field, ResponsiveLayer, Scale } from '@ichef/transcharts-graph';
+import { LinePath } from '@vx/shape';
 import * as React from 'react';
 
 export interface LineChartProps {
@@ -38,12 +39,17 @@ export class LineChart extends React.Component<LineChartProps, {}> {
             fieldsY={fieldsY}
           >
             {({ xAxis, yAxis }) => {
-              console.log(xAxis, yAxis)
+              console.log(xAxis, yAxis);
               return (
-                <>
-                  <p>Width: {width}</p>
-                  <p>Height: {height}</p>
-                </>
+                <svg width={width} height={height}>
+                  <LinePath
+                    data={data}
+                    x={d => xAxis.d3Scale(d.x)}
+                    y={d => yAxis.d3Scale(d.y)}
+                    stroke={'#af0c5d'}
+                    strokeWidth={3}
+                  />
+                </svg>
               );
             }}
           </DataLayer>
