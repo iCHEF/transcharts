@@ -31,9 +31,9 @@ export interface LineChartProps {
  * @param fieldIndex - the current index of the field
  */
 function getConvertFuncFromAxis(axis: Axis, fieldIndex: number) {
-  const { fields, d3Scale } = axis;
+  const { fields, d3Scale, getValue } = axis;
   const fieldName = fields[fieldIndex].name;
-  return (d: object) => d3Scale(d[fieldName]);
+  return (d: object) => d3Scale(getValue(d[fieldName]));
 }
 
 export class LineChart extends React.Component<LineChartProps, {}> {

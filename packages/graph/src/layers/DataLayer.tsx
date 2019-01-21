@@ -44,6 +44,9 @@ export interface Axis {
    */
   range: [number, number];
 
+  /** Returns the formatted value according to the type of the axis */
+  getValue: (val: any) => any;
+
   /** d3's Scaling function employed in this axis */
   d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
 }
@@ -114,6 +117,7 @@ function getAxisConfig(
 
   let domain: Axis['domain'];
   let d3Scale: Axis['d3Scale'];
+  let getValue = (val: any) => val;
 
   switch (scale.type) {
     case 'point': {
@@ -122,7 +126,8 @@ function getAxisConfig(
       break;
     }
     case 'time': {
-      domain = d3Extent(dataVals.map(time => new Date(time)));
+      getValue = (val: string) => new Date(val);
+      domain = d3Extent(dataVals.map(time => getValue(time)));
       d3Scale = scaleTime().domain(domain).range(range);
       break;
     }
@@ -140,7 +145,8 @@ function getAxisConfig(
     fields,
     range,
     domain,
-    d3Scale
+    d3Scale,
+    getValue,
   };
 }
 
