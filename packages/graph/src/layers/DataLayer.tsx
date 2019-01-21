@@ -48,6 +48,11 @@ export interface Axis {
   d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
 }
 
+export interface DataLayerAxes {
+  xAxis: Axis;
+  yAxis: Axis;
+}
+
 export interface DataLayerProps {
   /** Width of the inner graph */
   width: number;
@@ -76,12 +81,7 @@ export interface DataLayerProps {
   fieldsY: Field[];
 
   /** Render props with the computed configurations for the axes */
-  children: (
-    dimension: {
-      xAxis: Axis;
-      yAxis: Axis;
-    }
-  ) => React.ReactNode;
+  children: (axes: DataLayerAxes) => React.ReactNode;
 }
 
 export interface DataLayerState {
