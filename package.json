@@ -14,6 +14,7 @@
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/memoize-one": "^4.1.0",
+    "@types/d3": "^5.7.0",
     "docz": "^0.13.7",
     "docz-theme-default": "^0.13.7",
     "lerna": "^3.8.0",
