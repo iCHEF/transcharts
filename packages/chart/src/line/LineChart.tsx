@@ -1,4 +1,5 @@
 import {
+  Axis,
   DataLayer,
   DataLayerAxes,
   Field,
@@ -21,6 +22,18 @@ export interface LineChartProps {
   scaleY: Scale;
   fieldsX: Field[];
   fieldsY: Field[];
+}
+
+/**
+ * Returns the data value conversion function of the field
+ * using the d3Scale function of the axis
+ * @param axis - the axis computed from DataLayer
+ * @param fieldIndex - the current index of the field
+ */
+function getConvertFuncFromAxis(axis: Axis, fieldIndex: number) {
+  const { fields, d3Scale } = axis;
+  const fieldName = fields[fieldIndex].name;
+  return (d: object) => d3Scale(d[fieldName]);
 }
 
 export class LineChart extends React.Component<LineChartProps, {}> {
@@ -46,14 +59,16 @@ export class LineChart extends React.Component<LineChartProps, {}> {
             fieldsY={fieldsY}
           >
             {({ xAxis, yAxis } : DataLayerAxes) => {
-              console.log(xAxis, yAxis);
+              const getX = getConvertFuncFromAxis(xAxis, 0);
+              const getY = getConvertFuncFromAxis(yAxis, 0);
+
               return (
                 <svg width={width} height={height}>
                   <LinePath
                     data={data}
-                    x={d => xAxis.d3Scale(d.x)}
-                    y={d => yAxis.d3Scale(d.y)}
-                    stroke={'#af0c5d'}
+                    x={getX}
+                    y={getY}
+                    stroke={'#ff7049'}
                     strokeWidth={3}
                   />
                 </svg>
