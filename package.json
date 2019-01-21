@@ -8,7 +8,8 @@
     "start": "docz dev",
     "build": "docz build",
     "prepublish": "lerna run prepublish",
-    "lint": "lerna run lint --parallel --stream"
+    "lint": "lerna run lint --parallel --stream",
+    "clean": "lerna run --parallel clean"
   },
   "devDependencies": {
     "@types/react": "^16.7.18",
@@ -27,6 +28,6 @@
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.4"
   }
 }
