@@ -1,5 +1,5 @@
 ---
-name: ResponsiveLayers
+name: Line Chart
 route: /charts/line_chart
 menu: Charts
 ---
@@ -10,8 +10,28 @@ import lineData from '../sampleData/lineData';
 
 # Line Chart
 
+The `<LineChart>` component supports drawing single and multiple lines on the Y-axis.
+
+We use the following example data to generate the example charts below.
+
+**Example Data:**
+
+```js
+const lineData = [
+  { x: 0, y: 9, date: '2018-12-10', weekday: 'Mon' },
+  { x: 1, y: 5, date: '2018-12-11', weekday: 'Tue' },
+  { x: 2, y: 5, date: '2018-12-12', weekday: 'Wed' },
+  { x: 3, y: 3, date: '2018-12-13', weekday: 'Thu'},
+  { x: 4, y: 1, date: '2018-12-14', weekday: 'Fri' },
+];
+```
+
+## Using different scales on the X-axis
+
+### Linear + Linear
+
 <Playground>
-  <div style={{ width: '60%', height: '12vh' }}>
+  <div style={{ width: '100%', height: '12vh' }}>
     <LineChart
       data={lineData}
       scaleX={{ type: 'linear' }}
@@ -22,6 +42,33 @@ import lineData from '../sampleData/lineData';
   </div>
 </Playground>
 
+### Time + Linear
+
+<Playground>
+  <div style={{ width: '100%', height: '12vh' }}>
+    <LineChart
+      data={lineData}
+      scaleX={{ type: 'time' }}
+      scaleY={{ type: 'linear' }}
+      fieldsX={[{name: 'date'}]}
+      fieldsY={[{name: 'x'}]}
+    />
+  </div>
+</Playground>
+
+### Point + Linear
+
+<Playground>
+  <div style={{ width: '100%', height: '12vh' }}>
+    <LineChart
+      data={lineData}
+      scaleX={{ type: 'point' }}
+      scaleY={{ type: 'linear' }}
+      fieldsX={[{name: 'weekday'}]}
+      fieldsY={[{name: 'y'}]}
+    />
+  </div>
+</Playground>
 
 ## Props
 
