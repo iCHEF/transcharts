@@ -41,6 +41,7 @@
   "dependencies": {
     "@ichef/transcharts-graph": "^0.0.0",
     "@types/lodash-es": "^4.17.1",
+    "@vx/axis": "^0.0.183",
     "@vx/shape": "^0.0.183",
     "lodash-es": "^4.17.11"
   }
