@@ -9,10 +9,19 @@
   "jsRules": {},
   "rules": {
     "object-literal-sort-keys": false,
-    "interface-name" : [true, "never-prefix"],
+    "interface-name": [true, "never-prefix"],
     "member-ordering": false,
     "quotemark": [true, "single", "jsx-double"],
     "semicolon": [true, "always"],
+    "jsx-boolean-value": false,
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never",
+        "esSpecCompliant": true
+      }
+    ],
     // This rule is here for now because of https://github.com/palantir/tslint-react/issues/120
     "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"]
   },
