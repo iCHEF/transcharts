@@ -2,6 +2,26 @@ import { AxisBottom, AxisLeft } from '@vx/axis';
 import * as React from 'react';
 import { Axis } from './DataLayer';
 
+// TODO: This should be extracted as a variable in the context
+const axisStyles = {
+  strokeColor: '#7c8a94',
+  tickStrokeColor: '#7c8a94',
+  strokeWidth: 1.5,
+  tickFontSize: 13,
+};
+
+/**
+ * Returns the number of ticks on the axis based on the length of data and the axis
+ * @param axisLength - length of the axis
+ * @param data - data of the graph
+ */
+function getNumberOfTicks(axisLength: number, data: object[]): number {
+  const maxTicks = Math.max(data.length, 2);
+  const lengthBasis = axisLength > 0 ? axisLength : 60;
+  const ticksFromLen = Math.ceil(lengthBasis / 60);
+  return Math.min(maxTicks, ticksFromLen);
+}
+
 export interface AxisLayerProps {
   /** Width of the inner graph */
   width: number;
@@ -25,6 +45,20 @@ export interface AxisLayerProps {
   yAxis: Axis;
 }
 
+const getXtickLabelProps = (styles: { tickFontSize: number }) => (value: any, index: number) => ({
+  fill: axisStyles.strokeColor,
+  textAnchor: 'end',
+  fontSize: styles.tickFontSize,
+  dx: '-0.25rem',
+  dy: '0.25rem',
+});
+
+const getYtickLabelProps = (styles: { tickFontSize: number }) => (value: any, index: number) => ({
+  fill: axisStyles.strokeColor,
+  fontSize: styles.tickFontSize,
+  textAnchor: 'middle',
+});
+
 export const AxisLayer: React.SFC<AxisLayerProps> = ({
   width,
   height,
@@ -44,45 +78,29 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             top={0}
             left={0}
             scale={yAxis.d3Scale}
-            hideZero
+            // TODO: support showing labels on axes
+            stroke={axisStyles.strokeColor}
+            strokeWidth={axisStyles.strokeWidth}
+            tickStroke={axisStyles.tickStrokeColor}
             // TODO: modify it as a function
-            numTicks={5}
-            label="Axis Left Label"
-            labelProps={{
-              fill: '#7c8a94',
-              textAnchor: 'middle',
-              fontSize: 12,
-              fontFamily: 'Arial',
-            }}
-            stroke="#7c8a94"
-            strokeWidth={2}
-            tickStroke="#7c8a94"
-            tickLabelProps={(value, index) => ({
-              fill: '#7c8a94',
-              textAnchor: 'end',
-              fontSize: 12,
-              fontFamily: 'Arial',
-              dx: '-0.25em',
-              dy: '0.25em',
-            })}
-            tickComponent={({ formattedValue, ...tickProps }) => (
-              <text {...tickProps}>{formattedValue}</text>
-            )}
+            numTicks={getNumberOfTicks(height, data)}
+            tickLabelProps={getXtickLabelProps(axisStyles)}
+            // TODO: format the ticks based on the axis types
+            // tickComponent={({ formattedValue, ...tickProps }) => (
+            //   <text {...tickProps}>{formattedValue}</text>
+            // )}
           />
         )}
         {showBottom && (
           <AxisBottom
             top={height}
             scale={xAxis.d3Scale}
-            stroke="#7c8a94"
-            strokeWidth={2}
-            tickStroke="#7c8a94"
-            numTicks={5}
-            tickLabelProps={(value, index) => ({
-              fill: '#7c8a94',
-              fontSize: 12,
-              textAnchor: 'middle',
-            })}
+            stroke={axisStyles.strokeColor}
+            strokeWidth={axisStyles.strokeWidth}
+            tickStroke={axisStyles.tickStrokeColor}
+            numTicks={getNumberOfTicks(width, data)}
+            // TODO: deal with date type
+            tickLabelProps={getYtickLabelProps(axisStyles)}
           />
         )}
       </>
