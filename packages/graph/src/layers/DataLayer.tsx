@@ -5,7 +5,7 @@ import {
   scalePoint,
   ScalePoint,
   scaleTime,
-  ScaleTime
+  ScaleTime,
 } from 'd3-scale';
 import memoizeOne from 'memoize-one';
 import * as React from 'react';
@@ -101,7 +101,7 @@ function getAxisConfig(
   max: number,
   data: object[],
   scale: Scale,
-  fields: Field[]
+  fields: Field[],
 ): Axis {
   const range: Axis['range'] = [min, max];
 
@@ -158,16 +158,16 @@ export class DataLayer extends React.PureComponent<
   DataLayerState
 > {
   public state: DataLayerState = {
-    activeDataIndices: []
+    activeDataIndices: [],
   };
 
   private getXYAxes = memoizeOne(
     (width, height, data, scaleX, scaleY, fieldsX, fieldsY) => {
       return {
         xAxis: getAxisConfig(0, width, data, scaleX, fieldsX),
-        yAxis: getAxisConfig(height, 0, data, scaleY, fieldsY)
+        yAxis: getAxisConfig(height, 0, data, scaleY, fieldsY),
       };
-    }
+    },
   );
 
   public render() {
@@ -179,7 +179,7 @@ export class DataLayer extends React.PureComponent<
       scaleY,
       fieldsX,
       fieldsY,
-      children
+      children,
     } = this.props;
     const { xAxis, yAxis } = this.getXYAxes(
       width,
@@ -188,7 +188,7 @@ export class DataLayer extends React.PureComponent<
       scaleX,
       scaleY,
       fieldsX,
-      fieldsY
+      fieldsY,
     );
     return children({ xAxis, yAxis });
   }
