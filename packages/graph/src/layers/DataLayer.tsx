@@ -126,6 +126,7 @@ function getAxisConfig(
       break;
     }
     case 'time': {
+      // TODO: think out a way to deal with the date type
       getValue = (val: string) => new Date(val);
       domain = d3Extent(dataVals.map(time => getValue(time)));
       d3Scale = scaleTime().domain(domain).range(range);

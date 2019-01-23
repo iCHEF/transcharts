@@ -46,8 +46,8 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
     margin: {
       top: 20,
       right: 20,
-      bottom: 20,
-      left: 40,
+      bottom: 30,
+      left: 60,
     },
     showLeft: true,
     showBottom: true,
