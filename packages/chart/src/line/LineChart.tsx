@@ -1,5 +1,6 @@
 import {
   Axis,
+  AxisLayer,
   DataLayer,
   DataLayerAxes,
   Field,
@@ -7,7 +8,6 @@ import {
   ResponsiveState,
   Scale,
 } from '@ichef/transcharts-graph';
-import { AxisBottom, AxisLeft } from '@vx/axis';
 import { LinePath } from '@vx/shape';
 import * as React from 'react';
 
@@ -23,6 +23,10 @@ export interface LineChartProps {
   scaleY: Scale;
   fieldsX: Field[];
   fieldsY: Field[];
+  /** Should show the axis on the left or not */
+  showLeft: boolean;
+  /** Should show the axis on the bottom or not */
+  showBottom: boolean;
 }
 
 /**
@@ -45,10 +49,21 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
       bottom: 20,
       left: 40,
     },
+    showLeft: true,
+    showBottom: true,
   };
 
   public render() {
-    const { data, scaleX, scaleY, fieldsX, fieldsY, margin } = this.props;
+    const {
+      data,
+      scaleX,
+      scaleY,
+      fieldsX,
+      fieldsY,
+      margin,
+      showLeft,
+      showBottom,
+    } = this.props;
 
     return (
       <ResponsiveLayer>
@@ -84,48 +99,18 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
 
                   return (
                     <g transform={`translate(${left}, ${top})`}>
-                      {/* TODO: add points */}
-                      <AxisLeft
-                        top={0}
-                        left={0}
-                        scale={yAxis.d3Scale}
-                        hideZero
-                        // TODO: modify it as a function
-                        numTicks={5}
-                        label="Axis Left Label"
-                        labelProps={{
-                          fill: '#7c8a94',
-                          textAnchor: 'middle',
-                          fontSize: 12,
-                          fontFamily: 'Arial',
-                        }}
-                        stroke="#7c8a94"
-                        strokeWidth={2}
-                        tickStroke="#7c8a94"
-                        tickLabelProps={(value, index) => ({
-                          fill: '#7c8a94',
-                          textAnchor: 'end',
-                          fontSize: 12,
-                          fontFamily: 'Arial',
-                          dx: '-0.25em',
-                          dy: '0.25em',
-                        })}
-                        tickComponent={({ formattedValue, ...tickProps }) => (
-                          <text {...tickProps}>{formattedValue}</text>
-                        )}
+                      {/* Draw the axes */}
+                      <AxisLayer
+                        width={graphWidth}
+                        height={graphHeight}
+                        showLeft={showLeft}
+                        showBottom={showBottom}
+                        data={data}
+                        xAxis={xAxis}
+                        yAxis={yAxis}
                       />
-                      <AxisBottom
-                        top={graphHeight}
-                        scale={xAxis.d3Scale}
-                        stroke="#7c8a94"
-                        strokeWidth={2}
-                        tickStroke="#7c8a94"
-                        tickLabelProps={(value, index) => ({
-                          fill: '#7c8a94',
-                          fontSize: 12,
-                          textAnchor: 'middle',
-                        })}
-                      />
+
+                      {/* Draw the line */}
                       <LinePath
                         data={data}
                         x={getX}
@@ -135,7 +120,8 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
-                      {/* Show dots on the line */}
+
+                      {/* Draw dots on the line */}
                       {lineDots}
                     </g>
                   );
