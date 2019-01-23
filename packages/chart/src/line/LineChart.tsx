@@ -43,7 +43,7 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
       top: 20,
       right: 20,
       bottom: 20,
-      left: 30,
+      left: 40,
     },
   };
 
@@ -72,15 +72,19 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
                   const getX = getConvertFuncFromAxis(xAxis, 0);
                   const getY = getConvertFuncFromAxis(yAxis, 0);
 
+                  const lineDots = data.map((dataRow, index) => (
+                    <circle
+                      key={`c-${index}`}
+                      cx={getX(dataRow)}
+                      cy={getY(dataRow)}
+                      r={3.5}
+                      fill={'#ff7049'}
+                    />
+                  ));
+
                   return (
                     <g transform={`translate(${left}, ${top})`}>
-                      <LinePath
-                        data={data}
-                        x={getX}
-                        y={getY}
-                        stroke={'#ff7049'}
-                        strokeWidth={1.5}
-                      />
+                      {/* TODO: add points */}
                       <AxisLeft
                         top={0}
                         left={0}
@@ -90,17 +94,18 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
                         numTicks={5}
                         label="Axis Left Label"
                         labelProps={{
-                          fill: '#1b1a1e',
+                          fill: '#7c8a94',
                           textAnchor: 'middle',
                           fontSize: 12,
                           fontFamily: 'Arial',
                         }}
-                        stroke="#1b1a1e"
-                        tickStroke="#1b1a1e"
+                        stroke="#7c8a94"
+                        strokeWidth={2}
+                        tickStroke="#7c8a94"
                         tickLabelProps={(value, index) => ({
-                          fill: '#1b1a1e',
+                          fill: '#7c8a94',
                           textAnchor: 'end',
-                          fontSize: 10,
+                          fontSize: 12,
                           fontFamily: 'Arial',
                           dx: '-0.25em',
                           dy: '0.25em',
@@ -112,14 +117,26 @@ export class LineChart extends React.PureComponent<LineChartProps, {}> {
                       <AxisBottom
                         top={graphHeight}
                         scale={xAxis.d3Scale}
-                        stroke="#1b1a1e"
-                        tickStroke="#1b1a1e"
+                        stroke="#7c8a94"
+                        strokeWidth={2}
+                        tickStroke="#7c8a94"
                         tickLabelProps={(value, index) => ({
-                          fill: '#1b1a1e',
-                          fontSize: 11,
+                          fill: '#7c8a94',
+                          fontSize: 12,
                           textAnchor: 'middle',
                         })}
                       />
+                      <LinePath
+                        data={data}
+                        x={getX}
+                        y={getY}
+                        stroke={'#ff7049'}
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      {/* Show dots on the line */}
+                      {lineDots}
                     </g>
                   );
                 }}

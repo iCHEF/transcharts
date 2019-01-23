@@ -9,6 +9,8 @@ declare module '@vx/shape' {
     y: ((d: any) => any) | number;
     stroke?: string;
     strokeWidth?: number;
+    strokeLinecap?: string;
+    strokeLinejoin?: string;
   }
   const LinePath: React.ComponentType<LinePath>;
 }
