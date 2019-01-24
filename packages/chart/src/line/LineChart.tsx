@@ -41,96 +41,86 @@ function getConvertFuncFromAxis(axis: Axis, fieldIndex: number) {
   return (d: object) => d3Scale(getValue(d[fieldName]));
 }
 
-export class LineChart extends React.PureComponent<LineChartProps, {}> {
-  public static defaultProps = {
-    margin: {
-      top: 20,
-      right: 20,
-      bottom: 30,
-      left: 60,
-    },
-    showLeft: true,
-    showBottom: true,
-  };
+export const LineChart: React.SFC<LineChartProps> = ({
+  data,
+  scaleX,
+  scaleY,
+  fieldsX,
+  fieldsY,
+  margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 60,
+  },
+  showLeft = true,
+  showBottom = true,
+}) => {
+  return (
+    <ResponsiveLayer>
+      {({ width: outerWidth, height: outerHeight }: ResponsiveState) => {
+        const { top, right, bottom, left } = margin;
+        const graphWidth = outerWidth - left - right;
+        const graphHeight = outerHeight - top - bottom;
 
-  public render() {
-    const {
-      data,
-      scaleX,
-      scaleY,
-      fieldsX,
-      fieldsY,
-      margin,
-      showLeft,
-      showBottom,
-    } = this.props;
+        return (
+          <svg width={outerWidth} height={outerHeight}>
+            <DataLayer
+              width={graphWidth}
+              height={graphHeight}
+              data={data}
+              scaleX={scaleX}
+              scaleY={scaleY}
+              fieldsX={fieldsX}
+              fieldsY={fieldsY}
+            >
+              {({ xAxis, yAxis }: DataLayerAxes) => {
+                const getX = getConvertFuncFromAxis(xAxis, 0);
+                const getY = getConvertFuncFromAxis(yAxis, 0);
 
-    return (
-      <ResponsiveLayer>
-        {({ width: outerWidth, height: outerHeight }: ResponsiveState) => {
-          const { top, right, bottom, left } = margin;
-          const graphWidth = outerWidth - left - right;
-          const graphHeight = outerHeight - top - bottom;
+                const lineDots = data.map((dataRow, index) => (
+                  <circle
+                    key={`c-${index}`}
+                    cx={getX(dataRow)}
+                    cy={getY(dataRow)}
+                    r={3.5}
+                    fill={'#ff7049'}
+                  />
+                ));
 
-          return (
-            <svg width={outerWidth} height={outerHeight}>
-              <DataLayer
-                width={graphWidth}
-                height={graphHeight}
-                data={data}
-                scaleX={scaleX}
-                scaleY={scaleY}
-                fieldsX={fieldsX}
-                fieldsY={fieldsY}
-              >
-                {({ xAxis, yAxis }: DataLayerAxes) => {
-                  const getX = getConvertFuncFromAxis(xAxis, 0);
-                  const getY = getConvertFuncFromAxis(yAxis, 0);
-
-                  const lineDots = data.map((dataRow, index) => (
-                    <circle
-                      key={`c-${index}`}
-                      cx={getX(dataRow)}
-                      cy={getY(dataRow)}
-                      r={3.5}
-                      fill={'#ff7049'}
+                return (
+                  <g transform={`translate(${left}, ${top})`}>
+                    {/* Draw the axes */}
+                    <AxisLayer
+                      width={graphWidth}
+                      height={graphHeight}
+                      showLeft={showLeft}
+                      showBottom={showBottom}
+                      data={data}
+                      xAxis={xAxis}
+                      yAxis={yAxis}
                     />
-                  ));
 
-                  return (
-                    <g transform={`translate(${left}, ${top})`}>
-                      {/* Draw the axes */}
-                      <AxisLayer
-                        width={graphWidth}
-                        height={graphHeight}
-                        showLeft={showLeft}
-                        showBottom={showBottom}
-                        data={data}
-                        xAxis={xAxis}
-                        yAxis={yAxis}
-                      />
+                    {/* Draw the line */}
+                    <LinePath
+                      data={data}
+                      x={getX}
+                      y={getY}
+                      stroke={'#ff7049'}
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
 
-                      {/* Draw the line */}
-                      <LinePath
-                        data={data}
-                        x={getX}
-                        y={getY}
-                        stroke={'#ff7049'}
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-
-                      {/* Draw dots on the line */}
-                      {lineDots}
-                    </g>
-                  );
-                }}
-              </DataLayer>
-            </svg>
-          );
-        }}
-      </ResponsiveLayer>
-    );
-  }
-}
+                    {/* Draw dots on the line */}
+                    {lineDots}
+                  </g>
+                );
+              }}
+            </DataLayer>
+          </svg>
+        );
+      }}
+    </ResponsiveLayer>
+  );
+};
