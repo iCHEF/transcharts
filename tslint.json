@@ -12,7 +12,7 @@
     "interface-name": [true, "never-prefix"],
     "member-ordering": false,
     "quotemark": [true, "single", "jsx-double"],
-    "semicolon": [true, "always"],
+    "semicolon": [true, "always", "strict-bound-class-methods"],
     "jsx-boolean-value": false,
     "trailing-comma": [
       true,
