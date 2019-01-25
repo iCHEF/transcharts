@@ -49,7 +49,9 @@
         "tabWidth": 2,
         "ignoreUrls": true
       }
-    ]
+    ],
+    // ============= from tslint-react =============
+    "jsx-no-multiline-js": false
   },
   "rulesDirectory": []
 }
