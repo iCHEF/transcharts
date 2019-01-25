@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { LinePath } from '@vx/shape';
 import {
   Axis,
   AxisLayer,
@@ -8,8 +10,6 @@ import {
   ResponsiveState,
   Scale,
 } from '@ichef/transcharts-graph';
-import { LinePath } from '@vx/shape';
-import * as React from 'react';
 
 export interface LineChartProps {
   margin: {

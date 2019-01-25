@@ -25,9 +25,22 @@
         "esSpecCompliant": true
       }
     ],
-    "ordered-imports": false,
+    // disable the rules that sort imports by alphabetical order
+    "ordered-imports": [
+      true,
+      {
+        "grouped-imports": true,
+        "import-sources-order": "any",
+        "named-imports-order": "any"
+      }
+    ],
     // This rule is here for now because of https://github.com/palantir/tslint-react/issues/120
-    "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case"
+    ],
     // ============= from tslint-eslint-rules =============
     "object-curly-spacing": [true, "always"],
     "ter-max-len": [

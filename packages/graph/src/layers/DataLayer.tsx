@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { extent as d3Extent } from 'd3-array';
 import {
   scaleLinear,
@@ -8,8 +9,6 @@ import {
   ScaleTime,
 } from 'd3-scale';
 import memoizeOne from 'memoize-one';
-import * as React from 'react';
-
 
 /**
  * Name of the scale which should be consistent with the naming of d3 fuctions.

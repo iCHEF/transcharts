@@ -1,5 +1,5 @@
-import { debounce } from 'lodash-es';
 import * as React from 'react';
+import { debounce } from 'lodash-es';
 import resizeObserverPolyfill from 'resize-observer-polyfill';
 
 export interface ResponsiveState {
