@@ -50,8 +50,8 @@ const getXtickLabelProps = (styles: { tickFontSize: number }) => (value: any, in
   fill: axisStyles.strokeColor,
   textAnchor: 'end',
   fontSize: styles.tickFontSize,
-  dx: '-0.25rem',
-  dy: '0.25rem',
+  dx: '-0.25em',
+  dy: '0.25em',
 });
 
 const getYtickLabelProps = (styles: { tickFontSize: number }) => (value: any, index: number) => ({
