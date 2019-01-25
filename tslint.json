@@ -1,13 +1,16 @@
 {
   "defaultSeverity": "error",
   "extends": [
+    // https://github.com/palantir/tslint/blob/master/src/configs/recommended.ts
     "tslint:recommended",
+    "tslint-eslint-rules",
     "tslint-config-airbnb",
     "tslint-react",
     "tslint-config-prettier"
   ],
   "jsRules": {},
   "rules": {
+    // ============= from tslint =============
     "object-literal-sort-keys": false,
     "interface-name": [true, "never-prefix"],
     "member-ordering": false,
@@ -22,8 +25,19 @@
         "esSpecCompliant": true
       }
     ],
+    "ordered-imports": false,
     // This rule is here for now because of https://github.com/palantir/tslint-react/issues/120
-    "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"]
+    "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"],
+    // ============= from tslint-eslint-rules =============
+    "object-curly-spacing": [true, "always"],
+    "ter-max-len": [
+      true,
+      {
+        "code": 100,
+        "tabWidth": 2,
+        "ignoreUrls": true
+      }
+    ]
   },
   "rulesDirectory": []
 }
