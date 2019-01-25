@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LinePath } from '@vx/shape';
 import {
-  Axis,
+  AxisConfig,
   AxisLayer,
   DataLayer,
   DataLayerAxes,
@@ -35,7 +35,7 @@ export interface LineChartProps {
  * @param axis - the axis computed from DataLayer
  * @param fieldIndex - the current index of the field
  */
-function getConvertFuncFromAxis(axis: Axis, fieldIndex: number) {
+function getConvertFuncFromAxis(axis: AxisConfig, fieldIndex: number) {
   const { fields, d3Scale, getValue } = axis;
   const fieldName = fields[fieldIndex].name;
   return (d: object) => d3Scale(getValue(d[fieldName]));

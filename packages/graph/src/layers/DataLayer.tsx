@@ -30,7 +30,7 @@ export interface Field {
   color: string; // TODO: accept a function?: (index, value) => {...}
 }
 
-export interface Axis {
+export interface AxisConfig {
   /**  List of fields appear in this axis */
   fields: Field[];
 
@@ -51,8 +51,8 @@ export interface Axis {
 }
 
 export interface DataLayerAxes {
-  xAxis: Axis;
-  yAxis: Axis;
+  xAxis: AxisConfig;
+  yAxis: AxisConfig;
 }
 
 export interface DataLayerProps {
@@ -101,8 +101,8 @@ function getAxisConfig(
   data: object[],
   scale: Scale,
   fields: Field[],
-): Axis {
-  const range: Axis['range'] = [min, max];
+): AxisConfig {
+  const range: AxisConfig['range'] = [min, max];
 
   const dataVals: any[] = [];
   fields.forEach(({ name }) => {
@@ -114,8 +114,8 @@ function getAxisConfig(
     });
   });
 
-  let domain: Axis['domain'];
-  let d3Scale: Axis['d3Scale'];
+  let domain: AxisConfig['domain'];
+  let d3Scale: AxisConfig['d3Scale'];
   let getValue = (val: any) => val;
 
   switch (scale.type) {

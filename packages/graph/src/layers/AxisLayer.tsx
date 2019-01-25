@@ -1,6 +1,7 @@
-import { AxisBottom, AxisLeft } from '@vx/axis';
 import * as React from 'react';
-import { Axis } from './DataLayer';
+import { AxisBottom, AxisLeft } from '@vx/axis';
+
+import { AxisConfig } from './DataLayer';
 
 // TODO: This should be extracted as a variable in the context
 const axisStyles = {
@@ -39,10 +40,10 @@ export interface AxisLayerProps {
   data: object[];
 
   /** X-axis configurations produced by `<DataLayer>` */
-  xAxis: Axis;
+  xAxis: AxisConfig;
 
   /** Y-axis configurations produced by `<DataLayer>` */
-  yAxis: Axis;
+  yAxis: AxisConfig;
 }
 
 const getXtickLabelProps = (styles: { tickFontSize: number }) => (value: any, index: number) => ({
