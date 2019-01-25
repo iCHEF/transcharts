@@ -2,53 +2,12 @@ import * as React from 'react';
 import { extent as d3Extent } from 'd3-array';
 import {
   scaleLinear,
-  ScaleLinear,
   scalePoint,
-  ScalePoint,
   scaleTime,
-  ScaleTime,
 } from 'd3-scale';
 import memoizeOne from 'memoize-one';
 
-/**
- * Name of the scale which should be consistent with the naming of d3 fuctions.
- * Ref: https://github.com/d3/d3-scale#api-reference
- */
-export interface Scale {
-  type: 'point' | 'time' | 'linear';
-}
-
-/**
- * Stores the name and other configurations for the fields to be painted on the axis.
- * Its name should be the same with the key in the data.
- * e.g., two lines are going to be painted => each line should have its field config
- */
-export interface Field {
-  /** Name of the field, which corresponds to the field name in the data */
-  name: string;
-  /** Custom color config */
-  color: string; // TODO: accept a function?: (index, value) => {...}
-}
-
-export interface AxisConfig {
-  /**  List of fields appear in this axis */
-  fields: Field[];
-
-  /*  Domain of the axis: [min, max] */
-  domain: any[];
-
-  /**
-   * Range of the axis: [min, max]
-   * it should match the inner width and height of the graph
-   */
-  range: [number, number];
-
-  /** Returns the formatted value according to the type of the axis */
-  getValue: (val: any) => any;
-
-  /** d3's Scaling function employed in this axis */
-  d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
-}
+import { Scale, DataField, AxisConfig } from '../common/types';
 
 export interface DataLayerAxes {
   xAxis: AxisConfig;
@@ -76,11 +35,11 @@ export interface DataLayerProps {
   /** Scale config of the y-axis */
   scaleY: Scale;
 
-  /** Fields of the x-axis */
-  fieldsX: Field[];
+  /** DataFields of the x-axis */
+  fieldsX: DataField[];
 
-  /** Fields of the y-axis */
-  fieldsY: Field[];
+  /** DataFields of the y-axis */
+  fieldsY: DataField[];
 
   /** Render props with the computed configurations for the axes */
   children: (axes: DataLayerAxes) => React.ReactNode;
@@ -100,13 +59,13 @@ function getAxisConfig(
   max: number,
   data: object[],
   scale: Scale,
-  fields: Field[],
+  fields: DataField[],
 ): AxisConfig {
   const range: AxisConfig['range'] = [min, max];
 
   const dataVals: any[] = [];
   fields.forEach(({ name }) => {
-    data.forEach(row => {
+    data.forEach((row) => {
       const val = row[name];
       if (val !== undefined && val !== null) {
         dataVals.push(val);

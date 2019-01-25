@@ -5,7 +5,7 @@ import {
   AxisLayer,
   DataLayer,
   DataLayerAxes,
-  Field,
+  DataField,
   ResponsiveLayer,
   ResponsiveState,
   Scale,
@@ -21,12 +21,12 @@ export interface LineChartProps {
   data: object[];
   scaleX: Scale;
   scaleY: Scale;
-  fieldsX: Field[];
-  fieldsY: Field[];
+  fieldsX: DataField[];
+  fieldsY: DataField[];
   /** Should show the axis on the left or not */
-  showLeft: boolean;
+  showLeftAxis: boolean;
   /** Should show the axis on the bottom or not */
-  showBottom: boolean;
+  showBottomAxis: boolean;
 }
 
 /**
@@ -53,8 +53,8 @@ export const LineChart: React.SFC<LineChartProps> = ({
     bottom: 30,
     left: 60,
   },
-  showLeft = true,
-  showBottom = true,
+  showLeftAxis = true,
+  showBottomAxis = true,
 }) => {
   return (
     <ResponsiveLayer>
@@ -94,8 +94,8 @@ export const LineChart: React.SFC<LineChartProps> = ({
                     <AxisLayer
                       width={graphWidth}
                       height={graphHeight}
-                      showLeft={showLeft}
-                      showBottom={showBottom}
+                      showLeftAxis={showLeftAxis}
+                      showBottomAxis={showBottomAxis}
                       data={data}
                       xAxis={xAxis}
                       yAxis={yAxis}

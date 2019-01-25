@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AxisBottom, AxisLeft } from '@vx/axis';
 
-import { AxisConfig } from './DataLayer';
+import { AxisConfig } from '../common/types';
 
 // TODO: This should be extracted as a variable in the context
 const axisStyles = {
@@ -31,10 +31,10 @@ export interface AxisLayerProps {
   height: number;
 
   /** Should show the axis on the left or not */
-  showLeft: boolean;
+  showLeftAxis: boolean;
 
   /** Should show the axis on the bottom or not */
-  showBottom: boolean;
+  showBottomAxis: boolean;
 
   /** Data of the chart */
   data: object[];
@@ -64,9 +64,9 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   width,
   height,
   // it should always show the left axis by default
-  showLeft = true,
+  showLeftAxis = true,
   // it should always show the bottom axis by default
-  showBottom = true,
+  showBottomAxis = true,
   data,
   xAxis,
   yAxis,
@@ -74,7 +74,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
 
   return (
       <>
-        {showLeft && (
+        {showLeftAxis && (
           <AxisLeft
             top={0}
             left={0}
@@ -92,7 +92,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             // )}
           />
         )}
-        {showBottom && (
+        {showBottomAxis && (
           <AxisBottom
             top={height}
             scale={xAxis.d3Scale}
