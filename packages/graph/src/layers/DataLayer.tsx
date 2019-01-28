@@ -3,6 +3,7 @@ import memoizeOne from 'memoize-one';
 
 import { Scale, DataField, AxisConfig } from '../common/types';
 import { getAxisConfig } from '../utils/getAxisConfig';
+import dataLayerContext, { DataLayerContextInferface } from '../context/dataLayerContext';
 
 export interface DataLayerAxes {
   xAxis: AxisConfig;
@@ -40,20 +41,18 @@ export interface DataLayerProps {
   children: (axes: DataLayerAxes) => React.ReactNode;
 }
 
-export interface DataLayerState {
-  /** TODO: records the indices of data selected by users from the interaction layer */
-  activeDataIndices: number[];
-}
-
 /**
  * The layer is responsible for computing axis data in order to draw a graph
  */
 export class DataLayer extends React.PureComponent<
   DataLayerProps,
-  DataLayerState
+  DataLayerContextInferface
 > {
-  public state: DataLayerState = {
-    activeDataIndices: [],
+  public state: DataLayerContextInferface = {
+    activeDataIndex: null,
+    setActiveDataIndex: (activeDataIndex: number) => {
+      this.setState({ activeDataIndex });
+    },
   };
 
   private getXYAxes = memoizeOne(
@@ -66,6 +65,8 @@ export class DataLayer extends React.PureComponent<
   );
 
   public render() {
+    const { Provider } = dataLayerContext;
+
     const {
       width,
       height,
@@ -85,6 +86,10 @@ export class DataLayer extends React.PureComponent<
       fieldsX,
       fieldsY,
     );
-    return children({ xAxis, yAxis });
+    return (
+      <Provider value={this.state}>
+        {children({ xAxis, yAxis })}
+      </Provider>
+    );
   }
 }
