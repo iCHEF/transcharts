@@ -39,6 +39,7 @@
     "url": "https://github.com/iCHEF/transcharts/issues"
   },
   "dependencies": {
+    "@vx/event": "^0.0.182",
     "d3-array": "^2.0.3",
     "d3-scale": "^2.1.2",
     "lodash-es": "^4.17.11",

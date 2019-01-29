@@ -5,19 +5,17 @@ import {
   AxisLayer,
   DataLayer,
   DataLayerAxes,
+  TooltipLayer,
   DataField,
   ResponsiveLayer,
   ResponsiveState,
   Scale,
+  Margin,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
+   /** Margin between the inner graph area and the outer svg */
+  margin: Margin;
   data: object[];
   scaleX: Scale;
   scaleY: Scale;
@@ -78,6 +76,9 @@ export const LineChart: React.SFC<LineChartProps> = ({
                 const getX = getConvertFuncFromAxis(xAxis, 0);
                 const getY = getConvertFuncFromAxis(yAxis, 0);
 
+                /** Width of the collision detection rectangle */
+                const bandWidth = graphWidth / (data.length - 1);
+
                 const lineDots = data.map((dataRow, index) => (
                   <circle
                     key={`c-${index}`}
@@ -99,6 +100,23 @@ export const LineChart: React.SFC<LineChartProps> = ({
                       data={data}
                       xAxis={xAxis}
                       yAxis={yAxis}
+                    />
+
+                    <TooltipLayer
+                      margin={margin}
+                      collisionComponents={
+                        data.map((dataRow, index) => (
+                          <rect
+                            key={`colli-${index}`}
+                            x={getX(dataRow) - bandWidth * 0.5}
+                            y={0}
+                            width={bandWidth}
+                            height={graphHeight}
+                            fill={'#ff7049'}
+                            opacity={0.5}
+                          />
+                        ))
+                      }
                     />
 
                     {/* Draw the line */}

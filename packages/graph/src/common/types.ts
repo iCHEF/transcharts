@@ -43,3 +43,10 @@ export interface AxisConfig {
   /** d3's Scaling function employed in this axis */
   d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
 }
+
+export interface Margin {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
