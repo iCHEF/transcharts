@@ -1,13 +1,8 @@
 import * as React from 'react';
-import { extent as d3Extent } from 'd3-array';
-import {
-  scaleLinear,
-  scalePoint,
-  scaleTime,
-} from 'd3-scale';
 import memoizeOne from 'memoize-one';
 
 import { Scale, DataField, AxisConfig } from '../common/types';
+import { getAxisConfig } from '../utils/getAxisConfig';
 
 export interface DataLayerAxes {
   xAxis: AxisConfig;
@@ -48,65 +43,6 @@ export interface DataLayerProps {
 export interface DataLayerState {
   /** TODO: records the indices of data selected by users from the interaction layer */
   activeDataIndices: number[];
-}
-
-/**
- * Computes and returns the configurations for the axis,
- * such as its range and d3 scale functions
- */
-function getAxisConfig(
-  min: number,
-  max: number,
-  data: object[],
-  scale: Scale,
-  fields: DataField[],
-): AxisConfig {
-  const range: AxisConfig['range'] = [min, max];
-
-  const dataVals: any[] = [];
-  fields.forEach(({ name }) => {
-    data.forEach((row) => {
-      const val = row[name];
-      if (val !== undefined && val !== null) {
-        dataVals.push(val);
-      }
-    });
-  });
-
-  let domain: AxisConfig['domain'];
-  let d3Scale: AxisConfig['d3Scale'];
-  let getValue = (val: any) => val;
-
-  switch (scale.type) {
-    case 'point': {
-      domain = dataVals;
-      d3Scale = scalePoint().domain(domain).range(range);
-      break;
-    }
-    case 'time': {
-      // TODO: think out a way to deal with the date type
-      getValue = (val: string) => new Date(val);
-      domain = d3Extent(dataVals.map(time => getValue(time)));
-      d3Scale = scaleTime().domain(domain).range(range);
-      break;
-    }
-    case 'linear': {
-      domain = d3Extent(dataVals);
-      d3Scale = scaleLinear().domain(domain).range(range);
-      break;
-    }
-    default:
-      // TODO: unify the way handling the errors
-      throw new Error('Unsupported scale type');
-  }
-
-  return {
-    fields,
-    range,
-    domain,
-    d3Scale,
-    getValue,
-  };
 }
 
 /**
