@@ -61,6 +61,10 @@ export const LineChart: React.SFC<LineChartProps> = ({
         const graphWidth = outerWidth - left - right;
         const graphHeight = outerHeight - top - bottom;
 
+        if (graphWidth <= 0 || graphHeight <= 0) {
+          return null;
+        }
+
         return (
           <svg width={outerWidth} height={outerHeight}>
             <DataLayer
@@ -108,12 +112,17 @@ export const LineChart: React.SFC<LineChartProps> = ({
                         data.map((dataRow, index) => (
                           <rect
                             key={`colli-${index}`}
-                            x={getX(dataRow) - bandWidth * 0.5}
+                            x={index === 0 ? 0 : getX(dataRow) - bandWidth * 0.5}
                             y={0}
-                            width={bandWidth}
+                            width={index === 0 || index === data.length - 1
+                              ? bandWidth / 2
+                              : bandWidth
+                            }
                             height={graphHeight}
                             fill={'#ff7049'}
                             opacity={0.5}
+                            stroke="blue"
+                            strokeWidth={3}
                           />
                         ))
                       }
