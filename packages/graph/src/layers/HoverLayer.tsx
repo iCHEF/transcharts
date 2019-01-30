@@ -10,12 +10,12 @@ export interface HoverLayerProps {
   collisionComponents: JSX.Element[];
 
   /** The debounce time for the mouse and touch events */
-  debounceTime: number;
+  throttleTime: number;
 }
 
 export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
   public static defaultProps = {
-    debounceTime: 30,
+    throttleTime: 30,
   };
 
   public animaFrameID: number;
@@ -34,7 +34,7 @@ export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
     });
   };
 
-  private throttledUpdatePosition = throttle(this.updatePosition, this.props.debounceTime);
+  private throttledUpdatePosition = throttle(this.updatePosition, this.props.throttleTime);
 
   private handleTooltip = (dataIndex: number) => (event: React.SyntheticEvent) => {
     // removes it from the event pool and allows references to the event
