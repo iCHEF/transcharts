@@ -57,7 +57,6 @@ export class TooltipLayer extends React.PureComponent<
         yPos: y - top,
       });
     });
-    // this.context.setActiveDataIndex(dataIndex);
   };
 
   private throttledUpdatePosition = throttle(this.updatePosition, this.props.debounceTime);

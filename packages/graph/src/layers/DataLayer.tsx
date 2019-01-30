@@ -3,7 +3,6 @@ import memoizeOne from 'memoize-one';
 
 import { Scale, DataField, AxisConfig } from '../common/types';
 import { getAxisConfig } from '../utils/getAxisConfig';
-import dataLayerContext, { DataLayerContextInferface } from '../context/dataLayerContext';
 
 export interface DataLayerAxes {
   xAxis: AxisConfig;
@@ -41,14 +40,19 @@ export interface DataLayerProps {
   children: (axes: DataLayerAxes) => React.ReactNode;
 }
 
+export interface DataLayerState {
+  activeDataIndex: number | null;
+  setActiveDataIndex: (activeDataIndex: number) => void;
+}
+
 /**
  * The layer is responsible for computing axis data in order to draw a graph
  */
 export class DataLayer extends React.PureComponent<
   DataLayerProps,
-  DataLayerContextInferface
+  DataLayerState
 > {
-  public state: DataLayerContextInferface = {
+  public state: DataLayerState = {
     activeDataIndex: null,
     setActiveDataIndex: (activeDataIndex: number) => {
       this.setState({ activeDataIndex });
@@ -65,8 +69,6 @@ export class DataLayer extends React.PureComponent<
   );
 
   public render() {
-    const { Provider } = dataLayerContext;
-
     const {
       width,
       height,
@@ -77,6 +79,7 @@ export class DataLayer extends React.PureComponent<
       fieldsY,
       children,
     } = this.props;
+
     const { xAxis, yAxis } = this.getXYAxes(
       width,
       height,
@@ -86,10 +89,7 @@ export class DataLayer extends React.PureComponent<
       fieldsX,
       fieldsY,
     );
-    return (
-      <Provider value={this.state}>
-        {children({ xAxis, yAxis })}
-      </Provider>
-    );
+
+    return children({ xAxis, yAxis });
   }
 }
