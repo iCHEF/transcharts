@@ -2,14 +2,9 @@ import * as React from 'react';
 import { throttle } from 'lodash-es';
 import { localPoint } from '@vx/event';
 
-import { Margin } from '../common/types';
-
 export interface HoverLayerProps {
   /** Set the information related to hover or touch interactions  */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
-
-  /** Margin between the inner graph area and the outer svg */
-  margin: Margin;
 
   /** Hidden components to detect the mouse or touch interactions */
   collisionComponents: JSX.Element[];
@@ -20,12 +15,6 @@ export interface HoverLayerProps {
 
 export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
   public static defaultProps = {
-    margin: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-    },
     debounceTime: 30,
   };
 
@@ -33,16 +22,14 @@ export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
 
   /** Updates the position of the tooltip and sets the currently active data index */
   private updatePosition = (dataIndex: number, event: React.SyntheticEvent) => {
-    const { margin, setHoveredPosAndIndex } = this.props;
-    const { left, top } = margin;
+    const { setHoveredPosAndIndex } = this.props;
     // TODO: integrate `localPoint` of vx
     const { x, y } = localPoint(event);
-    console.log(x - left, y - top);
     this.animaFrameID = window.requestAnimationFrame(() => {
       setHoveredPosAndIndex(
         dataIndex,
-        x - left,
-        y - top,
+        x,
+        y,
       );
     });
   };

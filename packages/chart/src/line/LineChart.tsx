@@ -132,7 +132,6 @@ export const LineChart: React.SFC<LineChartProps> = ({
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
                         setHoveredPosAndIndex={setHoveredPosAndIndex}
-                        margin={margin}
                         collisionComponents={data.map((dataRow, index) => (
                           <rect
                             key={`colli-${index}`}
@@ -155,6 +154,24 @@ export const LineChart: React.SFC<LineChartProps> = ({
                       />
                     </g>
                   </svg>
+
+                  {/* Draw the tooltip */}
+                  {
+                    (hoveredIndex !== null) && (
+                      <div>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: hoveredPos.y,
+                            left: hoveredPos.x,
+                            backgroundColor: 'rgba(200,200,100, 0.5)',
+                          }}
+                        >
+                          Tooltip: {data[hoveredIndex].x}
+                        </div>
+                      </div>
+                    )
+                  }
                 </>
               );
             }}
