@@ -5,7 +5,8 @@ import {
   AxisLayer,
   DataLayer,
   DataLayerAxes,
-  TooltipLayer,
+  HoverLayer,
+  HoverLayerState,
   DataField,
   ResponsiveLayer,
   ResponsiveState,
@@ -66,7 +67,6 @@ export const LineChart: React.SFC<LineChartProps> = ({
         }
 
         return (
-          <svg width={outerWidth} height={outerHeight}>
             <DataLayer
               width={graphWidth}
               height={graphHeight}
@@ -94,58 +94,64 @@ export const LineChart: React.SFC<LineChartProps> = ({
                 ));
 
                 return (
-                  <g transform={`translate(${left}, ${top})`}>
-                    {/* Draw the axes */}
-                    <AxisLayer
-                      width={graphWidth}
-                      height={graphHeight}
-                      showLeftAxis={showLeftAxis}
-                      showBottomAxis={showBottomAxis}
-                      data={data}
-                      xAxis={xAxis}
-                      yAxis={yAxis}
-                    />
+                  <>
+                    <svg width={outerWidth} height={outerHeight}>
+                      <g transform={`translate(${left}, ${top})`}>
+                        {/* Draw the axes */}
+                        <AxisLayer
+                          width={graphWidth}
+                          height={graphHeight}
+                          showLeftAxis={showLeftAxis}
+                          showBottomAxis={showBottomAxis}
+                          data={data}
+                          xAxis={xAxis}
+                          yAxis={yAxis}
+                        />
 
-                    <TooltipLayer
-                      margin={margin}
-                      collisionComponents={
-                        data.map((dataRow, index) => (
-                          <rect
-                            key={`colli-${index}`}
-                            x={index === 0 ? 0 : getX(dataRow) - bandWidth * 0.5}
-                            y={0}
-                            width={index === 0 || index === data.length - 1
-                              ? bandWidth / 2
-                              : bandWidth
-                            }
-                            height={graphHeight}
-                            fill={'#ff7049'}
-                            opacity={0.5}
-                            stroke="blue"
-                            strokeWidth={3}
-                          />
-                        ))
-                      }
-                    />
+                        {/* Draw the line */}
+                        <LinePath
+                          data={data}
+                          x={getX}
+                          y={getY}
+                          stroke={'#ff7049'}
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
 
-                    {/* Draw the line */}
-                    <LinePath
-                      data={data}
-                      x={getX}
-                      y={getY}
-                      stroke={'#ff7049'}
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                        {/* Draw dots on the line */}
+                        {lineDots}
 
-                    {/* Draw dots on the line */}
-                    {lineDots}
-                  </g>
+                        {/* Areas which are used to detect mouse or touch interactions */}
+                        <HoverLayer
+                          width={outerWidth}
+                          height={outerWidth}
+                          margin={margin}
+                          collisionComponents={
+                            data.map((dataRow, index) => (
+                              <rect
+                                key={`colli-${index}`}
+                                x={index === 0 ? 0 : getX(dataRow) - bandWidth * 0.5}
+                                y={0}
+                                width={index === 0 || index === data.length - 1
+                                  ? bandWidth / 2
+                                  : bandWidth
+                                }
+                                height={graphHeight}
+                                fill={'#ff7049'}
+                                opacity={0.5}
+                                stroke="blue"
+                                strokeWidth={3}
+                              />
+                            ))
+                          }
+                        />
+                      </g>
+                    </svg>
+                  </>
                 );
               }}
             </DataLayer>
-          </svg>
         );
       }}
     </ResponsiveLayer>

@@ -4,7 +4,23 @@ import { localPoint } from '@vx/event';
 
 import { Margin } from '../common/types';
 
-export interface TooltipLayerProps {
+export interface HoverLayerState {
+  /** X position of the tooltip relative to the position of the inner graph */
+  xPos: number;
+
+  /** Y position of the tooltip relative to the position of the inner graph */
+  yPos: number;
+
+  /** Currently hovered or touched index of data */
+  activeDataIndex: number | null;
+}
+export interface HoverLayerProps {
+  /** Width of the inner graph */
+  width: number;
+
+  /** height of the inner graph */
+  height: number;
+
   /** Margin between the inner graph area and the outer svg */
   margin: Margin;
 
@@ -13,19 +29,14 @@ export interface TooltipLayerProps {
 
   /** The debounce time for the mouse and touch events */
   debounceTime: number;
+
+  /** Render props to render the tooltip box */
+  children: (state: HoverLayerState) => React.ReactNode;
 }
 
-export interface TooltipLayerState {
-  /** X position of the tooltip relative to the position of the inner graph */
-  xPos: number;
-
-  /** Y position of the tooltip relative to the position of the inner graph */
-  yPos: number;
-}
-
-export class TooltipLayer extends React.PureComponent<
-  TooltipLayerProps,
-  TooltipLayerState
+export class HoverLayer extends React.PureComponent<
+  HoverLayerProps,
+  HoverLayerState
 > {
   public static defaultProps = {
     margin: {
@@ -39,9 +50,10 @@ export class TooltipLayer extends React.PureComponent<
 
   public animaFrameID: number;
 
-  public state: TooltipLayerState = {
+  public state: HoverLayerState = {
     xPos: 0,
     yPos: 0,
+    activeDataIndex: null,
   };
 
   /** Updates the position of the tooltip and sets the currently active data index */
@@ -50,11 +62,12 @@ export class TooltipLayer extends React.PureComponent<
     const { left, top } = margin;
     // TODO: integrate `localPoint` of vx
     const { x, y } = localPoint(event);
-    console.log(x - left, y - top)
+    console.log(x - left, y - top);
     this.animaFrameID = window.requestAnimationFrame(() => {
       this.setState({
         xPos: x - left,
         yPos: y - top,
+        activeDataIndex: dataIndex,
       });
     });
   };
@@ -72,8 +85,8 @@ export class TooltipLayer extends React.PureComponent<
   }
 
   public render() {
-    const { activeDataIndex } = this.context;
-    const { collisionComponents, debounceTime } = this.props;
+    const { activeDataIndex, xPos, yPos } = this.state;
+    const { collisionComponents, children } = this.props;
     const detectionAreas = collisionComponents.map((area: JSX.Element, dataIndex: number) => {
       const handleCurrentTooltip = this.handleTooltip(dataIndex);
       return React.cloneElement(area, {
@@ -84,10 +97,8 @@ export class TooltipLayer extends React.PureComponent<
     });
 
     return (
-      <>
-        {/* Render areas to detect collisions of mouse pointers or touches with data points */}
-        {detectionAreas}
-      </>
+      // Render areas to detect collisions of mouse pointers or touches with data points
+      detectionAreas
     );
   }
 }
