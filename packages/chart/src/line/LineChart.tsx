@@ -158,17 +158,18 @@ export const LineChart: React.SFC<LineChartProps> = ({
                   {/* Draw the tooltip */}
                   {
                     (hoveredIndex !== null) && (
-                      <div>
-                        <div
-                          style={{
-                            position: 'absolute',
-                            top: hoveredPos.y,
-                            left: hoveredPos.x,
-                            backgroundColor: 'rgba(200,200,100, 0.5)',
-                          }}
-                        >
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: hoveredPos.y,
+                          left: hoveredPos.x,
+                          backgroundColor: 'rgba(120,200,100, 0.5)',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        <table>
                           Tooltip: {data[hoveredIndex].x}
-                        </div>
+                        </table>
                       </div>
                     )
                   }
