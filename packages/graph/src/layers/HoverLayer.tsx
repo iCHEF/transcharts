@@ -4,22 +4,9 @@ import { localPoint } from '@vx/event';
 
 import { Margin } from '../common/types';
 
-export interface HoverLayerState {
-  /** X position of the tooltip relative to the position of the inner graph */
-  xPos: number;
-
-  /** Y position of the tooltip relative to the position of the inner graph */
-  yPos: number;
-
-  /** Currently hovered or touched index of data */
-  activeDataIndex: number | null;
-}
 export interface HoverLayerProps {
-  /** Width of the inner graph */
-  width: number;
-
-  /** height of the inner graph */
-  height: number;
+  /** Set the information related to hover or touch interactions  */
+  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
 
   /** Margin between the inner graph area and the outer svg */
   margin: Margin;
@@ -29,15 +16,9 @@ export interface HoverLayerProps {
 
   /** The debounce time for the mouse and touch events */
   debounceTime: number;
-
-  /** Render props to render the tooltip box */
-  children: (state: HoverLayerState) => React.ReactNode;
 }
 
-export class HoverLayer extends React.PureComponent<
-  HoverLayerProps,
-  HoverLayerState
-> {
+export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
   public static defaultProps = {
     margin: {
       top: 0,
@@ -50,25 +31,19 @@ export class HoverLayer extends React.PureComponent<
 
   public animaFrameID: number;
 
-  public state: HoverLayerState = {
-    xPos: 0,
-    yPos: 0,
-    activeDataIndex: null,
-  };
-
   /** Updates the position of the tooltip and sets the currently active data index */
   private updatePosition = (dataIndex: number, event: React.SyntheticEvent) => {
-    const { margin } = this.props;
+    const { margin, setHoveredPosAndIndex } = this.props;
     const { left, top } = margin;
     // TODO: integrate `localPoint` of vx
     const { x, y } = localPoint(event);
     console.log(x - left, y - top);
     this.animaFrameID = window.requestAnimationFrame(() => {
-      this.setState({
-        xPos: x - left,
-        yPos: y - top,
-        activeDataIndex: dataIndex,
-      });
+      setHoveredPosAndIndex(
+        dataIndex,
+        x - left,
+        y - top,
+      );
     });
   };
 
@@ -85,8 +60,7 @@ export class HoverLayer extends React.PureComponent<
   }
 
   public render() {
-    const { activeDataIndex, xPos, yPos } = this.state;
-    const { collisionComponents, children } = this.props;
+    const { collisionComponents } = this.props;
     const detectionAreas = collisionComponents.map((area: JSX.Element, dataIndex: number) => {
       const handleCurrentTooltip = this.handleTooltip(dataIndex);
       return React.cloneElement(area, {

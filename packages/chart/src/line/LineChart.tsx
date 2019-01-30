@@ -4,9 +4,8 @@ import {
   AxisConfig,
   AxisLayer,
   DataLayer,
-  DataLayerAxes,
+  DataLayerRenderParams,
   HoverLayer,
-  HoverLayerState,
   DataField,
   ResponsiveLayer,
   ResponsiveState,
@@ -67,91 +66,99 @@ export const LineChart: React.SFC<LineChartProps> = ({
         }
 
         return (
-            <DataLayer
-              width={graphWidth}
-              height={graphHeight}
-              data={data}
-              scaleX={scaleX}
-              scaleY={scaleY}
-              fieldsX={fieldsX}
-              fieldsY={fieldsY}
-            >
-              {({ xAxis, yAxis }: DataLayerAxes) => {
-                const getX = getConvertFuncFromAxis(xAxis, 0);
-                const getY = getConvertFuncFromAxis(yAxis, 0);
+          <DataLayer
+            width={graphWidth}
+            height={graphHeight}
+            data={data}
+            scaleX={scaleX}
+            scaleY={scaleY}
+            fieldsX={fieldsX}
+            fieldsY={fieldsY}
+          >
+            {({
+              // computed x and y axis configurations
+              xAxis,
+              yAxis,
+              // currently hovered positions
+              hoveredIndex,
+              hoveredPos,
+              setHoveredPosAndIndex,
+            }: DataLayerRenderParams) => {
+              const getX = getConvertFuncFromAxis(xAxis, 0);
+              const getY = getConvertFuncFromAxis(yAxis, 0);
 
-                /** Width of the collision detection rectangle */
-                const bandWidth = graphWidth / (data.length - 1);
+              /** Width of the collision detection rectangle */
+              const bandWidth = graphWidth / (data.length - 1);
 
-                const lineDots = data.map((dataRow, index) => (
-                  <circle
-                    key={`c-${index}`}
-                    cx={getX(dataRow)}
-                    cy={getY(dataRow)}
-                    r={3.5}
-                    fill={'#ff7049'}
-                  />
-                ));
+              const lineDots = data.map((dataRow, index) => (
+                <circle
+                  key={`c-${index}`}
+                  cx={getX(dataRow)}
+                  cy={getY(dataRow)}
+                  r={3.5}
+                  fill={'#ff7049'}
+                />
+              ));
 
-                return (
-                  <>
-                    <svg width={outerWidth} height={outerHeight}>
-                      <g transform={`translate(${left}, ${top})`}>
-                        {/* Draw the axes */}
-                        <AxisLayer
-                          width={graphWidth}
-                          height={graphHeight}
-                          showLeftAxis={showLeftAxis}
-                          showBottomAxis={showBottomAxis}
-                          data={data}
-                          xAxis={xAxis}
-                          yAxis={yAxis}
-                        />
+              return (
+                <>
+                  <svg width={outerWidth} height={outerHeight}>
+                    <g transform={`translate(${left}, ${top})`}>
+                      {/* Draw the axes */}
+                      <AxisLayer
+                        width={graphWidth}
+                        height={graphHeight}
+                        showLeftAxis={showLeftAxis}
+                        showBottomAxis={showBottomAxis}
+                        data={data}
+                        xAxis={xAxis}
+                        yAxis={yAxis}
+                      />
 
-                        {/* Draw the line */}
-                        <LinePath
-                          data={data}
-                          x={getX}
-                          y={getY}
-                          stroke={'#ff7049'}
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
+                      {/* Draw the line */}
+                      <LinePath
+                        data={data}
+                        x={getX}
+                        y={getY}
+                        stroke={'#ff7049'}
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
 
-                        {/* Draw dots on the line */}
-                        {lineDots}
+                      {/* Draw dots on the line */}
+                      {lineDots}
 
-                        {/* Areas which are used to detect mouse or touch interactions */}
-                        <HoverLayer
-                          width={outerWidth}
-                          height={outerWidth}
-                          margin={margin}
-                          collisionComponents={
-                            data.map((dataRow, index) => (
-                              <rect
-                                key={`colli-${index}`}
-                                x={index === 0 ? 0 : getX(dataRow) - bandWidth * 0.5}
-                                y={0}
-                                width={index === 0 || index === data.length - 1
-                                  ? bandWidth / 2
-                                  : bandWidth
-                                }
-                                height={graphHeight}
-                                fill={'#ff7049'}
-                                opacity={0.5}
-                                stroke="blue"
-                                strokeWidth={3}
-                              />
-                            ))
-                          }
-                        />
-                      </g>
-                    </svg>
-                  </>
-                );
-              }}
-            </DataLayer>
+                      {/* Areas which are used to detect mouse or touch interactions */}
+                      <HoverLayer
+                        setHoveredPosAndIndex={setHoveredPosAndIndex}
+                        margin={margin}
+                        collisionComponents={data.map((dataRow, index) => (
+                          <rect
+                            key={`colli-${index}`}
+                            x={
+                              index === 0 ? 0 : getX(dataRow) - bandWidth * 0.5
+                            }
+                            y={0}
+                            width={
+                              index === 0 || index === data.length - 1
+                                ? bandWidth / 2
+                                : bandWidth
+                            }
+                            height={graphHeight}
+                            fill={'#ff7049'}
+                            opacity={0.5}
+                            stroke="blue"
+                            strokeWidth={3}
+                          />
+                        ))}
+                      />
+                    </g>
+                  </svg>
+                </>
+              );
+            }}
+          </DataLayer>
         );
       }}
     </ResponsiveLayer>

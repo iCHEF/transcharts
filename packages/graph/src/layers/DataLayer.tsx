@@ -4,7 +4,21 @@ import memoizeOne from 'memoize-one';
 import { Scale, DataField, AxisConfig } from '../common/types';
 import { getAxisConfig } from '../utils/getAxisConfig';
 
-export interface DataLayerAxes {
+export interface DataLayerState {
+  /** The index of data being hovered or touched */
+  hoveredIndex: number | null;
+
+  /** The mouse hovered or touched position */
+  hoveredPos: {
+    x: number;
+    y: number;
+  } | null;
+
+  /** Function to record hover or touch interactions, which is used by `<TouchLayer>` */
+  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
+}
+
+export interface DataLayerRenderParams extends DataLayerState {
   xAxis: AxisConfig;
   yAxis: AxisConfig;
 }
@@ -37,12 +51,7 @@ export interface DataLayerProps {
   fieldsY: DataField[];
 
   /** Render props with the computed configurations for the axes */
-  children: (axes: DataLayerAxes) => React.ReactNode;
-}
-
-export interface DataLayerState {
-  activeDataIndex: number | null;
-  setActiveDataIndex: (activeDataIndex: number) => void;
+  children: (axes: DataLayerRenderParams) => React.ReactNode;
 }
 
 /**
@@ -53,9 +62,16 @@ export class DataLayer extends React.PureComponent<
   DataLayerState
 > {
   public state: DataLayerState = {
-    activeDataIndex: null,
-    setActiveDataIndex: (activeDataIndex: number) => {
-      this.setState({ activeDataIndex });
+    hoveredIndex: null,
+    hoveredPos: null,
+    setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => {
+      this.setState({
+        hoveredIndex,
+        hoveredPos: {
+          x: xPos,
+          y: yPos,
+        },
+      });
     },
   };
 
@@ -90,6 +106,6 @@ export class DataLayer extends React.PureComponent<
       fieldsY,
     );
 
-    return children({ xAxis, yAxis });
+    return children({ xAxis, yAxis, ...this.state });
   }
 }
