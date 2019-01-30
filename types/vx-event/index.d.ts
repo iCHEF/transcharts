@@ -4,6 +4,6 @@ declare module '@vx/event' {
     y: number;
   }
 
-  function localPoint(event: UIEvent): Point;
-  function localPoint(node: React.ReactNode, event: UIEvent): Point;
+  function localPoint(event: React.SyntheticEvent): Point;
+  function localPoint(node: React.ReactNode, event: React.SyntheticEvent): Point;
 }
