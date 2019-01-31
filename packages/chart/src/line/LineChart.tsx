@@ -11,6 +11,7 @@ import {
   ResponsiveState,
   Scale,
   Margin,
+  Tooltip,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -158,19 +159,13 @@ export const LineChart: React.SFC<LineChartProps> = ({
                   {/* Draw the tooltip */}
                   {
                     (hoveredIndex !== null) && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: hoveredPos.y,
-                          left: hoveredPos.x,
-                          backgroundColor: 'rgba(120,200,100, 0.5)',
-                          whiteSpace: 'nowrap',
-                        }}
+                      <Tooltip
+                        top={hoveredPos.y}
+                        left={hoveredPos.x}
                       >
-                        <table>
-                          Tooltip: {data[hoveredIndex].x}
-                        </table>
-                      </div>
+                        <p>Tooltip: {data[hoveredIndex].x}</p>
+                        <p>Test</p>
+                      </Tooltip>
                     )
                   }
                 </>
