@@ -3,6 +3,7 @@ import * as path from 'path';
 const modifyBundlerConfig = config => {
   config.resolve.alias = Object.assign({}, config.resolve.alias, {
     '@ichef/transcharts-graph': path.resolve(__dirname, 'packages/graph/src'),
+    '@ichef/transcharts-chart': path.resolve(__dirname, 'packages/chart/src'),
   });
   return config;
 };
@@ -14,7 +15,7 @@ export default {
     head: {
       links: [{
         rel: 'stylesheet',
-        href: 'https://codemirror.net/theme/monokai.css'
+        href: 'https://codemirror.net/theme/oceanic-next.css'
       }]
     }
   },
@@ -22,7 +23,7 @@ export default {
   themeConfig: {
     // See: https://github.com/pedronauck/docz/blob/5fbea6a1469d2e258402621ba81f74f898af906a/packages/docz-theme-default/README.md#default-themeconfig
     mode: 'light',
-    codemirrorTheme: 'monokai',
+    codemirrorTheme: 'oceanic-next',
     showPlaygroundEditor: true, // always display the code in <Playground>
     colors: {
       primary: '#ff7049',

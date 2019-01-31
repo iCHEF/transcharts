@@ -1,5 +1,5 @@
-import { debounce } from 'lodash-es';
 import * as React from 'react';
+import { debounce } from 'lodash-es';
 import resizeObserverPolyfill from 'resize-observer-polyfill';
 
 export interface ResponsiveState {
@@ -25,21 +25,21 @@ export class ResponsiveLayer extends React.Component<
 > {
   public static defaultProps: ResponsiveProps = {
     debounceTime: 300,
-    children: () => null
+    children: () => null,
   };
   public resizeObsr: ResizeObserver;
   public animaFrameID: number;
 
   public state: ResponsiveState = {
     width: 0,
-    height: 0
+    height: 0,
   };
 
   private layerRef = React.createRef<HTMLDivElement>();
 
   private resize = (
     entries: ResizeObserverEntry[],
-    observer: ResizeObserver
+    observer: ResizeObserver,
   ) => {
     for (const entry of entries) {
       const { width, height } = entry.contentRect;
@@ -53,7 +53,7 @@ export class ResponsiveLayer extends React.Component<
     this.animaFrameID = window.requestAnimationFrame(() => {
       this.setState({
         width,
-        height
+        height,
       });
     });
   };

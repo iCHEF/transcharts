@@ -1,7 +1,7 @@
 {
-  "name": "@ichef/transcharts-graph",
+  "name": "@ichef/transcharts-chart",
   "version": "0.0.0",
-  "description": "Basic reusable graphs",
+  "description": "Ready-to-use charts",
   "author": "garfieldduck <garfieldduck@gmail.com>",
   "homepage": "https://github.com/iCHEF/transcharts#readme",
   "license": "MIT",
@@ -39,13 +39,10 @@
     "url": "https://github.com/iCHEF/transcharts/issues"
   },
   "dependencies": {
-    "d3-array": "^2.0.3",
-    "d3-scale": "^2.1.2",
-    "lodash-es": "^4.17.11",
-    "memoize-one": "^5.0.0",
-    "resize-observer-polyfill": "^1.5.1"
-  },
-  "devDependencies": {
-    "@types/lodash-es": "^4.17.1"
+    "@ichef/transcharts-graph": "^0.0.0",
+    "@types/lodash-es": "^4.17.1",
+    "@vx/axis": "^0.0.183",
+    "@vx/shape": "^0.0.183",
+    "lodash-es": "^4.17.11"
   }
 }

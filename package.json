@@ -8,9 +8,12 @@
     "start": "docz dev",
     "build": "docz build",
     "prepublish": "lerna run prepublish",
-    "lint": "lerna run lint --parallel --stream"
+    "lint": "lerna run lint --parallel --stream",
+    "clean": "lerna run --parallel clean"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.0",
+    "@types/memoize-one": "^4.1.0",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "docz": "^0.13.7",
@@ -23,8 +26,8 @@
     "rimraf": "^2.6.3",
     "tslint": "^5.12.0",
     "tslint-config-airbnb": "^5.11.1",
-    "tslint-config-prettier": "^1.17.0",
+    "tslint-eslint-rules": "^5.4.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.4"
   }
 }
