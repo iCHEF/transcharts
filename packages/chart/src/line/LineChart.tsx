@@ -29,15 +29,61 @@ export interface LineChartProps {
 }
 
 /**
- * Returns the data value conversion function of the field
- * using the d3Scale function of the axis
+ * Returns the data value selectors for a data record
+ * using the computed axis configurations including the d3Scale function of the axis
  * @param axis - the axis computed from DataLayer
  * @param fieldIndex - the current index of the field
  */
-function getConvertFuncFromAxis(axis: AxisConfig, fieldIndex: number) {
-  const { fields, d3Scale, getValue } = axis;
+function getRecordFieldSelectors(axis: AxisConfig, fieldIndex: number) {
+  const { fields, d3Scale, getValue, scaleConfig } = axis;
   const fieldName = fields[fieldIndex].name;
-  return (d: object) => d3Scale(getValue(d[fieldName]));
+
+  /** Given a record of data, it returns the orginal value of the specified field */
+  const getOriginalVal = (record: object) => getValue(record[fieldName]);
+
+  return {
+    getOriginalVal,
+
+    /**
+     * Given a record of data,
+     * it returns the mapped value (computed by d3 scale function) of the specified field
+     */
+    getScaledVal: (record: object) => d3Scale(getOriginalVal(record)),
+
+    getFormattedStringVal: (record: object) => {
+      const recordValue = getOriginalVal(record);
+
+      if (scaleConfig.type === 'time') {
+        // FIXME: unify the way of formatting datetime
+        return recordValue.toLocaleString();
+      }
+
+      return recordValue;
+    },
+  };
+}
+
+const getSelectorType = (false as true) && getRecordFieldSelectors(undefined, 0);
+
+function getTooltipBox(
+  hoveredIndex: number,
+  hoveredPos: DataLayerRenderParams['hoveredPos'],
+  data: object[],
+  xSelector: typeof getSelectorType,
+  ySelector: typeof getSelectorType,
+) {
+  if (hoveredIndex === null || !data) {
+    return null;
+  }
+
+  return (
+    <Tooltip
+      position={hoveredPos}
+    >
+      <p>{xSelector.getFormattedStringVal(data[hoveredIndex])}</p>
+      <p>{ySelector.getFormattedStringVal(data[hoveredIndex])}</p>
+    </Tooltip>
+  );
 }
 
 export const LineChart: React.SFC<LineChartProps> = ({
@@ -85,8 +131,8 @@ export const LineChart: React.SFC<LineChartProps> = ({
               hoveredPos,
               setHoveredPosAndIndex,
             }: DataLayerRenderParams) => {
-              const getX = getConvertFuncFromAxis(xAxis, 0);
-              const getY = getConvertFuncFromAxis(yAxis, 0);
+              const xSelector = getRecordFieldSelectors(xAxis, 0);
+              const ySelector = getRecordFieldSelectors(yAxis, 0);
 
               /** Width of the collision detection rectangle */
               const bandWidth = graphWidth / (data.length - 1);
@@ -94,8 +140,8 @@ export const LineChart: React.SFC<LineChartProps> = ({
               const lineDots = data.map((dataRow, index) => (
                 <circle
                   key={`c-${index}`}
-                  cx={getX(dataRow)}
-                  cy={getY(dataRow)}
+                  cx={xSelector.getScaledVal(dataRow)}
+                  cy={ySelector.getScaledVal(dataRow)}
                   r={3.5}
                   fill={'#ff7049'}
                 />
@@ -119,8 +165,8 @@ export const LineChart: React.SFC<LineChartProps> = ({
                       {/* Draw the line */}
                       <LinePath
                         data={data}
-                        x={getX}
-                        y={getY}
+                        x={xSelector.getScaledVal}
+                        y={ySelector.getScaledVal}
                         stroke={'#ff7049'}
                         strokeWidth={2}
                         strokeLinecap="round"
@@ -137,7 +183,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                           <rect
                             key={`colli-${index}`}
                             x={
-                              index === 0 ? 0 : getX(dataRow) - bandWidth * 0.5
+                              index === 0 ? 0 : xSelector.getScaledVal(dataRow) - bandWidth * 0.5
                             }
                             y={0}
                             width={
@@ -157,17 +203,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                   </svg>
 
                   {/* Draw the tooltip */}
-                  {
-                    (hoveredIndex !== null) && (
-                      <Tooltip
-                        top={hoveredPos.y}
-                        left={hoveredPos.x}
-                      >
-                        <p>Tooltip: {data[hoveredIndex].x}</p>
-                        <p>Test</p>
-                      </Tooltip>
-                    )
-                  }
+                  {getTooltipBox(hoveredIndex, hoveredPos, data, xSelector, ySelector)}
                 </>
               );
             }}

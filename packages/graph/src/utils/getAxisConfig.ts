@@ -61,7 +61,8 @@ export function getAxisConfig(
     fields,
     range,
     domain,
-    d3Scale,
     getValue,
+    d3Scale,
+    scaleConfig: scale,
   };
 }
