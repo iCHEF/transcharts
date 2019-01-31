@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { LinePath } from '@vx/shape';
 import {
-  AxisConfig,
   AxisLayer,
   DataLayer,
   DataLayerRenderParams,
@@ -12,6 +11,8 @@ import {
   Scale,
   Margin,
   Tooltip,
+  FieldSelector,
+  getRecordFieldSelectors,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -28,49 +29,12 @@ export interface LineChartProps {
   showBottomAxis: boolean;
 }
 
-/**
- * Returns the data value selectors for a data record
- * using the computed axis configurations including the d3Scale function of the axis
- * @param axis - the axis computed from DataLayer
- * @param fieldIndex - the current index of the field
- */
-function getRecordFieldSelectors(axis: AxisConfig, fieldIndex: number) {
-  const { fields, d3Scale, getValue, scaleConfig } = axis;
-  const fieldName = fields[fieldIndex].name;
-
-  /** Given a record of data, it returns the orginal value of the specified field */
-  const getOriginalVal = (record: object) => getValue(record[fieldName]);
-
-  return {
-    getOriginalVal,
-
-    /**
-     * Given a record of data,
-     * it returns the mapped value (computed by d3 scale function) of the specified field
-     */
-    getScaledVal: (record: object) => d3Scale(getOriginalVal(record)),
-
-    getFormattedStringVal: (record: object) => {
-      const recordValue = getOriginalVal(record);
-
-      if (scaleConfig.type === 'time') {
-        // FIXME: unify the way of formatting datetime
-        return recordValue.toLocaleString();
-      }
-
-      return recordValue;
-    },
-  };
-}
-
-const getSelectorType = (false as true) && getRecordFieldSelectors(undefined, 0);
-
 function getTooltipBox(
-  hoveredIndex: number,
+  hoveredIndex: DataLayerRenderParams['hoveredIndex'],
   hoveredPos: DataLayerRenderParams['hoveredPos'],
   data: object[],
-  xSelector: typeof getSelectorType,
-  ySelector: typeof getSelectorType,
+  xSelector: FieldSelector,
+  ySelector: FieldSelector,
 ) {
   if (hoveredIndex === null || !data) {
     return null;
