@@ -16,6 +16,9 @@ export interface DataLayerState {
 
   /** Function to record hover or touch interactions, which is used by `<TouchLayer>` */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
+
+  /** Function let `<TouchLayer>` hide the tooltip */
+  clearHoveredIndex: () => void;
 }
 
 export interface DataLayerRenderParams extends DataLayerState {
@@ -64,6 +67,9 @@ export class DataLayer extends React.PureComponent<
   public state: DataLayerState = {
     hoveredIndex: null,
     hoveredPos: null,
+    clearHoveredIndex: () => {
+      this.setState({ hoveredIndex: null });
+    },
     setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => {
       this.setState({
         hoveredIndex,

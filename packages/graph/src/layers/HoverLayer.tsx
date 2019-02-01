@@ -6,6 +6,9 @@ export interface HoverLayerProps {
   /** Set the information related to hover or touch interactions  */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
 
+  /** Function to hide the tooltip */
+  clearHoveredIndex: () => void;
+
   /** Hidden components to detect the mouse or touch interactions */
   collisionComponents: JSX.Element[];
 
@@ -42,6 +45,12 @@ export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
     this.throttledUpdatePosition(dataIndex, event);
   };
 
+  private hideTooltip = () => {
+    // cancel the previously thorttled event to prevent the tooltip from reappearing
+    this.throttledUpdatePosition.cancel();
+    this.props.clearHoveredIndex();
+  };
+
   public componentWillUnmount() {
     window.cancelAnimationFrame(this.animaFrameID);
   }
@@ -54,6 +63,7 @@ export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
         onTouchStart: handleCurrentTooltip,
         onTouchMove: handleCurrentTooltip,
         onMouseMove: handleCurrentTooltip,
+        onMouseLeave: this.hideTooltip,
       });
     });
 

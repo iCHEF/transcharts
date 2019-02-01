@@ -94,6 +94,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
               hoveredIndex,
               hoveredPos,
               setHoveredPosAndIndex,
+              clearHoveredIndex,
             }: DataLayerRenderParams) => {
               const xSelector = getRecordFieldSelectors(xAxis, 0);
               const ySelector = getRecordFieldSelectors(yAxis, 0);
@@ -143,6 +144,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
                         setHoveredPosAndIndex={setHoveredPosAndIndex}
+                        clearHoveredIndex={clearHoveredIndex}
                         collisionComponents={data.map((dataRow, index) => (
                           <rect
                             key={`colli-${index}`}
