@@ -7,9 +7,11 @@ export interface TooltipProps {
   position: {
     x: number;
     y: number;
-  } | null;
+  };
   show: boolean;
   children: React.ReactNode;
+  graphWidth: number;
+  graphHeight: number;
 }
 
 const TooltipWrapper = styled.div`
@@ -25,14 +27,36 @@ const TooltipWrapper = styled.div`
   transition: all 200ms ease-in;
 `;
 
+/**
+ * Returns the position and transform
+ * which limit the tooltip within the bound of the graph
+ */
+function getTooltipPosition(
+  graphWidth: TooltipProps['graphWidth'],
+  graphHeight: TooltipProps['graphHeight'],
+  position: TooltipProps['position'],
+) {
+  const percentX = Math.round(-100 * (position.x / graphWidth));
+  const percentY = Math.round(-100 * (position.y / graphHeight));
+  return {
+    top: `${position.y}px`,
+    left: `${position.x}px`,
+    transform: `translate(${percentX}%, ${percentY}%)`,
+  };
+}
+
 export const Tooltip: React.SFC<TooltipProps> = ({
   position,
   children,
   show = false,
+  graphWidth,
+  graphHeight,
 }) => {
   if (!position) {
     return null;
   }
+
+  const tooltipStyle = getTooltipPosition(graphWidth, graphHeight, position);
 
   return (
     // use Transition to control the mounting/unmounting of Tooltip
@@ -47,7 +71,7 @@ export const Tooltip: React.SFC<TooltipProps> = ({
       {showing =>
         showing && (props =>
           <animated.div style={{ ...props, transition: 'opacity 0.1s ease-out' }}>
-            <TooltipWrapper style={{ transform: `translate(${position.x}px, ${position.y}px)` }}>
+            <TooltipWrapper style={tooltipStyle}>
               {children}
             </TooltipWrapper>
           </animated.div>

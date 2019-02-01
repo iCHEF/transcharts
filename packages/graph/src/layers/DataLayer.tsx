@@ -15,7 +15,7 @@ export interface DataLayerState {
   hoveredPos: {
     x: number;
     y: number;
-  } | null;
+  };
 
   /** Function to record hover or touch interactions, which is used by `<TouchLayer>` */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
@@ -70,7 +70,10 @@ export class DataLayer extends React.PureComponent<
   public state: DataLayerState = {
     hovering: false,
     hoveredIndex: 0,
-    hoveredPos: null,
+    hoveredPos: {
+      x: 0,
+      y: 0,
+    },
     clearHovering: () => {
       this.setState({ hovering: false });
     },

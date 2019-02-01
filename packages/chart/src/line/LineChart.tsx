@@ -34,11 +34,15 @@ function getTooltipBox(
   hoveredIndex: DataLayerRenderParams['hoveredIndex'],
   hoveredPos: DataLayerRenderParams['hoveredPos'],
   data: object[],
+  graphWidth: number,
+  graphHeight: number,
   xSelector: FieldSelector,
   ySelector: FieldSelector,
 ) {
   return (
     <Tooltip
+      graphWidth={graphWidth}
+      graphHeight={graphHeight}
       position={hoveredPos}
       show={hovering}
     >
@@ -142,33 +146,52 @@ export const LineChart: React.SFC<LineChartProps> = ({
 
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
-                        setHoveredPosAndIndex={setHoveredPosAndIndex}
+                        setHoveredPosAndIndex={
+                          setHoveredPosAndIndex
+                        }
                         clearHovering={clearHovering}
-                        collisionComponents={data.map((dataRow, index) => (
-                          <rect
-                            key={`colli-${index}`}
-                            x={
-                              index === 0 ? 0 : xSelector.getScaledVal(dataRow) - bandWidth * 0.5
-                            }
-                            y={0}
-                            width={
-                              index === 0 || index === data.length - 1
-                                ? bandWidth / 2
-                                : bandWidth
-                            }
-                            height={graphHeight}
-                            fill={'#ff7049'}
-                            opacity={0.5}
-                            stroke="blue"
-                            strokeWidth={3}
-                          />
-                        ))}
+                        collisionComponents={data.map(
+                          (dataRow, index) => (
+                            <rect
+                              key={`colli-${index}`}
+                              x={
+                                index === 0
+                                  ? 0
+                                  : xSelector.getScaledVal(
+                                      dataRow
+                                    ) -
+                                    bandWidth * 0.5
+                              }
+                              y={0}
+                              width={
+                                index === 0 ||
+                                index === data.length - 1
+                                  ? bandWidth / 2
+                                  : bandWidth
+                              }
+                              height={graphHeight}
+                              fill={'#ff7049'}
+                              opacity={0.5}
+                              stroke="blue"
+                              strokeWidth={3}
+                            />
+                          )
+                        )}
                       />
                     </g>
                   </svg>
 
                   {/* Draw the tooltip */}
-                  {getTooltipBox(hovering, hoveredIndex, hoveredPos, data, xSelector, ySelector)}
+                  {getTooltipBox(
+                    hovering,
+                    hoveredIndex,
+                    hoveredPos,
+                    data,
+                    graphWidth,
+                    graphHeight,
+                    xSelector,
+                    ySelector,
+                  )}
                 </>
               );
             }}
