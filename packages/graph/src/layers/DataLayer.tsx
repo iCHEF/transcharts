@@ -5,8 +5,11 @@ import { Scale, DataField, AxisConfig } from '../common/types';
 import { getAxisConfig } from '../utils/getAxisConfig';
 
 export interface DataLayerState {
+  /** Records whether there is mouse or touch event generating from the inner layer */
+  hovering: boolean;
+
   /** The index of data being hovered or touched */
-  hoveredIndex: number | null;
+  hoveredIndex: number;
 
   /** The mouse hovered or touched position */
   hoveredPos: {
@@ -18,7 +21,7 @@ export interface DataLayerState {
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
 
   /** Function let `<TouchLayer>` hide the tooltip */
-  clearHoveredIndex: () => void;
+  clearHovering: () => void;
 }
 
 export interface DataLayerRenderParams extends DataLayerState {
@@ -65,14 +68,16 @@ export class DataLayer extends React.PureComponent<
   DataLayerState
 > {
   public state: DataLayerState = {
-    hoveredIndex: null,
+    hovering: false,
+    hoveredIndex: 0,
     hoveredPos: null,
-    clearHoveredIndex: () => {
-      this.setState({ hoveredIndex: null });
+    clearHovering: () => {
+      this.setState({ hovering: false });
     },
     setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => {
       this.setState({
         hoveredIndex,
+        hovering: true,
         hoveredPos: {
           x: xPos,
           y: yPos,

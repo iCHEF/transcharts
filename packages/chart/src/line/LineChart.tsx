@@ -30,19 +30,17 @@ export interface LineChartProps {
 }
 
 function getTooltipBox(
+  hovering: DataLayerRenderParams['hovering'],
   hoveredIndex: DataLayerRenderParams['hoveredIndex'],
   hoveredPos: DataLayerRenderParams['hoveredPos'],
   data: object[],
   xSelector: FieldSelector,
   ySelector: FieldSelector,
 ) {
-  if (hoveredIndex === null || !data) {
-    return null;
-  }
-
   return (
     <Tooltip
       position={hoveredPos}
+      show={hovering}
     >
       <p>{xSelector.getFormattedStringVal(data[hoveredIndex])}</p>
       <p>{ySelector.getFormattedStringVal(data[hoveredIndex])}</p>
@@ -91,10 +89,11 @@ export const LineChart: React.SFC<LineChartProps> = ({
               xAxis,
               yAxis,
               // currently hovered positions
+              hovering,
               hoveredIndex,
               hoveredPos,
               setHoveredPosAndIndex,
-              clearHoveredIndex,
+              clearHovering,
             }: DataLayerRenderParams) => {
               const xSelector = getRecordFieldSelectors(xAxis, 0);
               const ySelector = getRecordFieldSelectors(yAxis, 0);
@@ -144,7 +143,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
                         setHoveredPosAndIndex={setHoveredPosAndIndex}
-                        clearHoveredIndex={clearHoveredIndex}
+                        clearHovering={clearHovering}
                         collisionComponents={data.map((dataRow, index) => (
                           <rect
                             key={`colli-${index}`}
@@ -169,7 +168,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                   </svg>
 
                   {/* Draw the tooltip */}
-                  {getTooltipBox(hoveredIndex, hoveredPos, data, xSelector, ySelector)}
+                  {getTooltipBox(hovering, hoveredIndex, hoveredPos, data, xSelector, ySelector)}
                 </>
               );
             }}

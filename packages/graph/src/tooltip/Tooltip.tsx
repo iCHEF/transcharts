@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Transition, animated } from 'react-spring';
 
 import { styled } from '../utils/styled-components';
 
@@ -7,6 +8,7 @@ export interface TooltipProps {
     x: number;
     y: number;
   } | null;
+  show: boolean;
   children: React.ReactNode;
 }
 
@@ -20,20 +22,37 @@ const TooltipWrapper = styled.div`
   top: 0;
   left: 0;
   pointer-events: none;
-  transition: all 150ms ease-in;
+  transition: all 200ms ease-in;
 `;
 
 export const Tooltip: React.SFC<TooltipProps> = ({
   position,
   children,
+  show = false,
 }) => {
   if (!position) {
     return null;
   }
 
   return (
-    <TooltipWrapper style={{ transform: `translate(${position.x}px, ${position.y}px)`  }}>
-      {children}
-    </TooltipWrapper>
+    // use Transition to control the mounting/unmounting of Tooltip
+    <Transition
+      items={show}
+      unique
+      native
+      from={{ opacity: 0 }}
+      enter={{ opacity: 1 }}
+      leave={{ opacity: 0 }}
+    >
+      {showing =>
+        showing && (props =>
+          <animated.div style={{ ...props, transition: 'opacity 0.1s ease-out' }}>
+            <TooltipWrapper style={{ transform: `translate(${position.x}px, ${position.y}px)` }}>
+              {children}
+            </TooltipWrapper>
+          </animated.div>
+        )
+      }
+    </Transition>
   );
 };
