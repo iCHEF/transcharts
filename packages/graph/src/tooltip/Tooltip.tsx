@@ -17,6 +17,10 @@ const TooltipWrapper = styled.div`
   border-radius: 1.2rem;
   font-size: 1rem;
   white-space: nowrap;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  transition: all 150ms ease-in;
 `;
 
 export const Tooltip: React.SFC<TooltipProps> = ({
@@ -28,7 +32,7 @@ export const Tooltip: React.SFC<TooltipProps> = ({
   }
 
   return (
-    <TooltipWrapper style={{ top: position.y, left: position.x }}>
+    <TooltipWrapper style={{ transform: `translate(${position.x}px, ${position.y}px)`  }}>
       {children}
     </TooltipWrapper>
   );

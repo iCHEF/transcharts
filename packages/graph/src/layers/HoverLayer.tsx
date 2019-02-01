@@ -15,7 +15,7 @@ export interface HoverLayerProps {
 
 export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
   public static defaultProps = {
-    throttleTime: 30,
+    throttleTime: 100,
   };
 
   public animaFrameID: number;
