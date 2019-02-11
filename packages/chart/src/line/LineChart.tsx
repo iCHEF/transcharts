@@ -29,6 +29,7 @@ export interface LineChartProps {
   showBottomAxis: boolean;
 }
 
+/** Generates the tooltip box of the line chart */
 function getTooltipBox(
   hovering: DataLayerRenderParams['hovering'],
   hoveredPoint: DataLayerRenderParams['hoveredPoint'],
@@ -55,6 +56,27 @@ function getTooltipBox(
       {/* TODO: unify the way of dealing colors of the fields */}
       <TooltipItem color="#ff7049" text={ySelector.getFormattedStringVal(data[index])} />
     </Tooltip>
+  );
+}
+
+/** Add a line and a dot for the point being hovered */
+function getHoveringDotAndLine(xPos: number, yPos: number, height: number) {
+  return (
+    <>
+      <line
+        x1={xPos}
+        y1={0}
+        x2={xPos}
+        y2={height}
+        style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
+      />
+      <circle
+        cx={xPos}
+        cy={yPos}
+        r={4.5}
+        fill={'#ff7049'}
+      />
+    </>
   );
 }
 
@@ -120,15 +142,6 @@ export const LineChart: React.SFC<LineChartProps> = ({
                 />
               ));
 
-              const hoveringDot = hovering && (
-                <circle
-                  cx={xSelector.getScaledVal(data[hoveredPoint.index])}
-                  cy={ySelector.getScaledVal(data[hoveredPoint.index])}
-                  r={4.5}
-                  fill={'#ff7049'}
-                />
-              );
-
               return (
                 <>
                   <svg width={outerWidth} height={outerHeight}>
@@ -157,7 +170,11 @@ export const LineChart: React.SFC<LineChartProps> = ({
 
                       {/* Draw dots on the line */}
                       {lineDots}
-                      {hoveringDot}
+                      {hovering && getHoveringDotAndLine(
+                        xSelector.getScaledVal(data[hoveredPoint.index]),
+                        ySelector.getScaledVal(data[hoveredPoint.index]),
+                        graphHeight,
+                      )}
 
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
