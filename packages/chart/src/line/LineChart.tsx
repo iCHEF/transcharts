@@ -34,6 +34,7 @@ function getTooltipBox(
   data: object[],
   graphWidth: number,
   graphHeight: number,
+  margin: Margin,
   xSelector: FieldSelector,
   ySelector: FieldSelector,
 ) {
@@ -42,7 +43,11 @@ function getTooltipBox(
     <Tooltip
       graphWidth={graphWidth}
       graphHeight={graphHeight}
-      position={position}
+      graphMargin={margin}
+      position={{
+        x: xSelector.getScaledVal(data[index]),
+        y: position.y,
+      }}
       show={hovering}
     >
       <p>{xSelector.getFormattedStringVal(data[index])}</p>
@@ -113,6 +118,15 @@ export const LineChart: React.SFC<LineChartProps> = ({
                 />
               ));
 
+              const hoveringDot = hovering && (
+                <circle
+                  cx={xSelector.getScaledVal(data[hoveredPoint.index])}
+                  cy={ySelector.getScaledVal(data[hoveredPoint.index])}
+                  r={4.5}
+                  fill={'#ff7049'}
+                />
+              );
+
               return (
                 <>
                   <svg width={outerWidth} height={outerHeight}>
@@ -141,6 +155,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
 
                       {/* Draw dots on the line */}
                       {lineDots}
+                      {hoveringDot}
 
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
@@ -186,6 +201,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                     data,
                     graphWidth,
                     graphHeight,
+                    margin,
                     xSelector,
                     ySelector,
                   )}

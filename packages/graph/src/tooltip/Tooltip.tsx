@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Transition, animated } from 'react-spring';
 
 import { styled } from '../utils/styled-components';
+import { Margin } from '../common/types';
 
 export interface TooltipProps {
   position: {
@@ -12,6 +13,7 @@ export interface TooltipProps {
   children: React.ReactNode;
   graphWidth: number;
   graphHeight: number;
+  graphMargin: Margin;
 }
 
 const TooltipWrapper = styled.div`
@@ -34,13 +36,16 @@ const TooltipWrapper = styled.div`
 function getTooltipPosition(
   graphWidth: TooltipProps['graphWidth'],
   graphHeight: TooltipProps['graphHeight'],
+  graphMargin: Margin,
   position: TooltipProps['position'],
 ) {
-  const percentX = Math.round(-100 * (position.x / graphWidth));
+  const onRightHalf = (position.x / graphWidth) > 0.5;
+  const percentX = onRightHalf ? -100 : 0;
   const percentY = Math.round(-100 * (position.y / graphHeight));
+  const leftOffset = onRightHalf ? -20 : 20;
   return {
-    top: `${position.y}px`,
-    left: `${position.x}px`,
+    top: `${graphMargin.top + position.y}px`,
+    left: `${graphMargin.left + position.x + leftOffset}px`,
     transform: `translate(${percentX}%, ${percentY}%)`,
   };
 }
@@ -51,12 +56,18 @@ export const Tooltip: React.SFC<TooltipProps> = ({
   show = false,
   graphWidth,
   graphHeight,
+  graphMargin = {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
 }) => {
   if (!position) {
     return null;
   }
 
-  const tooltipStyle = getTooltipPosition(graphWidth, graphHeight, position);
+  const tooltipStyle = getTooltipPosition(graphWidth, graphHeight, graphMargin, position);
 
   return (
     // use Transition to control the mounting/unmounting of Tooltip
