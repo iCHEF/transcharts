@@ -11,6 +11,7 @@ import {
   Scale,
   Margin,
   Tooltip,
+  TooltipItem,
   FieldSelector,
 } from '@ichef/transcharts-graph';
 
@@ -50,8 +51,9 @@ function getTooltipBox(
       }}
       show={hovering}
     >
-      <p>{xSelector.getFormattedStringVal(data[index])}</p>
-      <p>{ySelector.getFormattedStringVal(data[index])}</p>
+      <h3>{xSelector.getFormattedStringVal(data[index])}</h3>
+      {/* TODO: unify the way of dealing colors of the fields */}
+      <TooltipItem color="#ff7049" text={ySelector.getFormattedStringVal(data[index])} />
     </Tooltip>
   );
 }
@@ -183,8 +185,8 @@ export const LineChart: React.SFC<LineChartProps> = ({
                                   : bandWidth
                               }
                               height={graphHeight}
+                              opacity={0}
                               fill={'#ff7049'}
-                              opacity={0.5}
                               stroke="blue"
                               strokeWidth={3}
                             />

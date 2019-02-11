@@ -18,15 +18,23 @@ export interface TooltipProps {
 
 const TooltipWrapper = styled.div`
   position: absolute;
-  background-color: rgba(239, 235, 235, 0.8);
+  min-width: 3rem;
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 0.5rem 1.2rem;
-  border-radius: 1.2rem;
+  border-radius: 5px;
   font-size: 1rem;
   white-space: nowrap;
   top: 0;
   left: 0;
   pointer-events: none;
   transition: all 500ms linear;
+  box-shadow: 0px 2px 8px 3px rgba(120,120,120,0.3);
+
+  h3 {
+    color: #7c8a94;
+    margin: 0.25rem 0;
+    font-size: 1.1rem;
+  }
 `;
 
 /**
@@ -42,7 +50,7 @@ function getTooltipPosition(
   const onRightHalf = (position.x / graphWidth) > 0.5;
   const percentX = onRightHalf ? -100 : 0;
   const percentY = Math.round(-100 * (position.y / graphHeight));
-  const leftOffset = onRightHalf ? -20 : 20;
+  const leftOffset = onRightHalf ? -10 : 10;
   return {
     top: `${graphMargin.top + position.y}px`,
     left: `${graphMargin.left + position.x + leftOffset}px`,
