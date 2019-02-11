@@ -24,7 +24,7 @@ const TooltipWrapper = styled.div`
   top: 0;
   left: 0;
   pointer-events: none;
-  transition: all 200ms ease-in;
+  transition: all 500ms linear;
 `;
 
 /**
