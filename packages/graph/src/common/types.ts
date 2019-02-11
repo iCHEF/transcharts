@@ -24,6 +24,12 @@ export interface DataField {
   color: string; // TODO: accept a function?: (index, value) => {...}
 }
 
+export interface FieldSelector {
+  getOriginalVal: (record: object) => any;
+  getScaledVal: (record: object) => any;
+  getFormattedStringVal: (record: object) => string;
+}
+
 export interface AxisConfig {
   /**  List of fields appear in this axis */
   fields: DataField[];
@@ -44,6 +50,8 @@ export interface AxisConfig {
   d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
 
   scaleConfig: Scale;
+
+  getSelectorsByField: (fieldIndex: number) => FieldSelector;
 }
 
 export interface Margin {

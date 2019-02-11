@@ -1,18 +1,15 @@
 import { AxisConfig } from '../common/types';
 
-export interface FieldSelector {
-  getOriginalVal: (record: object) => any;
-  getScaledVal: (record: object) => any;
-  getFormattedStringVal: (record: object) => string;
-}
-
 /**
  * Returns the data value selectors for a data record
  * using the computed axis configurations including the d3Scale function of the axis
  * @param axis - the axis computed from DataLayer
  * @param fieldIndex - the current index of the field
  */
-export function getRecordFieldSelectors(axis: AxisConfig, fieldIndex: number) {
+export function getRecordFieldSelectors(
+  axis: Pick<AxisConfig, Exclude<keyof AxisConfig, 'getSelectorsByField'>>,
+  fieldIndex: number,
+) {
   const { fields, d3Scale, getValue, scaleConfig } = axis;
   const fieldName = fields[fieldIndex].name;
 

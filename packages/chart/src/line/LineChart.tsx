@@ -12,7 +12,6 @@ import {
   Margin,
   Tooltip,
   FieldSelector,
-  getRecordFieldSelectors,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -98,8 +97,8 @@ export const LineChart: React.SFC<LineChartProps> = ({
               setHoveredPosAndIndex,
               clearHovering,
             }: DataLayerRenderParams) => {
-              const xSelector = getRecordFieldSelectors(xAxis, 0);
-              const ySelector = getRecordFieldSelectors(yAxis, 0);
+              const xSelector = xAxis.getSelectorsByField(0);
+              const ySelector = yAxis.getSelectorsByField(0);
 
               /** Width of the collision detection rectangle */
               const bandWidth = graphWidth / (data.length - 1);
