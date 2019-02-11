@@ -31,23 +31,23 @@ export interface LineChartProps {
 
 function getTooltipBox(
   hovering: DataLayerRenderParams['hovering'],
-  hoveredIndex: DataLayerRenderParams['hoveredIndex'],
-  hoveredPos: DataLayerRenderParams['hoveredPos'],
+  hoveredPoint: DataLayerRenderParams['hoveredPoint'],
   data: object[],
   graphWidth: number,
   graphHeight: number,
   xSelector: FieldSelector,
   ySelector: FieldSelector,
 ) {
+  const { index, position } = hoveredPoint;
   return (
     <Tooltip
       graphWidth={graphWidth}
       graphHeight={graphHeight}
-      position={hoveredPos}
+      position={position}
       show={hovering}
     >
-      <p>{xSelector.getFormattedStringVal(data[hoveredIndex])}</p>
-      <p>{ySelector.getFormattedStringVal(data[hoveredIndex])}</p>
+      <p>{xSelector.getFormattedStringVal(data[index])}</p>
+      <p>{ySelector.getFormattedStringVal(data[index])}</p>
     </Tooltip>
   );
 }
@@ -94,8 +94,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
               yAxis,
               // currently hovered positions
               hovering,
-              hoveredIndex,
-              hoveredPos,
+              hoveredPoint,
               setHoveredPosAndIndex,
               clearHovering,
             }: DataLayerRenderParams) => {
@@ -158,7 +157,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                                 index === 0
                                   ? 0
                                   : xSelector.getScaledVal(
-                                      dataRow
+                                      dataRow,
                                     ) -
                                     bandWidth * 0.5
                               }
@@ -175,7 +174,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                               stroke="blue"
                               strokeWidth={3}
                             />
-                          )
+                          ),
                         )}
                       />
                     </g>
@@ -184,8 +183,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                   {/* Draw the tooltip */}
                   {getTooltipBox(
                     hovering,
-                    hoveredIndex,
-                    hoveredPos,
+                    hoveredPoint,
                     data,
                     graphWidth,
                     graphHeight,

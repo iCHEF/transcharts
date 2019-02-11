@@ -8,13 +8,16 @@ export interface DataLayerState {
   /** Records whether there is mouse or touch event generating from the inner layer */
   hovering: boolean;
 
-  /** The index of data being hovered or touched */
-  hoveredIndex: number;
+  /** The position of the point being hovered and its mapped index of data  */
+  hoveredPoint: {
+    /** The index of data being hovered or touched */
+    index: number;
 
-  /** The mouse hovered or touched position */
-  hoveredPos: {
-    x: number;
-    y: number;
+    /** The mouse hovered or touched position */
+    position: {
+      x: number;
+      y: number;
+    };
   };
 
   /** Function to record hover or touch interactions, which is used by `<TouchLayer>` */
@@ -69,21 +72,25 @@ export class DataLayer extends React.PureComponent<
 > {
   public state: DataLayerState = {
     hovering: false,
-    hoveredIndex: 0,
-    hoveredPos: {
-      x: 0,
-      y: 0,
+    hoveredPoint: {
+      index: 0,
+      position: {
+        x: 0,
+        y: 0,
+      },
     },
     clearHovering: () => {
       this.setState({ hovering: false });
     },
     setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => {
       this.setState({
-        hoveredIndex,
         hovering: true,
-        hoveredPos: {
-          x: xPos,
-          y: yPos,
+        hoveredPoint: {
+          index: hoveredIndex,
+          position: {
+            x: xPos,
+            y: yPos,
+          },
         },
       });
     },

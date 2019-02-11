@@ -2,9 +2,11 @@ import * as React from 'react';
 import { throttle } from 'lodash-es';
 import { localPoint } from '@vx/event';
 
+import { DataLayerState } from './DataLayer';
+
 export interface HoverLayerProps {
   /** Set the information related to hover or touch interactions  */
-  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
+  setHoveredPosAndIndex: DataLayerState['setHoveredPosAndIndex'];
 
   /** Function to hide the tooltip */
   clearHovering: () => void;
