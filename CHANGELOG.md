@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add `<HoverLayer>` to reuse the hovering interactions logic across different graphs. (#3)
+- Add the tooltip and hovered effects in `<LineChart>`. (#3)
+- Add the hovering information in `<DataLayer>`. (#3)
+- Add `getSelectorsByField` in `<DataLayer>` to select and convert the data value in a record. (#3)
 - Add a simple `<LineChart>`. (#2)
 - Add `<DataLayer>` to reuse the data calculations (such as domain and range computations) logic. (#2)
 - Add `<AxisLayer>` to reuse the axes on the charts. (#2)

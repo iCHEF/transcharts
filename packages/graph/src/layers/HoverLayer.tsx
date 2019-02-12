@@ -28,7 +28,7 @@ export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
   /** Updates the position of the tooltip and sets the currently active data index */
   private updatePosition = (dataIndex: number, event: React.SyntheticEvent) => {
     const { setHoveredPosAndIndex } = this.props;
-    // TODO: integrate `localPoint` of vx
+    // convert the position of the event to the coordinate system of the SVG
     const { x, y } = localPoint(event);
     this.animaFrameID = window.requestAnimationFrame(() => {
       setHoveredPosAndIndex(

@@ -126,7 +126,9 @@ export const LineChart: React.SFC<LineChartProps> = ({
               setHoveredPosAndIndex,
               clearHovering,
             }: DataLayerRenderParams) => {
+              // currently we only have one variable on the x-axis, so we get field `0`
               const xSelector = xAxis.getSelectorsByField(0);
+              // currently we only have one variable on the y-axis, so we get field `0`
               const ySelector = yAxis.getSelectorsByField(0);
 
               /** Width of the collision detection rectangle */
@@ -203,9 +205,6 @@ export const LineChart: React.SFC<LineChartProps> = ({
                               }
                               height={graphHeight}
                               opacity={0}
-                              fill={'#ff7049'}
-                              stroke="blue"
-                              strokeWidth={3}
                             />
                           ),
                         )}
