@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Transition, animated } from 'react-spring';
 
 import { styled } from '../utils/styled-components';

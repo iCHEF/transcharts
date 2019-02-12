@@ -18,6 +18,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "removeComments": false,
+    "allowSyntheticDefaultImports": true,
     "typeRoots": ["../node_modules/@types", "../types"]
   },
   "exclude": [
