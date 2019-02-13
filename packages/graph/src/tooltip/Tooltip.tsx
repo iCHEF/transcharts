@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { useTransition, animated } from 'react-spring';
 
 import { styled } from '../utils/styled-components';
@@ -59,7 +59,7 @@ function getTooltipPosition(
   };
 }
 
-export const Tooltip: React.SFC<TooltipProps> = ({
+export const Tooltip: FunctionComponent<TooltipProps> = ({
   position,
   children,
   show = false,
@@ -86,13 +86,18 @@ export const Tooltip: React.SFC<TooltipProps> = ({
   });
 
   // use transition to control the mounting/unmounting of Tooltip
-  return transition.map(({ item, key, props }) => (
-    item && (
-      <animated.div key={key} style={{ ...props, transition: 'opacity 300ms ease-out' }}>
-        <TooltipWrapper style={tooltipStyle}>
-          {children}
-        </TooltipWrapper>
-      </animated.div>
-    )
-  ));
+  return (
+    <>
+      {transition.map(({ item, key, props }) => (
+        item && (
+          <animated.div key={key} style={{ ...props, transition: 'opacity 300ms ease-out' }}>
+            <TooltipWrapper style={tooltipStyle}>
+              {children}
+            </TooltipWrapper>
+          </animated.div>
+        )
+        ))}
+    </>
+  );
+
 };
