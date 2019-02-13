@@ -1,5 +1,5 @@
 import React from 'react';
-import { Transition, animated } from 'react-spring';
+import { useTransition, animated } from 'react-spring';
 
 import { styled } from '../utils/styled-components';
 import { Margin } from '../common/types';
@@ -55,6 +55,7 @@ function getTooltipPosition(
     top: `${graphMargin.top + position.y}px`,
     left: `${graphMargin.left + position.x + leftOffset}px`,
     transform: `translate(${percentX}%, ${percentY}%)`,
+    transition: 'all 150ms ease',
   };
 }
 
@@ -77,25 +78,21 @@ export const Tooltip: React.SFC<TooltipProps> = ({
 
   const tooltipStyle = getTooltipPosition(graphWidth, graphHeight, graphMargin, position);
 
-  return (
-    // use Transition to control the mounting/unmounting of Tooltip
-    <Transition
-      items={show}
-      unique
-      native
-      from={{ opacity: 0 }}
-      enter={{ opacity: 1 }}
-      leave={{ opacity: 0 }}
-    >
-      {showing =>
-        showing && (props =>
-          <animated.div style={{ ...props, transition: 'opacity 0.1s ease-out' }}>
-            <TooltipWrapper style={tooltipStyle}>
-              {children}
-            </TooltipWrapper>
-          </animated.div>
-        )
-      }
-    </Transition>
-  );
+  const transition = useTransition(show, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    unique: true,
+  });
+
+  // use transition to control the mounting/unmounting of Tooltip
+  return transition.map(({ item, key, props }) => (
+    item && (
+      <animated.div key={key} style={{ ...props, transition: 'opacity 300ms ease-out' }}>
+        <TooltipWrapper style={tooltipStyle}>
+          {children}
+        </TooltipWrapper>
+      </animated.div>
+    )
+  ));
 };
