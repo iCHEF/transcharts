@@ -1,0 +1,28 @@
+---
+name: AnimatedClipRect
+route: /animations/clip_rect
+menu: Animation
+---
+
+import { Playground, PropsTable } from 'docz'
+import { AnimatedClipRect } from '@ichef/transcharts-animation'
+
+# AnimatedClipRect
+
+<Playground>
+  <svg width={500} height={100}>
+    <AnimatedClipRect width={500} height={100} type="slideRight">
+      <rect
+        width={500}
+        height={100}
+        rx={10}
+        style={{ fill: '#00E676' }}
+      />
+    </AnimatedClipRect>
+  </svg>
+</Playground>
+
+
+## Props
+
+<PropsTable of={AnimatedClipRect} />
