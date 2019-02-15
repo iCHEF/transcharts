@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useRef } from 'react';
 import { useSpring, animated } from 'react-spring';
 import shortid from 'shortid';
 
@@ -105,7 +105,7 @@ export const AnimatedClipRect: FunctionComponent<AnimatedClipRectProps> = ({
   children,
   ...restProps
 }) => {
-  const [clipId] = useState(`clipRect-${shortid.generate()}`);
+  const { current: clipId } = useRef(`clipRect-${shortid.generate()}`);
   const springProps = useSpring(getSpringFromTo(
     type,
     width,
