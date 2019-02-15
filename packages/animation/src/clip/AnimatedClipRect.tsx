@@ -2,6 +2,8 @@ import React, { FunctionComponent, useState } from 'react';
 import { useSpring, animated } from 'react-spring';
 import shortid from 'shortid';
 
+import { getD3EaseFunc } from '../utils/getD3EaseFunc';
+
 export interface AnimatedClipRectProps {
   type: 'slideRight' | 'slideLeft' | 'slideUp'| 'slideDown';
   width: number;
@@ -9,7 +11,13 @@ export interface AnimatedClipRectProps {
 
   /** Delay before the animation starts (ms) */
   delay: number;
+
+  /** Duration of the animation (ms) */
   duration: number;
+
+  /** Name of the easing function which belongs to `d3-ease` */
+  easing?: string;
+
   children: React.ReactNode;
 }
 
@@ -22,11 +30,13 @@ function getSpringFromTo(
   height: AnimatedClipRectProps['height'],
   delay: AnimatedClipRectProps['delay'],
   duration: AnimatedClipRectProps['duration'],
+  easing: AnimatedClipRectProps['easing'],
 ) {
   const results = {
     delay,
     config: {
       duration,
+      easing: getD3EaseFunc(easing),
     },
     to: {
       width,
@@ -91,6 +101,7 @@ export const AnimatedClipRect: FunctionComponent<AnimatedClipRectProps> = ({
   height = 1,
   duration = 500,
   delay = 0,
+  easing,
   children,
   ...restProps
 }) => {
@@ -101,6 +112,7 @@ export const AnimatedClipRect: FunctionComponent<AnimatedClipRectProps> = ({
     height,
     delay,
     duration,
+    easing,
   ));
   const { left, top, width: springWidth, height: springHeight } = springProps;
 

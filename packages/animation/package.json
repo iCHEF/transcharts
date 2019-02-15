@@ -41,6 +41,7 @@
     "url": "https://github.com/iCHEF/transcharts/issues"
   },
   "dependencies": {
+    "d3-ease": "^1.0.5",
     "shortid": "^2.2.14"
   }
 }
