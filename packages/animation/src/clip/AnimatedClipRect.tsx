@@ -77,14 +77,14 @@ function getSpringConfig(
 }
 
 export const AnimatedClipRect: FunctionComponent<AnimatedClipRectProps> = ({
-  type,
+  type = 'slideRight',
   width = 1,
   height = 1,
   duration = 300,
   children,
   ...restProps
 }) => {
-  const [clipId] = useState(`clip-${shortid.generate()}`);
+  const [clipId] = useState(`clipRect-${shortid.generate()}`);
   const springProps = useSpring(getSpringConfig(type, width, height));
   const { left, top, width: springWidth, height: springHeight } = springProps;
 
@@ -93,7 +93,7 @@ export const AnimatedClipRect: FunctionComponent<AnimatedClipRectProps> = ({
       <clipPath id={clipId}>
         <animated.rect x={left} y={top} width={springWidth} height={springHeight} {...restProps} />
       </clipPath>
-      <g clip-path={`url(#${clipId})`}>
+      <g clipPath={`url(#${clipId})`}>
         {children}
       </g>
     </>
