@@ -96,7 +96,7 @@ export const Tooltip: FunctionComponent<TooltipProps> = ({
             </TooltipWrapper>
           </animated.div>
         )
-        ))}
+      ))}
     </>
   );
 
