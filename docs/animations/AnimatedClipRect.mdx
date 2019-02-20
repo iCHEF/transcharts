@@ -1,0 +1,41 @@
+---
+name: Clipping Rectangle
+route: /animations/clip_rect
+menu: Animations
+---
+
+import { Playground, PropsTable } from 'docz'
+import { AnimatedClipRect } from '@ichef/transcharts-animation'
+
+# Clipping Rectangle
+
+You can make an inner SVG element be clipped by an animated rectangle by wrapping it into `<AnimatedClipRect>`.
+
+The default animation direction is enlarging the clipping rectangle from the left to the right, i.e., `slideRight`.
+While it supports four kinds of directions (`slideRight`, `slideLeft`, `slideUp`, `slideDown`), and you can modify it directly through the playground below to see different effects.
+
+Additionally, the `easing` options corresponds to the names of the [d3-ease](https://github.com/d3/d3-ease) functions.
+You may refer to its [document](https://github.com/d3/d3-ease) to choose a desirable easing effect.
+
+<Playground>
+  <svg width={550} height={50}>
+    <AnimatedClipRect
+      width={550}
+      height={50}
+      type="slideRight"
+      duration={1500}
+      easing='easeCubic'>
+      <rect
+        width={550}
+        height={50}
+        rx={10}
+        style={{ fill: '#2f98f7' }}
+      />
+    </AnimatedClipRect>
+  </svg>
+</Playground>
+
+
+## Props
+
+<PropsTable of={AnimatedClipRect} />
