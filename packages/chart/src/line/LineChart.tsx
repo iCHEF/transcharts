@@ -1,16 +1,22 @@
 import * as React from 'react';
 import { LinePath } from '@vx/shape';
 import {
+  // from AxisLayer
   AxisLayer,
+  // from DataLayer
   DataLayer,
   DataLayerRenderParams,
+  // from HoverLayer
   HoverLayer,
-  DataField,
+  // from ResponsiveLayer
   ResponsiveLayer,
-  TooltipLayer,
   ResponsiveState,
-  Scale,
+  // from TooltipLayer
+  TooltipLayer,
+  // from common types
+  DataField,
   Margin,
+  Scale,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -158,35 +164,33 @@ export const LineChart: React.SFC<LineChartProps> = ({
 
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
-                        setHoveredPosAndIndex={
-                          setHoveredPosAndIndex
-                        }
+                        setHoveredPosAndIndex={setHoveredPosAndIndex}
                         clearHovering={clearHovering}
                         collisionComponents={data.map(
-                          (dataRow, index) => (
-                            <rect
-                              // #TODO: use keys defined in the `<DataLayer>`
-                              key={`colli-${index}`}
-                              x={
-                                index === 0
-                                  ? 0
-                                  : xSelector.getScaledVal(
-                                      dataRow,
-                                    ) -
-                                    bandWidth * 0.5
-                              }
-                              y={0}
-                              width={
-                                index === 0 ||
-                                index === data.length - 1
-                                  ? bandWidth / 2
-                                  : bandWidth
-                              }
-                              height={graphHeight}
-                              opacity={0}
-                            />
-                          ),
-                        )}
+                          (dataRow, index) => {
+                            const rectX = index === 0
+                              ? 0
+                              : xSelector.getScaledVal(
+                                  dataRow,
+                                ) -
+                                bandWidth * 0.5;
+
+                            const rectWidth = index === 0 || index === data.length - 1
+                              ? bandWidth / 2
+                              : bandWidth;
+
+                            return (
+                              <rect
+                                // #TODO: use keys defined in the `<DataLayer>`
+                                key={`colli-${index}`}
+                                x={rectX}
+                                y={0}
+                                width={rectWidth}
+                                height={graphHeight}
+                                opacity={0}
+                              />
+                            );
+                          })}
                       />
                     </g>
                   </svg>
