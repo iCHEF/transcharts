@@ -8,6 +8,9 @@ export interface HoverLayerProps {
   /** Set the information related to hover or touch interactions  */
   setHoveredPosAndIndex: DataLayerRenderParams['setHoveredPosAndIndex'];
 
+  /** Function to be called before the latest tooltip position is set */
+  handleHover: () => void;
+
   /** Function to hide the tooltip */
   clearHovering: () => void;
 
@@ -21,13 +24,18 @@ export interface HoverLayerProps {
 export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
   public static defaultProps = {
     throttleTime: 180,
+    handleHover: () => null,
   };
 
   public animaFrameID: number;
 
   /** Updates the position of the tooltip and sets the currently active data index */
   private updatePosition = (dataIndex: number, event: React.SyntheticEvent) => {
-    const { setHoveredPosAndIndex } = this.props;
+    const { setHoveredPosAndIndex, handleHover } = this.props;
+
+    // custom action which executes before the position is updated
+    handleHover();
+
     // convert the position of the event to the coordinate system of the SVG
     const { x, y } = localPoint(event);
     this.animaFrameID = window.requestAnimationFrame(() => {
