@@ -9,5 +9,9 @@ const DEFAULT_EASING = 'easeLinear';
  */
 export function getD3EaseFunc(name: string = DEFAULT_EASING) {
   const easeFunc = d3Ease[name];
+  if (!easeFunc) {
+    // #TODO: come up with a better way to handle the warning messages
+    console.error('Unknown name of easing function. Check the name parameter of getD3EaseFunc.');
+  }
   return easeFunc ? easeFunc : d3Ease[DEFAULT_EASING];
 }
