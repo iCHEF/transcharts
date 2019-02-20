@@ -24,13 +24,15 @@ export interface DataLayerState {
 export interface DataLayerRenderParams extends DataLayerState {
   xAxis: AxisConfig;
   yAxis: AxisConfig;
-  /** Function to record hover or touch interactions, which is used by `<TouchLayer>` */
+  /** Function to record hover or touch interactions, which is used by `<HoverLayer>` */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
 
-  /** Function let `<TouchLayer>` hide the tooltip */
+  /** Function let `<HoverLayer>` hide the tooltip */
   clearHovering: () => void;
 }
 
+// #TODO: separate the data and hovering information,
+// and re-write it using Hooks
 export interface DataLayerProps {
   /** Width of the inner graph */
   width: number;
