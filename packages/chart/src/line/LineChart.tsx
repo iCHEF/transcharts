@@ -27,9 +27,18 @@ export interface LineChartProps {
   showBottomAxis: boolean;
 }
 
-/** Add a line and a dot for the point being hovered */
-function getHoveringDotAndLine(xPos: number, yPos: number, height: number) {
-  return (
+/** A line and a dot for the point being hovered */
+const HoveringIndicator: React.FC<{
+  hovering: boolean,
+  xPos: number,
+  yPos: number,
+  height: number,
+}> = ({ hovering, xPos, yPos, height }) => {
+  if (!hovering) {
+    return null;
+  }
+
+  return(
     <>
       <line
         x1={xPos}
@@ -46,7 +55,7 @@ function getHoveringDotAndLine(xPos: number, yPos: number, height: number) {
       />
     </>
   );
-}
+};
 
 export const LineChart: React.SFC<LineChartProps> = ({
   data,
@@ -140,11 +149,12 @@ export const LineChart: React.SFC<LineChartProps> = ({
 
                       {/* Draw dots on the line */}
                       {lineDots}
-                      {hovering && getHoveringDotAndLine(
-                        xSelector.getScaledVal(data[hoveredPoint.index]),
-                        ySelector.getScaledVal(data[hoveredPoint.index]),
-                        graphHeight,
-                      )}
+                      <HoveringIndicator
+                        hovering={hovering}
+                        xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
+                        yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
+                        height={graphHeight}
+                      />
 
                       {/* Areas which are used to detect mouse or touch interactions */}
                       <HoverLayer
