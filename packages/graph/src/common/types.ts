@@ -60,3 +60,5 @@ export interface Margin {
   bottom: number;
   left: number;
 }
+
+export interface Theme {}
