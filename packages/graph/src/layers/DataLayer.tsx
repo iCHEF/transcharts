@@ -19,17 +19,16 @@ export interface DataLayerState {
       y: number;
     };
   };
-
-  /** Function to record hover or touch interactions, which is used by `<TouchLayer>` */
-  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
-
-  /** Function let `<TouchLayer>` hide the tooltip */
-  clearHovering: () => void;
 }
 
 export interface DataLayerRenderParams extends DataLayerState {
   xAxis: AxisConfig;
   yAxis: AxisConfig;
+  /** Function to record hover or touch interactions, which is used by `<TouchLayer>` */
+  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
+
+  /** Function let `<TouchLayer>` hide the tooltip */
+  clearHovering: () => void;
 }
 
 export interface DataLayerProps {
@@ -79,21 +78,23 @@ export class DataLayer extends React.PureComponent<
         y: 0,
       },
     },
-    clearHovering: () => {
-      this.setState({ hovering: false });
-    },
-    setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => {
-      this.setState({
-        hovering: true,
-        hoveredPoint: {
-          index: hoveredIndex,
-          position: {
-            x: xPos,
-            y: yPos,
-          },
+  };
+
+  public clearHovering = () => {
+    this.setState({ hovering: false });
+  };
+
+  public setHoveredPosAndIndex = (hoveredIndex: number, xPos: number, yPos: number) => {
+    this.setState({
+      hovering: true,
+      hoveredPoint: {
+        index: hoveredIndex,
+        position: {
+          x: xPos,
+          y: yPos,
         },
-      });
-    },
+      },
+    });
   };
 
   private getXYAxes = memoizeOne(
@@ -127,6 +128,12 @@ export class DataLayer extends React.PureComponent<
       fieldsY,
     );
 
-    return children({ xAxis, yAxis, ...this.state });
+    return children({
+      ...this.state,
+      xAxis,
+      yAxis,
+      clearHovering: this.clearHovering,
+      setHoveredPosAndIndex: this.setHoveredPosAndIndex,
+    });
   }
 }
