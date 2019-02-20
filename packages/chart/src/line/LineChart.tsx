@@ -7,12 +7,10 @@ import {
   HoverLayer,
   DataField,
   ResponsiveLayer,
+  TooltipLayer,
   ResponsiveState,
   Scale,
   Margin,
-  Tooltip,
-  TooltipItem,
-  FieldSelector,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -27,36 +25,6 @@ export interface LineChartProps {
   showLeftAxis: boolean;
   /** Should show the axis on the bottom or not */
   showBottomAxis: boolean;
-}
-
-/** Generates the tooltip box of the line chart */
-function getTooltipBox(
-  hovering: DataLayerRenderParams['hovering'],
-  hoveredPoint: DataLayerRenderParams['hoveredPoint'],
-  data: object[],
-  graphWidth: number,
-  graphHeight: number,
-  margin: Margin,
-  xSelector: FieldSelector,
-  ySelector: FieldSelector,
-) {
-  const { index, position } = hoveredPoint;
-  return (
-    <Tooltip
-      graphWidth={graphWidth}
-      graphHeight={graphHeight}
-      graphMargin={margin}
-      position={{
-        x: xSelector.getScaledVal(data[index]),
-        y: position.y,
-      }}
-      show={hovering}
-    >
-      <h3>{xSelector.getFormattedStringVal(data[index])}</h3>
-      {/* TODO: unify the way of dealing colors of the fields */}
-      <TooltipItem color="#ff7049" text={ySelector.getFormattedStringVal(data[index])} />
-    </Tooltip>
-  );
 }
 
 /** Add a line and a dot for the point being hovered */
@@ -213,16 +181,16 @@ export const LineChart: React.SFC<LineChartProps> = ({
                   </svg>
 
                   {/* Draw the tooltip */}
-                  {getTooltipBox(
-                    hovering,
-                    hoveredPoint,
-                    data,
-                    graphWidth,
-                    graphHeight,
-                    margin,
-                    xSelector,
-                    ySelector,
-                  )}
+                  <TooltipLayer
+                    hovering={hovering}
+                    hoveredPoint={hoveredPoint}
+                    data={data}
+                    graphWidth={graphWidth}
+                    graphHeight={graphHeight}
+                    margin={margin}
+                    xSelector={xSelector}
+                    ySelector={ySelector}
+                  />
                 </>
               );
             }}
