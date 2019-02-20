@@ -165,6 +165,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
                         collisionComponents={data.map(
                           (dataRow, index) => (
                             <rect
+                              // #TODO: use keys defined in the `<DataLayer>`
                               key={`colli-${index}`}
                               x={
                                 index === 0

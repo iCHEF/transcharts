@@ -54,6 +54,7 @@ export interface DataLayerProps {
   /** Scale config of the y-axis */
   scaleY: Scale;
 
+  // #TODO: defien the keys for the fields, and the default keys are the index of the record
   /** DataFields of the x-axis */
   fieldsX: DataField[];
 
