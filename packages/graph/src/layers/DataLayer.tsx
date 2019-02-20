@@ -4,11 +4,35 @@ import memoizeOne from 'memoize-one';
 import { Scale, DataField, AxisConfig } from '../common/types';
 import { getAxisConfig } from '../utils/getAxisConfig';
 
-export interface DataLayerAxes {
-  xAxis: AxisConfig;
-  yAxis: AxisConfig;
+export interface DataLayerState {
+  /** Records whether there is mouse or touch event generating from the inner layer */
+  hovering: boolean;
+
+  /** The position of the point being hovered and its mapped index of data  */
+  hoveredPoint: {
+    /** The index of data being hovered or touched */
+    index: number;
+
+    /** The mouse hovered or touched position */
+    position: {
+      x: number;
+      y: number;
+    };
+  };
 }
 
+export interface DataLayerRenderParams extends DataLayerState {
+  xAxis: AxisConfig;
+  yAxis: AxisConfig;
+  /** Function to record hover or touch interactions, which is used by `<HoverLayer>` */
+  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
+
+  /** Function let `<HoverLayer>` hide the tooltip */
+  clearHovering: () => void;
+}
+
+// #TODO: separate the data and hovering information,
+// and re-write it using Hooks
 export interface DataLayerProps {
   /** Width of the inner graph */
   width: number;
@@ -30,6 +54,7 @@ export interface DataLayerProps {
   /** Scale config of the y-axis */
   scaleY: Scale;
 
+  // #TODO: defien the keys for the fields, and the default keys are the index of the record
   /** DataFields of the x-axis */
   fieldsX: DataField[];
 
@@ -37,12 +62,7 @@ export interface DataLayerProps {
   fieldsY: DataField[];
 
   /** Render props with the computed configurations for the axes */
-  children: (axes: DataLayerAxes) => React.ReactNode;
-}
-
-export interface DataLayerState {
-  /** TODO: records the indices of data selected by users from the interaction layer */
-  activeDataIndices: number[];
+  children: (axes: DataLayerRenderParams) => React.ReactNode;
 }
 
 /**
@@ -53,7 +73,31 @@ export class DataLayer extends React.PureComponent<
   DataLayerState
 > {
   public state: DataLayerState = {
-    activeDataIndices: [],
+    hovering: false,
+    hoveredPoint: {
+      index: 0,
+      position: {
+        x: 0,
+        y: 0,
+      },
+    },
+  };
+
+  public clearHovering = () => {
+    this.setState({ hovering: false });
+  };
+
+  public setHoveredPosAndIndex = (hoveredIndex: number, xPos: number, yPos: number) => {
+    this.setState({
+      hovering: true,
+      hoveredPoint: {
+        index: hoveredIndex,
+        position: {
+          x: xPos,
+          y: yPos,
+        },
+      },
+    });
   };
 
   private getXYAxes = memoizeOne(
@@ -76,6 +120,7 @@ export class DataLayer extends React.PureComponent<
       fieldsY,
       children,
     } = this.props;
+
     const { xAxis, yAxis } = this.getXYAxes(
       width,
       height,
@@ -85,6 +130,13 @@ export class DataLayer extends React.PureComponent<
       fieldsX,
       fieldsY,
     );
-    return children({ xAxis, yAxis });
+
+    return children({
+      ...this.state,
+      xAxis,
+      yAxis,
+      clearHovering: this.clearHovering,
+      setHoveredPosAndIndex: this.setHoveredPosAndIndex,
+    });
   }
 }

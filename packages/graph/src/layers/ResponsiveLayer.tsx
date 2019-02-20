@@ -82,7 +82,7 @@ export class ResponsiveLayer extends React.Component<
     return (
       <div
         ref={this.layerRef}
-        style={{ ...style, width: '100%', height: '100%' }}
+        style={{ ...style, width: '100%', height: '100%', position: 'relative' }}
         className={className}
         {...restProps}
       >

@@ -33,12 +33,15 @@
   "peerDependencies": {
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react-dom": "^16.7.0",
+    "react-spring": "^7.2.10",
+    "styled-components": "^4.1.3"
   },
   "bugs": {
     "url": "https://github.com/iCHEF/transcharts/issues"
   },
   "dependencies": {
+    "@vx/event": "^0.0.182",
     "d3-array": "^2.0.3",
     "d3-scale": "^2.1.2",
     "lodash-es": "^4.17.11",

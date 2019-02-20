@@ -7,6 +7,8 @@ import {
 
 import { Scale, DataField, AxisConfig } from '../common/types';
 
+import { getRecordFieldSelectors } from './getRecordFieldSelectors';
+
 /**
  * Computes and returns the configurations for the axis,
  * such as its domain, range and d3 scale functions
@@ -57,11 +59,17 @@ export function getAxisConfig(
       throw new Error('Unsupported scale type');
   }
 
-  return {
+  const axisConfig = {
     fields,
     range,
     domain,
-    d3Scale,
     getValue,
+    d3Scale,
+    scaleConfig: scale,
+  };
+
+  return {
+    ...axisConfig,
+    getSelectorsByField: (fieldIndex: number) => getRecordFieldSelectors(axisConfig, fieldIndex),
   };
 }

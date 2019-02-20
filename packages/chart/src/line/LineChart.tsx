@@ -1,23 +1,27 @@
 import * as React from 'react';
 import { LinePath } from '@vx/shape';
 import {
-  AxisConfig,
+  // from AxisLayer
   AxisLayer,
+  // from DataLayer
   DataLayer,
-  DataLayerAxes,
-  DataField,
+  DataLayerRenderParams,
+  // from HoverLayer
+  HoverLayer,
+  // from ResponsiveLayer
   ResponsiveLayer,
   ResponsiveState,
+  // from TooltipLayer
+  TooltipLayer,
+  // from common types
+  DataField,
+  Margin,
   Scale,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
+   /** Margin between the inner graph area and the outer svg */
+  margin: Margin;
   data: object[];
   scaleX: Scale;
   scaleY: Scale;
@@ -29,17 +33,35 @@ export interface LineChartProps {
   showBottomAxis: boolean;
 }
 
-/**
- * Returns the data value conversion function of the field
- * using the d3Scale function of the axis
- * @param axis - the axis computed from DataLayer
- * @param fieldIndex - the current index of the field
- */
-function getConvertFuncFromAxis(axis: AxisConfig, fieldIndex: number) {
-  const { fields, d3Scale, getValue } = axis;
-  const fieldName = fields[fieldIndex].name;
-  return (d: object) => d3Scale(getValue(d[fieldName]));
-}
+/** A line and a dot for the point being hovered */
+const HoveringIndicator: React.FC<{
+  hovering: boolean,
+  xPos: number,
+  yPos: number,
+  height: number,
+}> = ({ hovering, xPos, yPos, height }) => {
+  if (!hovering) {
+    return null;
+  }
+
+  return(
+    <>
+      <line
+        x1={xPos}
+        y1={0}
+        x2={xPos}
+        y2={height}
+        style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
+      />
+      <circle
+        cx={xPos}
+        cy={yPos}
+        r={4.5}
+        fill={'#ff7049'}
+      />
+    </>
+  );
+};
 
 export const LineChart: React.SFC<LineChartProps> = ({
   data,
@@ -63,62 +85,131 @@ export const LineChart: React.SFC<LineChartProps> = ({
         const graphWidth = outerWidth - left - right;
         const graphHeight = outerHeight - top - bottom;
 
+        if (graphWidth <= 0 || graphHeight <= 0) {
+          return null;
+        }
+
         return (
-          <svg width={outerWidth} height={outerHeight}>
-            <DataLayer
-              width={graphWidth}
-              height={graphHeight}
-              data={data}
-              scaleX={scaleX}
-              scaleY={scaleY}
-              fieldsX={fieldsX}
-              fieldsY={fieldsY}
-            >
-              {({ xAxis, yAxis }: DataLayerAxes) => {
-                const getX = getConvertFuncFromAxis(xAxis, 0);
-                const getY = getConvertFuncFromAxis(yAxis, 0);
+          <DataLayer
+            width={graphWidth}
+            height={graphHeight}
+            data={data}
+            scaleX={scaleX}
+            scaleY={scaleY}
+            fieldsX={fieldsX}
+            fieldsY={fieldsY}
+          >
+            {({
+              // computed x and y axis configurations
+              xAxis,
+              yAxis,
+              // currently hovered positions
+              hovering,
+              hoveredPoint,
+              setHoveredPosAndIndex,
+              clearHovering,
+            }: DataLayerRenderParams) => {
+              // currently we only have one variable on the x-axis, so we get field `0`
+              const xSelector = xAxis.getSelectorsByField(0);
+              // currently we only have one variable on the y-axis, so we get field `0`
+              const ySelector = yAxis.getSelectorsByField(0);
 
-                const lineDots = data.map((dataRow, index) => (
-                  <circle
-                    key={`c-${index}`}
-                    cx={getX(dataRow)}
-                    cy={getY(dataRow)}
-                    r={3.5}
-                    fill={'#ff7049'}
+              /** Width of the collision detection rectangle */
+              const bandWidth = graphWidth / (data.length - 1);
+
+              const lineDots = data.map((dataRow, index) => (
+                <circle
+                  key={`c-${index}`}
+                  cx={xSelector.getScaledVal(dataRow)}
+                  cy={ySelector.getScaledVal(dataRow)}
+                  r={3.5}
+                  fill={'#ff7049'}
+                />
+              ));
+
+              return (
+                <>
+                  <svg width={outerWidth} height={outerHeight}>
+                    <g transform={`translate(${left}, ${top})`}>
+                      {/* Draw the axes */}
+                      <AxisLayer
+                        width={graphWidth}
+                        height={graphHeight}
+                        showLeftAxis={showLeftAxis}
+                        showBottomAxis={showBottomAxis}
+                        data={data}
+                        xAxis={xAxis}
+                        yAxis={yAxis}
+                      />
+
+                      {/* Draw the line */}
+                      <LinePath
+                        data={data}
+                        x={xSelector.getScaledVal}
+                        y={ySelector.getScaledVal}
+                        stroke={'#ff7049'}
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+
+                      {/* Draw dots on the line */}
+                      {lineDots}
+                      <HoveringIndicator
+                        hovering={hovering}
+                        xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
+                        yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
+                        height={graphHeight}
+                      />
+
+                      {/* Areas which are used to detect mouse or touch interactions */}
+                      <HoverLayer
+                        setHoveredPosAndIndex={setHoveredPosAndIndex}
+                        clearHovering={clearHovering}
+                        collisionComponents={data.map(
+                          (dataRow, index) => {
+                            const rectX = index === 0
+                              ? 0
+                              : xSelector.getScaledVal(
+                                  dataRow,
+                                ) -
+                                bandWidth * 0.5;
+
+                            const rectWidth = index === 0 || index === data.length - 1
+                              ? bandWidth / 2
+                              : bandWidth;
+
+                            return (
+                              <rect
+                                // #TODO: use keys defined in the `<DataLayer>`
+                                key={`colli-${index}`}
+                                x={rectX}
+                                y={0}
+                                width={rectWidth}
+                                height={graphHeight}
+                                opacity={0}
+                              />
+                            );
+                          })}
+                      />
+                    </g>
+                  </svg>
+
+                  {/* Draw the tooltip */}
+                  <TooltipLayer
+                    hovering={hovering}
+                    hoveredPoint={hoveredPoint}
+                    data={data}
+                    graphWidth={graphWidth}
+                    graphHeight={graphHeight}
+                    margin={margin}
+                    xSelector={xSelector}
+                    ySelector={ySelector}
                   />
-                ));
-
-                return (
-                  <g transform={`translate(${left}, ${top})`}>
-                    {/* Draw the axes */}
-                    <AxisLayer
-                      width={graphWidth}
-                      height={graphHeight}
-                      showLeftAxis={showLeftAxis}
-                      showBottomAxis={showBottomAxis}
-                      data={data}
-                      xAxis={xAxis}
-                      yAxis={yAxis}
-                    />
-
-                    {/* Draw the line */}
-                    <LinePath
-                      data={data}
-                      x={getX}
-                      y={getY}
-                      stroke={'#ff7049'}
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-
-                    {/* Draw dots on the line */}
-                    {lineDots}
-                  </g>
-                );
-              }}
-            </DataLayer>
-          </svg>
+                </>
+              );
+            }}
+          </DataLayer>
         );
       }}
     </ResponsiveLayer>
