@@ -19,6 +19,7 @@ import {
   Scale,
   // from themes
   withChartTheme,
+  Theme,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -33,6 +34,8 @@ export interface LineChartProps {
   showLeftAxis: boolean;
   /** Should show the axis on the bottom or not */
   showBottomAxis: boolean;
+  /** Theme object */
+  theme: Theme
 }
 
 /** A line and a dot for the point being hovered */
@@ -41,7 +44,8 @@ const HoveringIndicator: React.FC<{
   xPos: number,
   yPos: number,
   height: number,
-}> = ({ hovering, xPos, yPos, height }) => {
+  color: string,
+}> = ({ hovering, xPos, yPos, height, color }) => {
   if (!hovering) {
     return null;
   }
@@ -59,7 +63,7 @@ const HoveringIndicator: React.FC<{
         cx={xPos}
         cy={yPos}
         r={4.5}
-        fill={'#ff7049'}
+        fill={color}
       />
     </>
   );
@@ -79,6 +83,7 @@ const LineChartImpl: React.SFC<LineChartProps> = ({
   },
   showLeftAxis = true,
   showBottomAxis = true,
+  theme,
 }) => {
   return (
     <ResponsiveLayer>
@@ -119,13 +124,15 @@ const LineChartImpl: React.SFC<LineChartProps> = ({
               /** Width of the collision detection rectangle */
               const bandWidth = graphWidth / (data.length - 1);
 
+              const color = theme.colors.category[0];
+
               const lineDots = data.map((dataRow, index) => (
                 <circle
                   key={`c-${index}`}
                   cx={xSelector.getScaledVal(dataRow)}
                   cy={ySelector.getScaledVal(dataRow)}
                   r={3.5}
-                  fill={'#ff7049'}
+                  fill={color}
                 />
               ));
 
@@ -149,7 +156,7 @@ const LineChartImpl: React.SFC<LineChartProps> = ({
                         data={data}
                         x={xSelector.getScaledVal}
                         y={ySelector.getScaledVal}
-                        stroke={'#ff7049'}
+                        stroke={color}
                         strokeWidth={2}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -162,6 +169,7 @@ const LineChartImpl: React.SFC<LineChartProps> = ({
                         xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
                         yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
                         height={graphHeight}
+                        color={color}
                       />
 
                       {/* Areas which are used to detect mouse or touch interactions */}
@@ -207,6 +215,7 @@ const LineChartImpl: React.SFC<LineChartProps> = ({
                     margin={margin}
                     xSelector={xSelector}
                     ySelector={ySelector}
+                    color={color}
                   />
                 </>
               );
