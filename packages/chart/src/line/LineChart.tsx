@@ -18,8 +18,8 @@ import {
   Margin,
   Scale,
   // from themes
-  withChartTheme,
   Theme,
+  ThemeContext,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -69,7 +69,7 @@ const HoveringIndicator: React.FC<{
   );
 };
 
-const LineChartImpl: React.SFC<LineChartProps> = ({
+export const LineChart: React.SFC<LineChartProps> = ({
   data,
   scaleX,
   scaleY,
@@ -83,8 +83,8 @@ const LineChartImpl: React.SFC<LineChartProps> = ({
   },
   showLeftAxis = true,
   showBottomAxis = true,
-  theme,
 }) => {
+  const theme = React.useContext(ThemeContext);
   return (
     <ResponsiveLayer>
       {({ width: outerWidth, height: outerHeight }: ResponsiveState) => {
@@ -226,5 +226,3 @@ const LineChartImpl: React.SFC<LineChartProps> = ({
     </ResponsiveLayer>
   );
 };
-
-export const LineChart = withChartTheme(LineChartImpl);
