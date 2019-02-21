@@ -82,4 +82,4 @@ export interface Theme {
   xAxis: AxisTheme;
   /** yaxis theme config */
   yAxis: AxisTheme;
-};
+}

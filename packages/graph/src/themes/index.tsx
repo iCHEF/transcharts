@@ -1,32 +1,33 @@
 import * as React from 'react';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import deepmerge from 'deepmerge';
+
 import { Theme } from '../common/types';
 
 interface ThemeProviderProps {
-    /** theme prop can be partial of Theme type */
-    theme: Partial<Theme>;
-    children: React.ReactNode;
+  /** theme prop can be partial of Theme type */
+  theme: Partial<Theme>;
+  children: React.ReactNode;
 }
 
 export const themes = {
-    default: {
-        colors: {
-            category: schemeCategory10,
-        },
-        xAxis: {
-            strokeColor: '#7c8a94',
-            tickStrokeColor: '#7c8a94',
-            strokeWidth: 1.5,
-            tickFontSize: 13,
-        },
-        yAxis: {
-            strokeColor: '#7c8a94',
-            tickStrokeColor: '#7c8a94',
-            strokeWidth: 1.5,
-            tickFontSize: 13,
-        },
+  default: {
+    colors: {
+      category: schemeCategory10,
     },
+    xAxis: {
+      strokeColor: '#7c8a94',
+      tickStrokeColor: '#7c8a94',
+      strokeWidth: 1.5,
+      tickFontSize: 13,
+    },
+    yAxis: {
+      strokeColor: '#7c8a94',
+      tickStrokeColor: '#7c8a94',
+      strokeWidth: 1.5,
+      tickFontSize: 13,
+    },
+  },
 };
 
 const defaultTheme = themes.default;
@@ -35,28 +36,30 @@ export const ThemeContext = React.createContext(defaultTheme);
 
 const { Provider, Consumer } = ThemeContext;
 function mergeTheme(theme: Theme, partialTheme: Partial<Theme>): Theme {
-    // see https://github.com/TehShrike/deepmerge
-    return deepmerge(
-        theme,
-        partialTheme,
-        { arrayMerge: (dest, source) => source }
-    );
+  // see https://github.com/TehShrike/deepmerge
+  return deepmerge(
+    theme,
+    partialTheme,
+    { arrayMerge: (dest, source) => source },
+  );
 }
 
 export const ThemeProvider = ({ theme, children }: ThemeProviderProps) => {
-    const resultTheme = mergeTheme(defaultTheme, theme);
-    return (
-        <Provider value={resultTheme}>
-            {children}
-        </Provider>
-    );
+  const resultTheme = mergeTheme(defaultTheme, theme);
+  return (
+    <Provider value={resultTheme}>
+      {children}
+    </Provider>
+  );
 };
-export function withChartTheme<P> (WrappedComponent: React.SFC<P>) {
-    const Wrapper =  (props: P) => {
-        return <Consumer>
-            {(theme: Theme) => <WrappedComponent theme={theme} {...props} /> }
-        </Consumer>
-    }
-    Wrapper.displayName = `withChartTheme(${WrappedComponent.displayName})`;
-    return Wrapper;
+export function withChartTheme<P>(WrappedComponent: React.SFC<P>) {
+  const Wrapper =  (props: P) => {
+    return (
+      <Consumer>
+        {(theme: Theme) => <WrappedComponent theme={theme} {...props} />}
+      </Consumer>
+    );
+  };
+  Wrapper.displayName = `withChartTheme(${WrappedComponent.displayName})`;
+  return Wrapper;
 }
