@@ -4,8 +4,7 @@ import deepmerge from 'deepmerge';
 import { Theme } from '../common/types';
 
 interface ThemeProviderProps {
-    // theme prop can be partial of Theme type
-    // merge default theme and passed partial in the provider
+    /** theme prop can be partial of Theme type */
     theme: Partial<Theme>;
     children: React.ReactNode;
 }

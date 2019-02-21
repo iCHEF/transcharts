@@ -62,16 +62,24 @@ export interface Margin {
 }
 
 export interface AxisTheme {
+  /** color of stroke */
   strokeColor: string;
+  /** color of ticke stroke */
   tickStrokeColor: string;
+  /** width of stroke */
   strokeWidth: number;
+  /** font size of tick */
   tickFontSize: number;
 }
 
 export interface Theme {
+  /** common colors */
   colors: {
+    /** colors used for nominal data */
     category: ReadonlyArray<string>;
   };
+  /** xaxis theme config */
   xAxis: AxisTheme;
+  /** yaxis theme config */
   yAxis: AxisTheme;
 };

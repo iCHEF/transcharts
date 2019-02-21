@@ -15,12 +15,13 @@ import { redTheme as customRedTheme } from './customThemes';
 By default, we have a default theme in `transchart` so you can directly render Chart component.
 However, if you'd like to customize theme for your chart, you could use `ThemeProvider`.
 Wrapping the charts where you want to customize with `ThemeProvider`, pass your custom theme object, and it's done.
+The theme object could be partial of theme.
 
 # Line Chart
 
 We use the following example data to generate the example charts below.
 
-**Example Data:**
+**Example Data and red theme:**
 
 ```js
 const lineData = [
@@ -33,7 +34,15 @@ const lineData = [
 const customRedTheme = {
   colors: {
     category: ['#d01040']
-  }
+  },
+  xAxis: {
+    strokeColor: '#d01040',
+    tickStrokeColor: '#d01040',
+  },
+  yAxis: {
+    strokeColor: '#d01040',
+    tickStrokeColor: '#d01040',
+  },
 }
 ```
 
@@ -51,3 +60,67 @@ const customRedTheme = {
   </div>
 </Playground>
 
+## propTypes
+
+<PropsTable of={ThemeProvider} />
+
+the `theme` type has following attributes:
+
+## `theme` attributes:
+
+```js
+
+{
+  /** common colors */
+  colors: {
+    /** colors used for nominal data */
+    category: ReadonlyArray<string>;
+  };
+  /** xaxis theme config */
+  xAxis: {
+    /** color of stroke */
+    strokeColor: string;
+    /** color of ticke stroke */
+    tickStrokeColor: string;
+    /** width of stroke */
+    strokeWidth: number;
+    /** font size of tick */
+    tickFontSize: number;
+  }
+  /** yaxis theme config */
+  yAxis: {
+    /** color of stroke */
+    strokeColor: string;
+    /** color of ticke stroke */
+    tickStrokeColor: string;
+    /** width of stroke */
+    strokeWidth: number;
+    /** font size of tick */
+    tickFontSize: number;
+  }
+};
+
+```
+
+### Currently default theme
+
+```js
+{
+  colors: {
+      /** see [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic) */
+      category: d3.schemeCategory10,
+  },
+  xAxis: {
+      strokeColor: '#7c8a94',
+      tickStrokeColor: '#7c8a94',
+      strokeWidth: 1.5,
+      tickFontSize: 13,
+  },
+  yAxis: {
+      strokeColor: '#7c8a94',
+      tickStrokeColor: '#7c8a94',
+      strokeWidth: 1.5,
+      tickFontSize: 13,
+  },
+}
+```
