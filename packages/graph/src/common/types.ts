@@ -63,6 +63,6 @@ export interface Margin {
 
 export interface Theme {
   colors: {
-    category: string[];
+    category: ReadonlyArray<string>;
   };
 };
