@@ -17,6 +17,8 @@ import {
   DataField,
   Margin,
   Scale,
+  // from themes
+  withChartTheme,
 } from '@ichef/transcharts-graph';
 
 export interface LineChartProps {
@@ -63,7 +65,7 @@ const HoveringIndicator: React.FC<{
   );
 };
 
-export const LineChart: React.SFC<LineChartProps> = ({
+const LineChartImpl: React.SFC<LineChartProps> = ({
   data,
   scaleX,
   scaleY,
@@ -215,3 +217,5 @@ export const LineChart: React.SFC<LineChartProps> = ({
     </ResponsiveLayer>
   );
 };
+
+export const LineChart = withChartTheme(LineChartImpl);
