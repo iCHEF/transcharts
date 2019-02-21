@@ -1,9 +1,13 @@
 import * as React from 'react';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 import { Theme } from '../common/types';
 
-
 export const themes = {
-    default: {},
+    default: {
+        colors: {
+            category: schemeCategory10,
+        },
+    },
 };
 
 const defaultTheme = themes.default;

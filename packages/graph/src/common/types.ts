@@ -61,4 +61,8 @@ export interface Margin {
   left: number;
 }
 
-export interface Theme {}
+export interface Theme {
+  colors: {
+    category: string[];
+  };
+};

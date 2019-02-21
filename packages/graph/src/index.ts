@@ -5,7 +5,7 @@ export * from './layers/DataLayer';
 export * from './layers/AxisLayer';
 export * from './layers/HoverLayer';
 export * from './layers/TooltipLayer';
-export * from './theme';
+export * from './themes';
 export * from './tooltip/Tooltip';
 export * from './tooltip/TooltipItem';
 export * from './utils/getRecordFieldSelectors';
