@@ -35,7 +35,7 @@ export interface LineChartProps {
   /** Should show the axis on the bottom or not */
   showBottomAxis: boolean;
   /** Theme object */
-  theme: Theme
+  theme: Theme;
 }
 
 /** A line and a dot for the point being hovered */
