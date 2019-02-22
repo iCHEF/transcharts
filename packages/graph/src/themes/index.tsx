@@ -34,7 +34,7 @@ const defaultTheme = themes.default;
 
 export const ThemeContext = React.createContext(defaultTheme);
 
-const { Provider, Consumer } = ThemeContext;
+const { Provider } = ThemeContext;
 function mergeTheme(theme: Theme, partialTheme: Partial<Theme>): Theme {
   // see https://github.com/TehShrike/deepmerge
   return deepmerge(
@@ -52,14 +52,3 @@ export const ThemeProvider = ({ theme, children }: ThemeProviderProps) => {
     </Provider>
   );
 };
-export function withChartTheme<P>(WrappedComponent: React.SFC<P>) {
-  const Wrapper =  (props: P) => {
-    return (
-      <Consumer>
-        {(theme: Theme) => <WrappedComponent theme={theme} {...props} />}
-      </Consumer>
-    );
-  };
-  Wrapper.displayName = `withChartTheme(${WrappedComponent.displayName})`;
-  return Wrapper;
-}
