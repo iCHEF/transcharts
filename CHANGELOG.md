@@ -20,5 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Fix `yarn lint` command. (#7)
 - Upgrade React to 16.8. (#4)
 - Upgrade react-spring to the latest version which uses hooks. (#4)
