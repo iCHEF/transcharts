@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add `ThemeProvider` and color / xy axis themes config for customize theme. (#6)
 - Create an animation package, and add a simple SVG clipping animation: `<AnimatedClipRect>`. (#4)
 - Add `<HoverLayer>` to reuse the hovering interactions logic across different graphs. (#3)
 - Add the tooltip and hovered effects in `<LineChart>`. (#3)
