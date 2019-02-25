@@ -8,6 +8,8 @@ import {
   DataLayerRenderParams,
   // from HoverLayer
   HoverLayer,
+  // from hooks
+  useHoverState,
   // from ResponsiveLayer
   ResponsiveLayer,
   ResponsiveState,
@@ -85,6 +87,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
   showBottomAxis = true,
 }) => {
   const theme = useContext(ThemeContext);
+  const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
   return (
     <ResponsiveLayer>
       {({ width: outerWidth, height: outerHeight }: ResponsiveState) => {
@@ -95,7 +98,6 @@ export const LineChart: React.SFC<LineChartProps> = ({
         if (graphWidth <= 0 || graphHeight <= 0) {
           return null;
         }
-
         return (
           <DataLayer
             width={graphWidth}
@@ -110,11 +112,6 @@ export const LineChart: React.SFC<LineChartProps> = ({
               // computed x and y axis configurations
               xAxis,
               yAxis,
-              // currently hovered positions
-              hovering,
-              hoveredPoint,
-              setHoveredPosAndIndex,
-              clearHovering,
             }: DataLayerRenderParams) => {
               // currently we only have one variable on the x-axis, so we get field `0`
               const xSelector = xAxis.getSelectorsByField(0);
