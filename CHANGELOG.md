@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add `tslint-react-hooks` rules to lint React Hooks. (#8)
 - Add `ThemeProvider` and color / xy axis themes config for customize theme. (#6)
 - Create an animation package, and add a simple SVG clipping animation: `<AnimatedClipRect>`. (#4)
 - Add `<HoverLayer>` to reuse the hovering interactions logic across different graphs. (#3)
@@ -21,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Use Hooks to rewrite functionalities of `<ResponsiveLayer>`. (#8)
+- Refactor the way getting width and height in `<LineChart>`. (#8)
 - Fix `yarn lint` command. (#7)
 - Upgrade React to 16.8. (#4)
 - Upgrade react-spring to the latest version which uses hooks. (#4)
