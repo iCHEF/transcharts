@@ -8,6 +8,8 @@ import {
   DataLayerRenderParams,
   // from HoverLayer
   HoverLayer,
+  // from hooks
+  useHoverState,
   // from TooltipLayer
   TooltipLayer,
   // from common types
@@ -90,7 +92,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   const dimension = useContainerDimension(chartRef);
   const { width: outerWidth, height: outerHeight } = dimension;
   const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin);
-
+  const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
   return (
     <div
       style={{ width: '100%', height: '100%', position: 'relative' }}
@@ -109,12 +111,10 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
           // computed x and y axis configurations
           xAxis,
           yAxis,
-          // currently hovered positions
-          hovering,
-          hoveredPoint,
-          setHoveredPosAndIndex,
-          clearHovering,
         }: DataLayerRenderParams) => {
+          if (graphWidth <= 0 || graphHeight <= 0) {
+            return null;
+          }
           // currently we only have one variable on the x-axis, so we get field `0`
           const xSelector = xAxis.getSelectorsByField(0);
           // currently we only have one variable on the y-axis, so we get field `0`
