@@ -60,3 +60,26 @@ export interface Margin {
   bottom: number;
   left: number;
 }
+
+export interface AxisTheme {
+  /** color of stroke */
+  strokeColor: string;
+  /** color of ticke stroke */
+  tickStrokeColor: string;
+  /** width of stroke */
+  strokeWidth: number;
+  /** font size of tick */
+  tickFontSize: number;
+}
+
+export interface Theme {
+  /** common colors */
+  colors: {
+    /** colors used for nominal data */
+    category: ReadonlyArray<string>;
+  };
+  /** x-axis theme config */
+  xAxis: AxisTheme;
+  /** y-axis theme config */
+  yAxis: AxisTheme;
+}

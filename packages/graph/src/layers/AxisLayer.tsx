@@ -1,15 +1,8 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { AxisBottom, AxisLeft } from '@vx/axis';
 
 import { AxisConfig } from '../common/types';
-
-// TODO: This should be extracted as a variable in the context
-const axisStyles = {
-  strokeColor: '#7c8a94',
-  tickStrokeColor: '#7c8a94',
-  strokeWidth: 1.5,
-  tickFontSize: 13,
-};
+import { ThemeContext } from '../themes';
 
 /**
  * Returns the number of ticks on the axis based on the length of data and the axis
@@ -46,16 +39,22 @@ export interface AxisLayerProps {
   yAxis: AxisConfig;
 }
 
-const getXtickLabelProps = (styles: { tickFontSize: number }) => (value: any, index: number) => ({
-  fill: axisStyles.strokeColor,
+const getXtickLabelProps = (styles: {
+  tickFontSize: number,
+  strokeColor: string,
+}) => (value: any, index: number) => ({
+  fill: styles.strokeColor,
   textAnchor: 'end',
   fontSize: styles.tickFontSize,
   dx: '-0.25em',
   dy: '0.25em',
 });
 
-const getYtickLabelProps = (styles: { tickFontSize: number }) => (value: any, index: number) => ({
-  fill: axisStyles.strokeColor,
+const getYtickLabelProps = (styles: {
+  tickFontSize: number,
+  strokeColor: string,
+}) => (value: any, index: number) => ({
+  fill: styles.strokeColor,
   fontSize: styles.tickFontSize,
   textAnchor: 'middle',
 });
@@ -72,6 +71,9 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   yAxis,
 }) => {
 
+  const theme = useContext(ThemeContext);
+  const { xAxis: xAxisTheme, yAxis: yAxisTheme } = theme;
+
   return (
       <>
         {showLeftAxis && (
@@ -80,12 +82,12 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             left={0}
             scale={yAxis.d3Scale}
             // TODO: support showing labels on axes
-            stroke={axisStyles.strokeColor}
-            strokeWidth={axisStyles.strokeWidth}
-            tickStroke={axisStyles.tickStrokeColor}
+            stroke={xAxisTheme.strokeColor}
+            strokeWidth={xAxisTheme.strokeWidth}
+            tickStroke={xAxisTheme.tickStrokeColor}
             // TODO: modify it as a function
             numTicks={getNumberOfTicks(height, data)}
-            tickLabelProps={getXtickLabelProps(axisStyles)}
+            tickLabelProps={getXtickLabelProps(xAxisTheme)}
             // TODO: format the ticks based on the axis types
             // tickComponent={({ formattedValue, ...tickProps }) => (
             //   <text {...tickProps}>{formattedValue}</text>
@@ -96,12 +98,12 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
           <AxisBottom
             top={height}
             scale={xAxis.d3Scale}
-            stroke={axisStyles.strokeColor}
-            strokeWidth={axisStyles.strokeWidth}
-            tickStroke={axisStyles.tickStrokeColor}
+            stroke={yAxisTheme.strokeColor}
+            strokeWidth={yAxisTheme.strokeWidth}
+            tickStroke={yAxisTheme.tickStrokeColor}
             numTicks={getNumberOfTicks(width, data)}
             // TODO: deal with date type
-            tickLabelProps={getYtickLabelProps(axisStyles)}
+            tickLabelProps={getYtickLabelProps(yAxisTheme)}
           />
         )}
       </>
