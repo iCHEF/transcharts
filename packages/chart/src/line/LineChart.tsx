@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { LinePath } from '@vx/shape';
 import {
   // from AxisLayer
@@ -84,7 +84,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
   showLeftAxis = true,
   showBottomAxis = true,
 }) => {
-  const theme = React.useContext(ThemeContext);
+  const theme = useContext(ThemeContext);
   return (
     <ResponsiveLayer>
       {({ width: outerWidth, height: outerHeight }: ResponsiveState) => {

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { AxisBottom, AxisLeft } from '@vx/axis';
 
 import { AxisConfig } from '../common/types';
@@ -71,7 +71,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   yAxis,
 }) => {
 
-  const theme = React.useContext(ThemeContext);
+  const theme = useContext(ThemeContext);
   const { xAxis: xAxisTheme, yAxis: yAxisTheme } = theme;
 
   return (
