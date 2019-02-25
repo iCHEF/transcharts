@@ -78,8 +78,8 @@ export interface Theme {
     /** colors used for nominal data */
     category: ReadonlyArray<string>;
   };
-  /** xaxis theme config */
+  /** x-axis theme config */
   xAxis: AxisTheme;
-  /** yaxis theme config */
+  /** y-axis theme config */
   yAxis: AxisTheme;
 }
