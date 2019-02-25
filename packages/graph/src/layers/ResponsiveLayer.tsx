@@ -2,11 +2,6 @@ import React, { FunctionComponent, useRef } from 'react';
 
 import { useContainerDimension } from '../hooks/useContainerDimension';
 
-export interface ResponsiveState {
-  width: number;
-  height: number;
-}
-
 export interface ResponsiveProps {
   className?: string;
   style?: React.CSSProperties;
