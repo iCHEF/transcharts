@@ -8,18 +8,20 @@ import {
 import { debounce } from 'lodash-es';
 import resizeObserverPolyfill from 'resize-observer-polyfill';
 
-export interface ContainerDimension {
-  width: number;
-  height: number;
+import { GraphDimension } from '../common/types';
+
+interface ResizeObserverEntry {
+  readonly target: Element;
+  readonly contentRect: DOMRectReadOnly;
 }
 
 export function useContainerDimension(
   containerRef: RefObject<HTMLDivElement>,
   debounceTime = 300,
 ) {
-  const [dimension, setDimension] = useState<ContainerDimension>({
-    width: 1,
-    height: 1,
+  const [dimension, setDimension] = useState<GraphDimension>({
+    width: 0,
+    height: 0,
   });
 
   /** resizeObsrRef.current stores the ResizeObserver */

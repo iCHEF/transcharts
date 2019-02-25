@@ -54,6 +54,11 @@ export interface AxisConfig {
   getSelectorsByField: (fieldIndex: number) => FieldSelector;
 }
 
+export interface GraphDimension {
+  width: number;
+  height: number;
+}
+
 export interface Margin {
   top: number;
   right: number;
