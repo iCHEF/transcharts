@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { AxisBottom, AxisLeft } from '@vx/axis';
 
-import { AxisConfig } from '../common/types';
+import { AxisScale } from '../common/types';
 import { ThemeContext } from '../themes';
 
 /**
@@ -33,10 +33,10 @@ export interface AxisLayerProps {
   data: object[];
 
   /** X-axis configurations produced by `<DataLayer>` */
-  xAxis: AxisConfig;
+  xAxis: AxisScale;
 
   /** Y-axis configurations produced by `<DataLayer>` */
-  yAxis: AxisConfig;
+  yAxis: AxisScale;
 }
 
 const getXtickLabelProps = (styles: {
@@ -80,7 +80,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
           <AxisLeft
             top={0}
             left={0}
-            scale={yAxis.d3Scale}
+            scale={yAxis.scale}
             // TODO: support showing labels on axes
             stroke={xAxisTheme.strokeColor}
             strokeWidth={xAxisTheme.strokeWidth}
@@ -97,7 +97,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
         {showBottomAxis && (
           <AxisBottom
             top={height}
-            scale={xAxis.d3Scale}
+            scale={xAxis.scale}
             stroke={yAxisTheme.strokeColor}
             strokeWidth={yAxisTheme.strokeWidth}
             tickStroke={yAxisTheme.tickStrokeColor}

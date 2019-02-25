@@ -10,11 +10,12 @@ import {
   // from TooltipLayer
   TooltipLayer,
   // from common types
-  DataField,
   Margin,
   Scale,
+  AxisEncoding,
   // from utils
-  getAxis,
+  getXAxisScale,
+  getYAxisScale,
   // from themes
   Theme,
   ThemeContext,
@@ -28,10 +29,8 @@ export interface LineChartProps {
    /** Margin between the inner graph area and the outer svg */
   margin: Margin;
   data: object[];
-  scaleX: Scale;
-  scaleY: Scale;
-  fieldsX: DataField[];
-  fieldsY: DataField[];
+  x: AxisEncoding;
+  y: AxisEncoding;
   /** Should show the axis on the left or not */
   showLeftAxis: boolean;
   /** Should show the axis on the bottom or not */
@@ -73,10 +72,8 @@ const HoveringIndicator: FunctionComponent<{
 
 export const LineChart: FunctionComponent<LineChartProps> = ({
   data,
-  scaleX,
-  scaleY,
-  fieldsX,
-  fieldsY,
+  x,
+  y,
   margin = {
     top: 20,
     right: 20,
@@ -95,23 +92,21 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
     return null;
   }
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
-  const { xAxis, yAxis } = getAxis({
-    width: graphWidth,
-    height: graphHeight,
-    data: data,
-    scaleX: scaleX,
-    scaleY: scaleY,
-    fieldsX: fieldsX,
-    fieldsY: fieldsY,
-  })
-  // currently we only have one variable on the x-axis, so we get field `0`
-  const xSelector = xAxis.getSelectorsByField(0);
-  // currently we only have one variable on the y-axis, so we get field `0`
-  const ySelector = yAxis.getSelectorsByField(0);
-
-  /** Width of the collision detection rectangle */
   const bandWidth = graphWidth / (data.length - 1);
 
+  const xAxis = getXAxisScale({
+    axisLength: graphWidth,
+    encoding: x,
+    data,
+  })
+  const yAxis = getYAxisScale({
+    axisLength: graphHeight,
+    encoding: y,
+    data
+  })
+  const xSelector = xAxis.getSelectors();
+  const ySelector = yAxis.getSelectors();
+  /** Width of the collision detection rectangle */
   const color = theme.colors.category[0];
 
   const lineDots = data.map((dataRow, index) => (

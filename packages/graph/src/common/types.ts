@@ -59,6 +59,14 @@ export interface GraphDimension {
   height: number;
 }
 
+export interface Encoding {
+  field: string;
+  type: 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
+  scale?: 'point' | 'time' | 'linear';
+}
+
+export type AxisEncoding = Encoding;
+
 export interface Margin {
   top: number;
   right: number;
