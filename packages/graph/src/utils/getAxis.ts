@@ -1,15 +1,14 @@
-import * as React from 'react';
 import memoizeOne from 'memoize-one';
 
 import { Scale, DataField, AxisConfig } from '../common/types';
-import { getAxisConfig } from '../utils/getAxisConfig';
+import { getAxisConfig } from './getAxisConfig';
 
-export interface DataLayerRenderParams {
+export interface XYAxisConfig {
   xAxis: AxisConfig;
   yAxis: AxisConfig;
 }
 
-export interface DataLayerProps {
+export interface xyAxisEncoding {
   /** Width of the inner graph */
   width: number;
 
@@ -36,16 +35,14 @@ export interface DataLayerProps {
 
   /** DataFields of the y-axis */
   fieldsY: DataField[];
-
-  /** Render props with the computed configurations for the axes */
-  children: (axes: DataLayerRenderParams) => React.ReactNode;
 }
 
 /**
- * The layer is responsible for computing axis data in order to draw a graph
+ * This is responsible for computing axis data in order to draw a graph
  */
-export class DataLayer extends React.PureComponent<DataLayerProps> {
-  private getXYAxes = memoizeOne(
+
+export function getAxis(args: xyAxisEncoding): XYAxisConfig {
+  const getXYAxes = memoizeOne(
     (width, height, data, scaleX, scaleY, fieldsX, fieldsY) => {
       return {
         xAxis: getAxisConfig(0, width, data, scaleX, fieldsX),
@@ -54,31 +51,28 @@ export class DataLayer extends React.PureComponent<DataLayerProps> {
     },
   );
 
-  public render() {
-    const {
-      width,
-      height,
-      data,
-      scaleX,
-      scaleY,
-      fieldsX,
-      fieldsY,
-      children,
-    } = this.props;
+  const {
+    width,
+    height,
+    data,
+    scaleX,
+    scaleY,
+    fieldsX,
+    fieldsY,
+  } = args;
 
-    const { xAxis, yAxis } = this.getXYAxes(
-      width,
-      height,
-      data,
-      scaleX,
-      scaleY,
-      fieldsX,
-      fieldsY,
-    );
+  const { xAxis, yAxis } = getXYAxes(
+    width,
+    height,
+    data,
+    scaleX,
+    scaleY,
+    fieldsX,
+    fieldsY,
+  );
 
-    return children({
-      xAxis,
-      yAxis,
-    });
-  }
+  return {
+    xAxis,
+    yAxis,
+  };
 }
