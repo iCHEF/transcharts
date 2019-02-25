@@ -9,3 +9,8 @@ interface ResizeObserver {
   unobserve(target: Element): void;
   disconnect(): void;
 }
+
+interface ResizeObserverEntry {
+  readonly target: Element;
+  readonly contentRect: DOMRectReadOnly;
+}
