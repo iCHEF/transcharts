@@ -34,10 +34,8 @@ const lineData = [
   <div style={{ width: '100%', height: '320px' }}>
     <LineChart
       data={lineData}
-      scaleX={{ type: 'linear' }}
-      scaleY={{ type: 'linear' }}
-      fieldsX={[{name: 'x'}]}
-      fieldsY={[{name: 'y'}]}
+      x={{ field: 'x', type: 'quantitative', scale: 'linear' }}
+      y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
     />
   </div>
 </Playground>
@@ -48,10 +46,8 @@ const lineData = [
   <div style={{ width: '100%', height: '320px' }}>
     <LineChart
       data={lineData}
-      scaleX={{ type: 'time' }}
-      scaleY={{ type: 'linear' }}
-      fieldsX={[{name: 'date'}]}
-      fieldsY={[{name: 'x'}]}
+      x={{ field: 'date', type: 'quantitative', scale: 'time' }}
+      y={{ field: 'x', type: 'quantitative', scale: 'linear' }}
     />
   </div>
 </Playground>
@@ -62,10 +58,8 @@ const lineData = [
   <div style={{ width: '100%', height: '320px' }}>
     <LineChart
       data={lineData}
-      scaleX={{ type: 'point' }}
-      scaleY={{ type: 'linear' }}
-      fieldsX={[{name: 'weekday'}]}
-      fieldsY={[{name: 'y'}]}
+      x={{ field: 'weekday', type: 'quantitative', scale: 'point' }}
+      y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
     />
   </div>
 </Playground>

@@ -54,6 +54,14 @@ export interface AxisConfig {
   getSelectorsByField: (fieldIndex: number) => FieldSelector;
 }
 
+export interface Encoding {
+  field: string;
+  type: 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
+  scale?: 'point' | 'time' | 'linear';
+}
+
+export type AxisEncoding = Encoding;
+
 export interface Margin {
   top: number;
   right: number;
