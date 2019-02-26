@@ -42,8 +42,10 @@ export const TooltipLayer: React.FC<TooltipLayerProps> = ({
       show={hovering}
     >
       <h3>{xSelector.getFormattedStringVal(data[index])}</h3>
-      {/* TODO: unify the way of dealing colors of the fields */}
-      <TooltipItem color={getColor(data[index])} text={ySelector.getFormattedStringVal(data[index])} />
+      <TooltipItem
+        color={getColor(data[index])}
+        text={ySelector.getFormattedStringVal(data[index])}
+      />
     </Tooltip>
   );
 };
