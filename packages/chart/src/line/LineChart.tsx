@@ -177,7 +177,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
 
                 return (
                   <rect
-                    // #TODO: use keys defined in the `<DataLayer>`
+                    // #TODO: use unique keys rather than array index
                     key={`colli-${index}`}
                     x={rectX}
                     y={0}

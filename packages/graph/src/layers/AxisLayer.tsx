@@ -32,10 +32,10 @@ export interface AxisLayerProps {
   /** Data of the chart */
   data: object[];
 
-  /** X-axis configurations produced by `<DataLayer>` */
+  /** X-axis configurations produced by `getAxisScale` */
   xAxis: AxisScale;
 
-  /** Y-axis configurations produced by `<DataLayer>` */
+  /** Y-axis configurations produced by `getAxisScale` */
   yAxis: AxisScale;
 }
 
