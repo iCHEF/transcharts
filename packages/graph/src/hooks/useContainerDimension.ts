@@ -16,7 +16,7 @@ interface ResizeObserverEntry {
 }
 
 export function useContainerDimension(
-  containerRef: RefObject<HTMLDivElement>,
+  containerRef: RefObject<HTMLElement>,
   debounceTime = 300,
 ) {
   const [dimension, setDimension] = useState<GraphDimension>({
