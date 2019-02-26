@@ -10,17 +10,22 @@ export interface HoveredPointState {
     x: number;
     y: number;
   };
-};
+}
 
 export interface HoverState {
   /** Records whether there is mouse or touch event generating from the inner layer */
   hovering: boolean;
 
   /** The position of the point being hovered and its mapped index of data  */
-  hoveredPoint: HoveredPointState
+  hoveredPoint: HoveredPointState;
 }
 
-export function useHoverState() {
+export interface HoverStateControls extends HoverState {
+  clearHovering: () => void;
+  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
+}
+
+export function useHoverState(): HoverStateControls {
   const [hovering, setHovering] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState({
     index: 0,
