@@ -1,20 +1,10 @@
 import { useState } from 'react';
 
-export type HoveringState = boolean;
-export interface HoveredPointState {
-  /** The index of data being hovered or touched */
-  index: number;
-
-  /** The mouse hovered or touched position */
-  position: {
-    x: number;
-    y: number;
-  };
-}
+import { HoveredPointState, HoveringState } from '../common/types';
 
 export interface HoverState {
   /** Records whether there is mouse or touch event generating from the inner layer */
-  hovering: boolean;
+  hovering: HoveringState;
 
   /** The position of the point being hovered and its mapped index of data  */
   hoveredPoint: HoveredPointState;

@@ -1,14 +1,12 @@
 import * as React from 'react';
 
-import { Margin, FieldSelector } from '../common/types';
+import { Margin, FieldSelector, HoveringState, HoveredPointState } from '../common/types';
 import { Tooltip } from '../tooltip/Tooltip';
 import { TooltipItem } from '../tooltip/TooltipItem';
 
-import { DataLayerRenderParams } from './DataLayer';
-
 export interface TooltipLayerProps {
-  hovering: DataLayerRenderParams['hovering'];
-  hoveredPoint: DataLayerRenderParams['hoveredPoint'];
+  hovering: HoveringState;
+  hoveredPoint: HoveredPointState;
   data: object[];
   graphWidth: number;
   graphHeight: number;

@@ -99,3 +99,15 @@ export interface Theme {
   /** y-axis theme config */
   yAxis: AxisTheme;
 }
+
+export type HoveringState = boolean;
+export interface HoveredPointState {
+  /** The index of data being hovered or touched */
+  index: number;
+
+  /** The mouse hovered or touched position */
+  position: {
+    x: number;
+    y: number;
+  };
+}
