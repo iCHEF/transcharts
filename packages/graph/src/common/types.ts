@@ -4,7 +4,6 @@ import {
   ScaleTime,
 } from 'd3-scale';
 
-
 export interface FieldSelector {
   getOriginalVal: (record: object) => any;
   getScaledVal: (record: object) => any;
@@ -13,7 +12,7 @@ export interface FieldSelector {
 
 export interface Scale {
   /** d3's Scaling function employed in specific channel */
-  scale: Function;
+  scale: (...values: any[]) => any;
 
   /** scale type string */
   scaleType: string;
@@ -62,7 +61,7 @@ export interface Encoding {
 
 export interface AxisEncoding extends Encoding {
   scale?: AxisScaleType;
-};
+}
 
 export interface Margin {
   top: number;

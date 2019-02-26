@@ -4,13 +4,15 @@ import {
   scalePoint,
   scaleTime,
 } from 'd3-scale';
+
 import { AxisScale, AxisEncoding } from '../common/types';
+
 import { getRecordFieldSelector } from './getRecordFieldSelector';
 
 export interface GetAxisScaleArgs {
-  data: object[],
-  encoding: AxisEncoding,
-  axisLength: number,
+  data: object[];
+  encoding: AxisEncoding;
+  axisLength: number;
 }
 
 /**
@@ -67,11 +69,11 @@ export function getAxisScale(
     domain,
     getValue,
     scaleType,
-    scale: scale,
     type,
-    selector
+    scale,
+    selector,
   };
-  return axisScale
+  return axisScale;
 }
 
 export function getXAxisScale({ encoding, data, axisLength }: GetAxisScaleArgs): AxisScale {
