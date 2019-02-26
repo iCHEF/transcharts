@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useContext, useRef } from 'react';
-import { groupBy, values } from 'lodash-es'
 import { LinePath } from '@vx/shape';
 import {
   // from AxisLayer
@@ -24,6 +23,8 @@ import {
   ThemeContext,
   // from hooks
   useContainerDimension,
+  // from types
+  FieldSelector,
 } from '@ichef/transcharts-graph';
 
 import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
@@ -73,6 +74,38 @@ const HoveringIndicator: FunctionComponent<{
     </>
   );
 };
+
+const DataLine: React.FC<{
+  color: string,
+  xSelector: FieldSelector,
+  ySelector: FieldSelector,
+  rows: object[],
+}> = ({ color, xSelector, ySelector, rows }) => {
+  const lineDots = rows.map((dataRow, index) => (
+    <circle
+      key={`c-${index}`}
+      cx={xSelector.getScaledVal(dataRow)}
+      cy={ySelector.getScaledVal(dataRow)}
+      r={3.5}
+      fill={color}
+    />
+  ));
+  return (<>
+    {/* Draw the line */}
+    <LinePath
+      data={rows}
+      x={xSelector.getScaledVal}
+      y={ySelector.getScaledVal}
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+
+    {/* Draw dots on the line */}
+    {lineDots}
+  </>
+)};
 
 export const LineChart: FunctionComponent<LineChartProps> = ({
   data,
@@ -124,30 +157,14 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   const graphGroup = dataGroup.map(
     rows => {
       const colorString: string = getColor(rows[0]);
-      const lineDots = rows.map((dataRow, index) => (
-        <circle
-          key={`c-${index}`}
-          cx={xSelector.getScaledVal(dataRow)}
-          cy={ySelector.getScaledVal(dataRow)}
-          r={3.5}
-          fill={colorString}
+      return (
+        <DataLine
+          color={colorString}
+          rows={rows}
+          xSelector={xSelector}
+          ySelector={ySelector}
         />
-      ));
-      return (<>
-        {/* Draw the line */}
-        <LinePath
-          data={rows}
-          x={xSelector.getScaledVal}
-          y={ySelector.getScaledVal}
-          stroke={colorString}
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* Draw dots on the line */}
-        {lineDots}
-      </>)
+      );
     }
   );
 
