@@ -143,16 +143,22 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   const xSelector = xAxis.selector;
   const ySelector = yAxis.selector;
 
+  /** Width of the collision detection rectangle */
   const bandWidth = graphWidth / (data.length - 1);
   const colorScale = typeof color !== 'undefined' && getColorScale({
-    encoding: color,
     data,
+    encoding: color,
     colors: theme.colors,
   });
-  const defaultColor = theme.colors.category[0]
-  const getColor = colorScale ? colorScale.selector.getScaledVal : () => defaultColor;
-  const fieldsToGroupBy: string[] = [color].filter(encoding => !!encoding).map(encoding => encoding.field);
-  const dataGroup = getDataGroup(data, fieldsToGroupBy);
+  const defaultColor = theme.colors.category[0];
+  const getColor = colorScale ?
+    colorScale.selector.getScaledVal :
+    () => defaultColor;
+  const fieldsToGroupBy: string[] = [color]
+    .filter(encoding => !!encoding)
+    .map(encoding => encoding.field);
+  const sortedData = data.sort((rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB));
+  const dataGroup = getDataGroup(sortedData, fieldsToGroupBy);
 
   const graphGroup = dataGroup.map(
     rows => {
