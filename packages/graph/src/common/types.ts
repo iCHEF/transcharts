@@ -29,7 +29,7 @@ export interface Scale {
   /**
    * Range of input channel
    */
-  range: [any, any];
+  range?: ReadonlyArray<any>;
 
   /** Returns the formatted value according to the type of the axis */
   getValue: (val: any) => any;
