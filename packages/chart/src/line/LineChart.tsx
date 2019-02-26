@@ -96,17 +96,17 @@ export const LineChart: React.SFC<LineChartProps> = ({
           return null;
         }
         const xAxis = getXAxisScale({
+          data,
           axisLength: graphWidth,
           encoding: x,
-          data,
-        })
+        });
         const yAxis = getYAxisScale({
+          data,
           axisLength: graphHeight,
           encoding: y,
-          data
-        })
-        const xSelector = xAxis.getSelectors();
-        const ySelector = yAxis.getSelectors();
+        });
+        const xSelector = xAxis.selector;
+        const ySelector = yAxis.selector;
 
         /** Width of the collision detection rectangle */
         const bandWidth = graphWidth / (data.length - 1);
