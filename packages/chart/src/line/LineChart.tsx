@@ -11,7 +11,6 @@ import {
   TooltipLayer,
   // from common types
   Margin,
-  Scale,
   AxisEncoding,
   // from utils
   getXAxisScale,
