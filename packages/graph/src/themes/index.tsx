@@ -17,7 +17,7 @@ export const themes = {
       sequential: {
         scheme: schemeBlues[9],
         interpolator: interpolateBlues,
-      }
+      },
     },
     xAxis: {
       strokeColor: '#7c8a94',
