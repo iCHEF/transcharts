@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useContext, useRef } from 'react';
+import { groupBy, values } from 'lodash-es'
 import { LinePath } from '@vx/shape';
 import {
   // from AxisLayer
@@ -14,9 +15,10 @@ import {
   AxisEncoding,
   ColorEncoding,
   // from utils
+  getColorScale,
+  getDataGroup,
   getXAxisScale,
   getYAxisScale,
-  getColorScale,
   // from themes
   Theme,
   ThemeContext,
@@ -116,25 +118,8 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   });
   const defaultColor = theme.colors.category[0]
   const getColor = colorScale ? colorScale.selector.getScaledVal : () => defaultColor;
-
-  const dataGroup: object[][] = typeof colorScale === 'object'  ? (function(){
-    const dataByField = data.reduce(
-      (all, row) => {
-        const { field } = color;
-        const val = row[field]
-        if (!all[val]) {
-          all[val] = [row]
-        } else {
-          all[val].push(row)
-        }
-        return all
-      },
-      {}
-    );
-    return Object.keys(dataByField).map(key => dataByField[key]);
-  })() :
-    [data];
-
+  const fieldsToGroupBy: string[] = [color].filter(encoding => !!encoding).map(encoding => encoding.field);
+  const dataGroup = getDataGroup(data, fieldsToGroupBy);
 
   const graphGroup = dataGroup.map(
     rows => {
