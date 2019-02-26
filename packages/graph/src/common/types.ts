@@ -58,9 +58,11 @@ export interface AxisScale extends Scale {
   range: [number, number];
 }
 
+export type EncodingDataType = 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
+
 export interface Encoding {
   field: string;
-  type: 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
+  type: EncodingDataType;
   scale?: string;
 }
 
