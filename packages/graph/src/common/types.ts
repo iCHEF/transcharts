@@ -65,6 +65,8 @@ export interface AxisEncoding extends Encoding {
   scale?: AxisScaleType;
 }
 
+export type ColorEncoding = Encoding;
+
 export interface Margin {
   top: number;
   right: number;
@@ -88,6 +90,10 @@ export interface Theme {
   colors: {
     /** colors used for nominal data */
     category: ReadonlyArray<string>;
+    sequential: {
+      scheme: ReadonlyArray<string>;
+      interpolator: (val: number) => string;
+    }
   };
   /** x-axis theme config */
   xAxis: AxisTheme;
