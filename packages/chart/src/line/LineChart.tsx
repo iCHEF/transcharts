@@ -13,9 +13,7 @@ import {
   // from TooltipLayer
   TooltipLayer,
   // from common types
-  DataField,
   Margin,
-  Scale,
   AxisEncoding,
   // from utils
   getXAxisScale,
