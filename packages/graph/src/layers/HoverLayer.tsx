@@ -7,6 +7,8 @@ import React, {
 import { throttle } from 'lodash-es';
 import { localPoint } from '@vx/event';
 
+import { useAnimationFrame } from '../hooks/useAnimationFrame';
+
 import { DataLayerRenderParams } from './DataLayer';
 
 export interface HoverLayerProps {
@@ -36,8 +38,8 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
   collisionComponents,
   throttleTime = 180,
 }) => {
-  /** stores the animation frame ID of the scheduled update of hovered position and data index */
-  const animaFrameIDRef = useRef<number | null>(null);
+  /** use requestAnimationFrame to schedule updates of hovered position and data index */
+  const { requestWindowAnimationFrame } = useAnimationFrame();
 
   /** Function to update the position of the tooltip and sets the currently active data index */
   const updatePosition = useCallback(
@@ -48,7 +50,7 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
 
         // convert the position of the event to the coordinate system of the SVG
         const { x, y } = localPoint(event);
-        animaFrameIDRef.current = window.requestAnimationFrame(() => {
+        requestWindowAnimationFrame(() => {
           setHoveredPosAndIndex(
             dataIndex,
             x,
@@ -77,19 +79,6 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
       // cancel the previously thorttled event to prevent the tooltip from reappearing
       updatePosition.cancel();
       clearHovering();
-    },
-    [],
-  );
-
-  // TODO: should this be extracted?
-  useEffect(
-    () => {
-      return () => {
-        // cancel the scheduled update of the container's dimension
-        if (animaFrameIDRef.current) {
-          window.cancelAnimationFrame(animaFrameIDRef.current);
-        }
-      };
     },
     [],
   );
