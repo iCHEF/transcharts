@@ -114,6 +114,8 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
     data,
     colors: theme.colors,
   });
+  const defaultColor = theme.colors.category[0]
+  const getColor = colorScale ? colorScale.selector.getScaledVal : () => defaultColor;
 
   const dataGroup: object[][] = typeof colorScale === 'object'  ? (function(){
     const dataByField = data.reduce(
@@ -133,11 +135,10 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   })() :
     [data];
 
-  const defaultColor = theme.colors.category[0]
 
   const graphGroup = dataGroup.map(
     rows => {
-      const colorString: string = colorScale ? colorScale.scale(rows[0][color.field]) : defaultColor;
+      const colorString: string = getColor(rows[0]);
       const lineDots = rows.map((dataRow, index) => (
         <circle
           key={`c-${index}`}
@@ -188,7 +189,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
             xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
             yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
             height={graphHeight}
-            color={defaultColor}
+            color={getColor(data[hoveredPoint.index])}
           />
 
           {/* Areas which are used to detect mouse or touch interactions */}
@@ -233,7 +234,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
         margin={margin}
         xSelector={xSelector}
         ySelector={ySelector}
-        color={color}
+        getColor={getColor}
       />
     </div>
   );
