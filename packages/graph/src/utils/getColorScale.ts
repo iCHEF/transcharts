@@ -1,37 +1,42 @@
 import { scaleOrdinal, scaleSequential } from 'd3-scale';
+
 import { Theme, ColorEncoding, ColorScale } from '../common/types';
+
 import { getRecordFieldSelector } from './getRecordFieldSelector';
 
 interface GetColorScaleArgs {
   colors: Theme['colors'];
   encoding: ColorEncoding;
-  data: object[]
+  data: object[];
 }
 
 const getColorScaleSetting = ({
   colors,
   encoding,
-  data
-}: GetColorScaleArgs): Pick<ColorScale, Extract<keyof ColorScale, 'domain' | 'scale' | 'range' | 'scaleType'>> => {
+  data,
+}: GetColorScaleArgs): Pick<
+  ColorScale,
+  Extract<keyof ColorScale, 'domain' | 'scale' | 'range' | 'scaleType'>
+> => {
   const { field, type } = encoding;
   switch (type) {
     case 'nominal': {
       const domain = Object.keys(data.reduce(
         (all, row) => {
-          const value = row[field]
+          const value = row[field];
           return {
             ...all,
-            [value]: true
-          }
+            [value]: true,
+          };
         },
-        {}
+        {},
       ));
       const scale = scaleOrdinal(colors.category).domain(domain);
       return {
+        domain,
         scale,
         scaleType: 'ordinal',
         range: colors.category,
-        domain
       };
     }
     case 'ordinal': {
@@ -39,24 +44,25 @@ const getColorScaleSetting = ({
         (all, row) => {
           return {
             ...all,
-            [row[field]]: true
-          }
+            [row[field]]: true,
+          };
         },
-        {}
+        {},
       )).sort((a, b) => Number(a) - Number(b));
       const scale = scaleOrdinal(colors.sequential.scheme).domain(domain);
       return {
+        domain,
         scale,
         scaleType: 'ordinal',
         range: colors.sequential.scheme,
-        domain
       };
     }
     case 'temporal': {
       const timeStamps: number[] = data.map(obj => obj[field].getTime());
       const minTime = Math.min(...timeStamps);
       const maxTime = Math.max(...timeStamps);
-      const scale = scaleSequential(colors.sequential.interpolator).domain([minTime, maxTime]);
+      const scale = scaleSequential(colors.sequential.interpolator)
+        .domain([minTime, maxTime]);
       return {
         scale,
         scaleType: 'sequential',
@@ -74,20 +80,19 @@ const getColorScaleSetting = ({
         domain: [min, max],
       };
     }
-
     default: {
       throw Error('Invalid color encoding type.');
     }
   }
 };
 
-export function getColorScale({encoding, colors, data}: {
+export function getColorScale({ encoding, colors, data }: {
   colors: Theme['colors'],
   encoding: ColorEncoding,
-  data: object[]
+  data: object[],
 }): ColorScale {
-  const { type, field } = encoding
-  const { scale, scaleType, domain, range } = getColorScaleSetting({ colors, encoding, data })
+  const { type, field } = encoding;
+  const { scale, scaleType, domain, range } = getColorScaleSetting({ colors, encoding, data });
   const getValue = (val: any) => val;
   return {
     scale,
@@ -97,6 +102,6 @@ export function getColorScale({encoding, colors, data}: {
     getValue,
     range,
     scaleType,
-    selector: getRecordFieldSelector({ field, scale, getValue, scaleType })
-  }
+    selector: getRecordFieldSelector({ field, scale, getValue, scaleType }),
+  };
 }
