@@ -16,26 +16,26 @@ export interface GraphDimension {
   height: number;
 }
 
-export interface AxisScale {
-  /** d3's Scaling function employed in this axis */
-  scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
+export interface Scale {
+  /** d3's Scaling function employed in specific channel */
+  scale: Function;
 
   /** scale type string */
   scaleType: string;
 
   /** field for axis */
   field: string;
+
   /** data type */
   type: string;
 
-  /*  Domain of the axis: [min, max] */
+  /** Domain of input channel */
   domain: any[];
 
   /**
-   * Range of the axis: [min, max]
-   * it should match the inner width and height of the graph
+   * Range of input channel
    */
-  range: [number, number];
+  range: [any, any];
 
   /** Returns the formatted value according to the type of the axis */
   getValue: (val: any) => any;
@@ -43,13 +43,31 @@ export interface AxisScale {
   selector: FieldSelector;
 }
 
+export type AxisScaleType = 'point' | 'time' | 'linear';
+
+export interface AxisScale extends Scale {
+  /** d3's Scaling function employed in this axis */
+  scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
+
+  /** scale type string */
+  scaleType: AxisScaleType;
+
+  /**
+   * Range of the axis: [min, max]
+   * it should match the inner width and height of the graph
+   */
+  range: [number, number];
+}
+
 export interface Encoding {
   field: string;
   type: 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
-  scale?: 'point' | 'time' | 'linear';
+  scale?: string;
 }
 
-export type AxisEncoding = Encoding;
+export interface AxisEncoding extends Encoding {
+  scale?: AxisScaleType;
+};
 
 export interface Margin {
   top: number;
