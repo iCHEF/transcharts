@@ -9,4 +9,5 @@ export * from './themes';
 export * from './tooltip/Tooltip';
 export * from './tooltip/TooltipItem';
 export * from './utils/getAxisScale';
+export * from './utils/getColorScale';
 export * from './utils/getRecordFieldSelector';

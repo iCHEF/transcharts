@@ -15,9 +15,11 @@ import {
   // from common types
   Margin,
   AxisEncoding,
+  ColorEncoding,
   // from utils
   getXAxisScale,
   getYAxisScale,
+  getColorScale,
   // from themes
   Theme,
   ThemeContext,
@@ -29,6 +31,7 @@ export interface LineChartProps {
   data: object[];
   x: AxisEncoding;
   y: AxisEncoding;
+  color?: ColorEncoding;
   /** Should show the axis on the left or not */
   showLeftAxis: boolean;
   /** Should show the axis on the bottom or not */
@@ -72,6 +75,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
   data,
   x,
   y,
+  color,
   margin = {
     top: 20,
     right: 20,
@@ -108,18 +112,61 @@ export const LineChart: React.SFC<LineChartProps> = ({
 
         /** Width of the collision detection rectangle */
         const bandWidth = graphWidth / (data.length - 1);
+        const colorScale = typeof color !== 'undefined' && getColorScale({
+          encoding: color,
+          data,
+          colors: theme.colors,
+        });
 
-        const color = theme.colors.category[0];
+        const dataGroup: object[][] = typeof colorScale === 'object'  ? (function(){
+          const dataByField = data.reduce(
+            (all, row) => {
+              const { field } = color;
+              const val = row[field]
+              if (!all[val]) {
+                all[val] = [row]
+              } else {
+                all[val].push(row)
+              }
+              return all
+            },
+            {}
+          );
+          return Object.keys(dataByField).map(key => dataByField[key]);
+        })() :
+          [data];
 
-        const lineDots = data.map((dataRow, index) => (
-          <circle
-            key={`c-${index}`}
-            cx={xSelector.getScaledVal(dataRow)}
-            cy={ySelector.getScaledVal(dataRow)}
-            r={3.5}
-            fill={color}
-          />
-        ));
+        const defaultColor = theme.colors.category[0]
+
+        const graphGroup = dataGroup.map(
+          rows => {
+            const colorString: string = colorScale ? colorScale.scale(rows[0][color.field]) : defaultColor;
+            const lineDots = rows.map((dataRow, index) => (
+              <circle
+                key={`c-${index}`}
+                cx={xSelector.getScaledVal(dataRow)}
+                cy={ySelector.getScaledVal(dataRow)}
+                r={3.5}
+                fill={colorString}
+              />
+            ));
+            return (<>
+              {/* Draw the line */}
+              <LinePath
+                data={rows}
+                x={xSelector.getScaledVal}
+                y={ySelector.getScaledVal}
+                stroke={colorString}
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* Draw dots on the line */}
+              {lineDots}
+            </>)
+          }
+        );
 
         return (
           <>
@@ -136,25 +183,13 @@ export const LineChart: React.SFC<LineChartProps> = ({
                   yAxis={yAxis}
                 />
 
-                {/* Draw the line */}
-                <LinePath
-                  data={data}
-                  x={xSelector.getScaledVal}
-                  y={ySelector.getScaledVal}
-                  stroke={color}
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-
-                {/* Draw dots on the line */}
-                {lineDots}
+                {graphGroup}
                 <HoveringIndicator
                   hovering={hovering}
                   xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
                   yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
                   height={graphHeight}
-                  color={color}
+                  color={defaultColor}
                 />
 
                 {/* Areas which are used to detect mouse or touch interactions */}
@@ -200,7 +235,7 @@ export const LineChart: React.SFC<LineChartProps> = ({
               margin={margin}
               xSelector={xSelector}
               ySelector={ySelector}
-              color={color}
+              color={defaultColor}
             />
           </>
         );

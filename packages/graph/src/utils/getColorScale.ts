@@ -12,15 +12,16 @@ const getColorScaleSetting = ({
   colors,
   encoding,
   data
-}: GetColorScaleArgs): Pick<ColorScale, Extract<keyof ColorScale, 'field' | 'scale' | 'getValue' | 'scaleType'>> => {
+}: GetColorScaleArgs): Pick<ColorScale, Extract<keyof ColorScale, 'domain' | 'scale' | 'range' | 'scaleType'>> => {
   const { field, type } = encoding;
   switch (type) {
     case 'nominal': {
       const domain = Object.keys(data.reduce(
         (all, row) => {
+          const value = row[field]
           return {
             ...all,
-            [row[field]]: true
+            [value]: true
           }
         },
         {}
@@ -59,7 +60,6 @@ const getColorScaleSetting = ({
       return {
         scale,
         scaleType: 'sequential',
-        range: colors.sequential.interpolator,
         domain: [minTime, maxTime],
       };
     }
@@ -71,7 +71,6 @@ const getColorScaleSetting = ({
       return {
         scale,
         scaleType: 'sequential',
-        range: colors.sequential.interpolator,
         domain: [min, max],
       };
     }
@@ -98,7 +97,6 @@ export function getColorScale({encoding, colors, data}: {
     getValue,
     range,
     scaleType,
-    selector: getRecordFieldSelector({ field, scale: getColorScaleFunc, getValue, scaleType })
-
+    selector: getRecordFieldSelector({ field, scale, getValue, scaleType })
   }
 }
