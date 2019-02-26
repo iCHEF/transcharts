@@ -16,11 +16,13 @@ import { values, groupBy } from 'lodash-es';
  *   [{ type: 'a', color: 'red' }],
  *   [{ type: 'b', color: 'red' }],
  * ]
-*/
+ */
 export function getDataGroup(data: object[], fields: string[]): object[][] {
   return fields.reduce(
     (all, field) => {
       const groups = all.map(rows => values(groupBy(rows, field)));
-      return groups.reduce((joinedGroups, group) => [...joinedGroups, ...group], [])
-    }, [data]);
+      return groups.reduce((joinedGroups, group) => [...joinedGroups, ...group], []);
+    },
+    [data],
+  );
 }
