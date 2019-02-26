@@ -92,20 +92,21 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
     return null;
   }
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
-  const bandWidth = graphWidth / (data.length - 1);
-
   const xAxis = getXAxisScale({
+    data,
     axisLength: graphWidth,
     encoding: x,
-    data,
-  })
+  });
   const yAxis = getYAxisScale({
+    data,
     axisLength: graphHeight,
     encoding: y,
-    data
-  })
-  const xSelector = xAxis.getSelectors();
-  const ySelector = yAxis.getSelectors();
+  });
+  const xSelector = xAxis.selector;
+  const ySelector = yAxis.selector;
+
+  const bandWidth = graphWidth / (data.length - 1);
+
   /** Width of the collision detection rectangle */
   const color = theme.colors.category[0];
 

@@ -54,9 +54,37 @@ export interface AxisConfig {
   getSelectorsByField: (fieldIndex: number) => FieldSelector;
 }
 
+
 export interface GraphDimension {
   width: number;
   height: number;
+}
+
+export interface AxisScale {
+  /** d3's Scaling function employed in this axis */
+  scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
+
+  /** scale type string */
+  scaleType: string;
+
+  /** field for axis */
+  field: string;
+  /** data type */
+  type: string;
+
+  /*  Domain of the axis: [min, max] */
+  domain: any[];
+
+  /**
+   * Range of the axis: [min, max]
+   * it should match the inner width and height of the graph
+   */
+  range: [number, number];
+
+  /** Returns the formatted value according to the type of the axis */
+  getValue: (val: any) => any;
+
+  selector: FieldSelector;
 }
 
 export interface Encoding {

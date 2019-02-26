@@ -1,20 +1,19 @@
-import { AxisConfig } from '../common/types';
+import { AxisScale } from '../common/types';
 
 /**
  * Returns the data value selectors for a data record
  * using the computed axis configurations including the d3Scale function of the axis
- * @param axis - the axis computed from DataLayer
+ * @param axis - AxisScale
  * @param fieldIndex - the current index of the field
  */
-export function getRecordFieldSelectors(
-  axis: Pick<AxisConfig, Exclude<keyof AxisConfig, 'getSelectorsByField'>>,
-  fieldIndex: number,
+export function getRecordFieldSelector(
+  axis: Pick<AxisScale, Extract<keyof AxisScale, 'field' | 'scale' | 'getValue' | 'scaleType'>>,
 ) {
-  const { fields, d3Scale, getValue, scaleConfig } = axis;
-  const fieldName = fields[fieldIndex].name;
+  const { field, scale, getValue, scaleType } = axis;
+
 
   /** Given a record of data, it returns the orginal value of the specified field */
-  const getOriginalVal = (record: object) => getValue(record[fieldName]);
+  const getOriginalVal = (record: object) => getValue(record[field]);
 
   return {
     getOriginalVal,
@@ -23,12 +22,12 @@ export function getRecordFieldSelectors(
      * Given a record of data,
      * it returns the mapped value (computed by d3 scale function) of the specified field
      */
-    getScaledVal: (record: object) => d3Scale(getOriginalVal(record)),
+    getScaledVal: (record: object) => scale(getOriginalVal(record)),
 
     getFormattedStringVal: (record: object) => {
       const recordValue = getOriginalVal(record);
 
-      if (scaleConfig.type === 'time') {
+      if (scaleType === 'time') {
         // FIXME: unify the way of formatting datetime
         return recordValue.toLocaleString();
       }
