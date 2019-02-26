@@ -7,6 +7,7 @@ menu: Charts
 import { Playground, PropsTable } from 'docz'
 import { LineChart } from '@ichef/transcharts-chart'
 import lineData from '../sampleData/lineData';
+import multiLinesData from '../sampleData/multiLinesData'
 
 # Line Chart
 
@@ -63,6 +64,25 @@ const lineData = [
     />
   </div>
 </Playground>
+
+## Multiple lines
+
+### category
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'linear', field:'x' }}
+      y={{ type: 'linear', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+      }}
+    />
+  </div>
+</Playground>
+
 
 ## Props
 
