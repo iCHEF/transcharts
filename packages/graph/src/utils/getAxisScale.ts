@@ -36,7 +36,7 @@ export function getAxisScale(
 
   let domain: AxisScale['domain'];
   let scale;
-  let scaleType = encoding.scale || 'linear';
+  const scaleType = encoding.scale || 'linear';
   let getValue = (val: any) => val;
 
   switch (scaleType) {
