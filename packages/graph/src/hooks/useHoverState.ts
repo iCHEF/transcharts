@@ -11,7 +11,9 @@ export interface HoverState {
 }
 
 export interface HoverStateControls extends HoverState {
+  /** set `hovering` as false; it should be called after the mouse left the `<HoverLayer>`. */
   clearHovering: () => void;
+  /** set current hovered position and data index */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
 }
 
