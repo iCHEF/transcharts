@@ -48,13 +48,13 @@ function getRecordFieldSelectors(
   };
 }
 
-interface GetAxisScaleArgs {
+export interface GetAxisScaleArgs {
   data: object[],
   encoding: AxisEncoding,
   axisLength: number,
 }
 
-interface AxisScale {
+export interface AxisScale {
   /** d3's Scaling function employed in this axis */
   scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
 
