@@ -156,7 +156,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
     () => defaultColor;
   const fieldsToGroupBy: string[] = [color]
     .filter(encoding => !!encoding)
-    .map(encoding => encoding.field);
+    .map(encoding => encoding!.field);
   const sortedData = data.sort((rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB));
   const dataGroup = getDataGroup(sortedData, fieldsToGroupBy);
 
