@@ -10,8 +10,6 @@ import resizeObserverPolyfill from 'resize-observer-polyfill';
 
 import { GraphDimension } from '../common/types';
 
-import { useAnimationFrame } from './useAnimationFrame';
-
 interface ResizeObserverEntry {
   readonly target: Element;
   readonly contentRect: DOMRectReadOnly;
@@ -28,13 +26,13 @@ export function useContainerDimension(
 
   /** resizeObsrRef.current stores the ResizeObserver */
   const resizeObsrRef = useRef<ResizeObserver | null>(null);
-  /** use requestAnimationFrame to update the dimension */
-  const { requestWindowAnimationFrame } = useAnimationFrame();
+  /** animaFrameIDRef.current stores the current animation frame ID */
+  const animaFrameIDRef = useRef<number | null>(null);
 
   /** Function to set the updated dimension */
   const updateDimension = useCallback(
     (width: number, height: number) => {
-      requestWindowAnimationFrame(() => {
+      animaFrameIDRef.current = window.requestAnimationFrame(() => {
         setDimension({
           width,
           height,
@@ -71,6 +69,10 @@ export function useContainerDimension(
       resizeObsrRef.current.observe(containerRef.current!);
 
       return () => {
+        // cancel the scheduled update of the container's dimension
+        if (animaFrameIDRef.current) {
+          window.cancelAnimationFrame(animaFrameIDRef.current);
+        }
         // disconnect the resize observer on unmounted
         resizeObsrRef.current!.disconnect();
       };
