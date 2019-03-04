@@ -4,7 +4,7 @@ import { Theme, ColorEncoding, ColorScale } from '../common/types';
 
 import { getRecordFieldSelector } from './getRecordFieldSelector';
 
-interface GetColorScaleArgs {
+interface ColorScaleArgs {
   colors: Theme['colors'];
   encoding: ColorEncoding;
   data: object[];
@@ -14,7 +14,7 @@ const getColorScaleSetting = ({
   colors,
   encoding,
   data,
-}: GetColorScaleArgs): Pick<
+}: ColorScaleArgs): Pick<
   ColorScale,
   Extract<keyof ColorScale, 'domain' | 'scale' | 'range' | 'scaleType'>
 > => {
