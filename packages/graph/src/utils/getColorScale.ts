@@ -1,3 +1,4 @@
+import { extent as d3Extent } from 'd3-array';
 import { scaleOrdinal, scaleSequential } from 'd3-scale';
 
 import { Theme, ColorEncoding, ColorScale } from '../common/types';
@@ -8,6 +9,18 @@ interface ColorScaleArgs {
   colors: Theme['colors'];
   encoding: ColorEncoding;
   data: object[];
+}
+
+function getNumericDomain(values: number[]): [number, number] {
+  const extent = d3Extent(values);
+  /**
+   * The `d3Extent` return [number, number] | [undefined, undefined].
+   * Maybe there is better way to make compiler happy, it's a workaround now.
+   */
+  return [
+    typeof extent[0] === 'undefined' ? 0 : extent[0],
+    typeof extent[1] === 'undefined' ? 0 : extent[1],
+  ];
 }
 
 const getColorScaleSetting = ({
@@ -59,25 +72,23 @@ const getColorScaleSetting = ({
     }
     case 'temporal': {
       const timeStamps: number[] = data.map(obj => obj[field].getTime());
-      const minTime = Math.min(...timeStamps);
-      const maxTime = Math.max(...timeStamps);
+      const domain = getNumericDomain(timeStamps);
       const scale = scaleSequential(colors.sequential.interpolator)
-        .domain([minTime, maxTime]);
+        .domain(domain);
       return {
+        domain,
         scale,
         scaleType: 'sequential',
-        domain: [minTime, maxTime],
       };
     }
     case 'quantitative': {
       const values = data.map(row => Number(row[field]));
-      const min = Math.min(...values);
-      const max = Math.max(...values);
-      const scale = scaleSequential(colors.sequential.interpolator).domain([min, max]);
+      let domain = getNumericDomain(values);
+      const scale = scaleSequential(colors.sequential.interpolator).domain(domain);
       return {
+        domain,
         scale,
         scaleType: 'sequential',
-        domain: [min, max],
       };
     }
     default: {
