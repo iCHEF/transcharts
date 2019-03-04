@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import { throttle } from 'lodash-es';
 import { localPoint } from '@vx/event';
 
