@@ -99,7 +99,7 @@ export interface Theme {
     /** colors used for nominal data */
     category: ReadonlyArray<string>;
     sequential: {
-      scheme: ReadonlyArray<string>;
+      scheme: ReadonlyArray<string>[];
       interpolator: (val: number) => string;
     }
   };
