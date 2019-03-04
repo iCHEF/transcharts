@@ -9,6 +9,8 @@ import {
   useHoverState,
   // from TooltipLayer
   TooltipLayer,
+  // from Legend,
+  Legend,
   // from common types
   Margin,
   FieldSelector,
@@ -218,7 +220,6 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
                 const rectWidth = index === 0 || index === data.length - 1
                   ? bandWidth / 2
                   : bandWidth;
-
                 return (
                   <rect
                     // #TODO: use unique keys rather than array index
@@ -246,6 +247,14 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
         ySelector={ySelector}
         getColor={getColor}
       />
+      {/* Draw the legend */}
+      {color && (
+        <Legend
+          scaleType={colorScale.scaleType}
+          scale={colorScale.scale}
+          title={colorScale.field}
+        />
+      )}
     </div>
   );
 };
