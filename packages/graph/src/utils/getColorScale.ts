@@ -1,3 +1,4 @@
+import { map } from 'lodash-es';
 import { extent as d3Extent } from 'd3-array';
 import { scaleOrdinal, scaleSequential } from 'd3-scale';
 
@@ -34,16 +35,7 @@ const getColorScaleSetting = ({
   const { field, type } = encoding;
   switch (type) {
     case 'nominal': {
-      const domain = Object.keys(data.reduce(
-        (all, row) => {
-          const value = row[field];
-          return {
-            ...all,
-            [value]: true,
-          };
-        },
-        {},
-      ));
+      const domain = map(data, field);
       const scale = scaleOrdinal(colors.category).domain(domain);
       return {
         domain,
@@ -53,15 +45,7 @@ const getColorScaleSetting = ({
       };
     }
     case 'ordinal': {
-      const domain = Object.keys(data.reduce(
-        (all, row) => {
-          return {
-            ...all,
-            [row[field]]: true,
-          };
-        },
-        {},
-      )).sort((a, b) => Number(a) - Number(b));
+      const domain = map(data, field).sort((a, b) => Number(a) - Number(b));
       const scale = scaleOrdinal(colors.sequential.scheme).domain(domain);
       return {
         domain,
