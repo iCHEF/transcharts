@@ -1,6 +1,8 @@
-import * as React from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import { throttle } from 'lodash-es';
 import { localPoint } from '@vx/event';
+
+import { useAnimationFrame } from '../hooks/useAnimationFrame';
 
 export interface HoverLayerProps {
   /** Set the information related to hover or touch interactions  */
@@ -12,72 +14,82 @@ export interface HoverLayerProps {
   /** Function to hide the tooltip */
   clearHovering: () => void;
 
-  /** Hidden components to detect the mouse or touch interactions */
+  /**
+   * Hidden components to detect the mouse or touch interactions.
+   * **Note:** The order of the components should correspond to the order of the data.
+   */
   collisionComponents: JSX.Element[];
 
-  /** The debounce time for the mouse and touch events */
+  /** The throttle time for the mouse and touch events */
   throttleTime: number;
 }
 
-export class HoverLayer extends React.PureComponent<HoverLayerProps, {}> {
-  public static defaultProps = {
-    throttleTime: 180,
-    handleHover: () => null,
-  };
+export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
+  setHoveredPosAndIndex,
+  handleHover= () => null,
+  clearHovering,
+  collisionComponents,
+  throttleTime = 180,
+}) => {
+  /** use requestAnimationFrame to schedule updates of hovered position and data index */
+  const { requestWindowAnimationFrame } = useAnimationFrame();
 
-  public animaFrameID: number;
+  /** Function to update the position of the tooltip and sets the currently active data index */
+  const updatePosition = useCallback(
+    throttle(
+      (dataIndex: number, event: React.SyntheticEvent) => {
+        // custom action which executes before the position is updated
+        handleHover();
 
-  /** Updates the position of the tooltip and sets the currently active data index */
-  private updatePosition = (dataIndex: number, event: React.SyntheticEvent) => {
-    const { setHoveredPosAndIndex, handleHover } = this.props;
+        // convert the position of the event to the coordinate system of the SVG
+        const { x, y } = localPoint(event);
+        requestWindowAnimationFrame(() => {
+          setHoveredPosAndIndex(
+            dataIndex,
+            x,
+            y,
+          );
+        });
+      },
+      throttleTime,
+    ),
+    [handleHover, setHoveredPosAndIndex, throttleTime],
+  );
 
-    // custom action which executes before the position is updated
-    handleHover();
+  /** Function to keep the event data and perform throttled updates of the position */
+  const handleTooltip = useCallback(
+    (dataIndex: number) => (event: React.SyntheticEvent) => {
+      // removes it from the event pool and allows references to the event
+      event.persist();
+      updatePosition(dataIndex, event);
+    },
+    [updatePosition],
+  );
 
-    // convert the position of the event to the coordinate system of the SVG
-    const { x, y } = localPoint(event);
-    this.animaFrameID = window.requestAnimationFrame(() => {
-      setHoveredPosAndIndex(
-        dataIndex,
-        x,
-        y,
-      );
+  /** Function to cancel the update of position and disable the hovering state */
+  const hideTooltip = useCallback(
+    () => {
+      // cancel the previously thorttled event to prevent the tooltip from reappearing
+      updatePosition.cancel();
+      clearHovering();
+    },
+    [updatePosition, clearHovering],
+  );
+
+  const detectionAreas = collisionComponents.map((area: JSX.Element, dataIndex: number) => {
+    const handleCurrentTooltip = handleTooltip(dataIndex);
+    return React.cloneElement(area, {
+      onTouchStart: handleCurrentTooltip,
+      onTouchMove: handleCurrentTooltip,
+      onMouseMove: handleCurrentTooltip,
+      onMouseLeave: hideTooltip,
     });
-  };
+  });
 
-  private throttledUpdatePosition = throttle(this.updatePosition, this.props.throttleTime);
-
-  private handleTooltip = (dataIndex: number) => (event: React.SyntheticEvent) => {
-    // removes it from the event pool and allows references to the event
-    event.persist();
-    this.throttledUpdatePosition(dataIndex, event);
-  };
-
-  private hideTooltip = () => {
-    // cancel the previously thorttled event to prevent the tooltip from reappearing
-    this.throttledUpdatePosition.cancel();
-    this.props.clearHovering();
-  };
-
-  public componentWillUnmount() {
-    window.cancelAnimationFrame(this.animaFrameID);
-  }
-
-  public render() {
-    const { collisionComponents } = this.props;
-    const detectionAreas = collisionComponents.map((area: JSX.Element, dataIndex: number) => {
-      const handleCurrentTooltip = this.handleTooltip(dataIndex);
-      return React.cloneElement(area, {
-        onTouchStart: handleCurrentTooltip,
-        onTouchMove: handleCurrentTooltip,
-        onMouseMove: handleCurrentTooltip,
-        onMouseLeave: this.hideTooltip,
-      });
-    });
-
-    return (
-      // Render areas to detect collisions of mouse pointers or touches with data points
-      detectionAreas
-    );
-  }
-}
+  // Render areas to detect collisions of mouse pointers or touches with data points
+  return (
+    <>
+      {detectionAreas}
+    </>
+  );
+};

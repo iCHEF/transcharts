@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Extract the animation frame controls as a custom effect hook. (#10)
 - Add `tslint-react-hooks` rules to lint React Hooks. (#8)
 - Add `ThemeProvider` and color / xy axis themes config for customize theme. (#6)
 - Create an animation package, and add a simple SVG clipping animation: `<AnimatedClipRect>`. (#4)
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Rewrite `<HoverLayer>` using Hooks. (#10)
 - Remove `AxisConfig` type. Add new `Encoding` (`AxisEncoding`) and `Scale` (`AxisScale`) type for `getAxisScale`. (#9)
 - Replace `fieldX` `fieldY` `scaleX` `scaleY` with `x` and `y` props in `LineChart`. (#9)
 - Rewrite functionality of `<DataLayer>` by hooks. (#9)

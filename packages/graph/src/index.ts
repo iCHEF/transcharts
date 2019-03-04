@@ -2,6 +2,7 @@ export * from './components/Foo';
 export * from './common/types';
 export * from './hooks/useContainerDimension';
 export * from './hooks/useHoverState';
+export * from './hooks/useAnimationFrame';
 export * from './layers/ResponsiveLayer';
 export * from './layers/AxisLayer';
 export * from './layers/HoverLayer';
