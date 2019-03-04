@@ -1,4 +1,5 @@
 import { values, groupBy } from 'lodash-es';
+import { Encoding } from '../common/types';
 
 /**
  * It's a utility to split rows into different sub rows by multiple field.
@@ -17,6 +18,7 @@ import { values, groupBy } from 'lodash-es';
  *   [{ type: 'b', color: 'red' }],
  * ]
  */
+
 export function getDataGroupByFields(data: object[], fields: string[]): object[][] {
   return fields.reduce(
     (all, field) => {
@@ -25,4 +27,10 @@ export function getDataGroupByFields(data: object[], fields: string[]): object[]
     },
     [data],
   );
+}
+
+export function getDataGroupByEncodings(data: object[], encodings: Encoding[]): object[][] {
+  const fieldsToGroupBy: string[] = encodings
+    .map(encoding => encoding!.field);
+  return getDataGroupByFields(data, fieldsToGroupBy);
 }

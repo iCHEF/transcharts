@@ -15,7 +15,7 @@ import {
   ColorEncoding,
   // from utils
   getColorScale,
-  getDataGroupByFields,
+  getDataGroupByEncodings,
   getXAxisScale,
   getYAxisScale,
   // from themes
@@ -25,6 +25,7 @@ import {
   useContainerDimension,
   // from types
   FieldSelector,
+  Encoding,
 } from '@ichef/transcharts-graph';
 
 import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
@@ -151,14 +152,14 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
     colors: theme.colors,
   });
   const defaultColor = theme.colors.category[0];
-  const getColor = colorScale ?
-    colorScale.selector.getScaledVal :
-    () => defaultColor;
-  const fieldsToGroupBy: string[] = [color]
-    .filter(encoding => !!encoding)
-    .map(encoding => encoding!.field);
-  const sortedData = data.sort((rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB));
-  const dataGroup = getDataGroupByFields(sortedData, fieldsToGroupBy);
+  const getColor = colorScale
+    ? colorScale.selector.getScaledVal
+    : () => defaultColor;
+  const sortedData = data.sort(
+    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB)
+  );
+  const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
+  const dataGroup = getDataGroupByEncodings(sortedData, encodings);
 
   const graphGroup = dataGroup.map(
     rows => {
