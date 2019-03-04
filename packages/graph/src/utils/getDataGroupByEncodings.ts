@@ -5,17 +5,33 @@ import { Encoding } from '../common/types';
  * It's a utility to split rows into different sub rows by multiple field.
  * For example, given:
  * const data = [
- *   { type: 'a', color: 'green' },
- *   { type: 'b', color: 'green' },
- *   { type: 'a', color: 'red' },
- *   { type: 'b', color: 'red' },
+ *   { value: 1, type: 'a', color: 'green' },
+ *   { value: 2, type: 'b', color: 'green' },
+ *   { value: 3, type: 'a', color: 'red' },
+ *   { value: 4, type: 'b', color: 'red' },
+ *   { value: 5, type: 'a', color: 'green' },
+ *   { value: 6, type: 'b', color: 'green' },
+ *   { value: 7, type: 'a', color: 'red' },
+ *   { value: 8, type: 'b', color: 'red' },
  * ]
- * `getDataGroup(data, ['type', 'color']) will categorize data by fields and return
+ * `getDataGroupByFields(data, ['type', 'color']) will categorize data by fields and return
  * [
- *   [{ type: 'a', color: 'green' }],
- *   [{ type: 'b', color: 'green' }],
- *   [{ type: 'a', color: 'red' }],
- *   [{ type: 'b', color: 'red' }],
+ *   [
+ *     { value: 1, type: 'a', color: 'green' },
+ *     { value: 5, type: 'a', color: 'green' },
+ *   ],
+ *   [
+ *     { value: 2,  type: 'b', color: 'green' },
+ *     { value: 6,  type: 'b', color: 'green' },
+ *   ],
+ *   [
+ *     { value: 3, type: 'a', color: 'red' },
+ *     { value: 7, type: 'a', color: 'red' },
+ *   ],
+ *   [
+ *     { value: 4 type: 'b', color: 'red' }
+ *     { value: 8 type: 'b', color: 'red' }
+ *   ],
  * ]
  */
 
@@ -28,6 +44,13 @@ export function getDataGroupByFields(data: object[], fields: string[]): object[]
     [data],
   );
 }
+
+/**
+ *
+ * It's a utility to split rows into different sub rows by multiple encoding.
+ * It will get field name from encodings
+ * and apply `getdataGroupByFields` to build data group.
+ */
 
 export function getDataGroupByEncodings(data: object[], encodings: Encoding[]): object[][] {
   const fieldsToGroupBy: string[] = encodings
