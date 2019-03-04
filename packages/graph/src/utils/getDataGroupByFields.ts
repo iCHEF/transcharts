@@ -17,7 +17,7 @@ import { values, groupBy } from 'lodash-es';
  *   [{ type: 'b', color: 'red' }],
  * ]
  */
-export function getDataGroup(data: object[], fields: string[]): object[][] {
+export function getDataGroupByFields(data: object[], fields: string[]): object[][] {
   return fields.reduce(
     (all, field) => {
       const groups = all.map(rows => values(groupBy(rows, field)));

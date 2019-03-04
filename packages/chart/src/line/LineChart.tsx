@@ -15,7 +15,7 @@ import {
   ColorEncoding,
   // from utils
   getColorScale,
-  getDataGroup,
+  getDataGroupByFields,
   getXAxisScale,
   getYAxisScale,
   // from themes
@@ -158,7 +158,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
     .filter(encoding => !!encoding)
     .map(encoding => encoding!.field);
   const sortedData = data.sort((rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB));
-  const dataGroup = getDataGroup(sortedData, fieldsToGroupBy);
+  const dataGroup = getDataGroupByFields(sortedData, fieldsToGroupBy);
 
   const graphGroup = dataGroup.map(
     rows => {
