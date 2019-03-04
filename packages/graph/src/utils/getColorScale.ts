@@ -97,6 +97,11 @@ const getColorScaleSetting = ({
   }
 };
 
+/**
+ * computes and returns domain, range, color scale and value selector,
+ * which you can utitlize in Chart component.
+ */
+
 export function getColorScale({
   colors,
   encoding,
