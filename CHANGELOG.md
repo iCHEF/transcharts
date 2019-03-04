@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changed
 - Rewrite `<HoverLayer>` using Hooks. (#10)
+- Remove `AxisConfig` type. Add new `Encoding` (`AxisEncoding`) and `Scale` (`AxisScale`) type for `getAxisScale`. (#9)
+- Replace `fieldX` `fieldY` `scaleX` `scaleY` with `x` and `y` props in `LineChart`. (#9)
+- Rewrite functionality of `<DataLayer>` by hooks. (#9)
 - Use Hooks to rewrite functionalities of `<ResponsiveLayer>`. (#8)
 - Refactor the way getting width and height in `<LineChart>`. (#8)
 - Fix `yarn lint` command. (#7)

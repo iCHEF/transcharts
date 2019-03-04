@@ -4,59 +4,70 @@ import {
   ScaleTime,
 } from 'd3-scale';
 
-/**
- * Name of the scale which should be consistent with the naming of d3 fuctions.
- * Ref: https://github.com/d3/d3-scale#api-reference
- */
-export interface Scale {
-  type: 'point' | 'time' | 'linear';
-}
-
-/**
- * Stores the name and other configurations for the fields to be painted on the axis.
- * Its name should be the same with the key in the data.
- * e.g., two lines are going to be painted => each line should have its field config
- */
-export interface DataField {
-  /** Name of the field, which corresponds to the field name in the data */
-  name: string;
-  /** Custom color config */
-  color: string; // TODO: accept a function?: (index, value) => {...}
-}
-
 export interface FieldSelector {
   getOriginalVal: (record: object) => any;
   getScaledVal: (record: object) => any;
   getFormattedStringVal: (record: object) => string;
 }
 
-export interface AxisConfig {
-  /**  List of fields appear in this axis */
-  fields: DataField[];
+export interface GraphDimension {
+  width: number;
+  height: number;
+}
 
-  /*  Domain of the axis: [min, max] */
+export interface Scale {
+  /** d3's Scaling function employed in specific channel */
+  scale: (...values: any[]) => any;
+
+  /** scale type string */
+  scaleType: string;
+
+  /** field for axis */
+  field: string;
+
+  /** data type */
+  type: string;
+
+  /** Domain of input channel */
   domain: any[];
+
+  /**
+   * Range of input channel
+   */
+  range: [any, any];
+
+  /** Returns the formatted value according to the type of the axis */
+  getValue: (val: any) => any;
+
+  selector: FieldSelector;
+}
+
+export type AxisScaleType = 'point' | 'time' | 'linear';
+
+export interface AxisScale extends Scale {
+  /** d3's Scaling function employed in this axis */
+  scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
+
+  /** scale type string */
+  scaleType: AxisScaleType;
 
   /**
    * Range of the axis: [min, max]
    * it should match the inner width and height of the graph
    */
   range: [number, number];
-
-  /** Returns the formatted value according to the type of the axis */
-  getValue: (val: any) => any;
-
-  /** d3's Scaling function employed in this axis */
-  d3Scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
-
-  scaleConfig: Scale;
-
-  getSelectorsByField: (fieldIndex: number) => FieldSelector;
 }
 
-export interface GraphDimension {
-  width: number;
-  height: number;
+export type EncodingDataType = 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
+
+export interface Encoding {
+  field: string;
+  type: EncodingDataType;
+  scale?: string;
+}
+
+export interface AxisEncoding extends Encoding {
+  scale?: AxisScaleType;
 }
 
 export interface Margin {
@@ -87,4 +98,16 @@ export interface Theme {
   xAxis: AxisTheme;
   /** y-axis theme config */
   yAxis: AxisTheme;
+}
+
+export type HoveringState = boolean;
+export interface HoveredPointState {
+  /** The index of data being hovered or touched */
+  index: number;
+
+  /** The mouse hovered or touched position */
+  position: {
+    x: number;
+    y: number;
+  };
 }

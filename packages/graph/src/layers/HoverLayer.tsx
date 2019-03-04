@@ -4,11 +4,9 @@ import { localPoint } from '@vx/event';
 
 import { useAnimationFrame } from '../hooks/useAnimationFrame';
 
-import { DataLayerRenderParams } from './DataLayer';
-
 export interface HoverLayerProps {
   /** Set the information related to hover or touch interactions  */
-  setHoveredPosAndIndex: DataLayerRenderParams['setHoveredPosAndIndex'];
+  setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
 
   /** Function to be called before the latest tooltip position is set */
   handleHover: () => void;

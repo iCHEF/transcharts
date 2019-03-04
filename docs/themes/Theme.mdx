@@ -51,10 +51,8 @@ const customRedTheme = {
     <ThemeProvider theme={customRedTheme}>
       <LineChart
         data={lineData}
-        scaleX={{ type: 'linear' }}
-        scaleY={{ type: 'linear' }}
-        fieldsX={[{name: 'x'}]}
-        fieldsY={[{name: 'y'}]}
+        x={{ field: 'x', type: 'quantitative', scale: 'linear' }}
+        y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
       />
     </ThemeProvider>
   </div>
