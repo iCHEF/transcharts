@@ -60,7 +60,7 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
       },
       throttleTime,
     ),
-    [],
+    [handleHover, setHoveredPosAndIndex, throttleTime],
   );
 
   /** Function to keep the event data and perform throttled updates of the position */
@@ -70,7 +70,7 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
       event.persist();
       updatePosition(dataIndex, event);
     },
-    [],
+    [updatePosition],
   );
 
   /** Function to cancel the update of position and disable the hovering state */
@@ -80,7 +80,7 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
       updatePosition.cancel();
       clearHovering();
     },
-    [],
+    [updatePosition, clearHovering],
   );
 
   const detectionAreas = collisionComponents.map((area: JSX.Element, dataIndex: number) => {
