@@ -11,8 +11,13 @@ import {
   TooltipLayer,
   // from common types
   Margin,
+  FieldSelector,
+  Encoding,
   AxisEncoding,
+  ColorEncoding,
   // from utils
+  getColorScale,
+  getDataGroupByEncodings,
   getXAxisScale,
   getYAxisScale,
   // from themes
@@ -30,6 +35,7 @@ export interface LineChartProps {
   data: object[];
   x: AxisEncoding;
   y: AxisEncoding;
+  color?: ColorEncoding;
   /** Should show the axis on the left or not */
   showLeftAxis: boolean;
   /** Should show the axis on the bottom or not */
@@ -69,10 +75,45 @@ const HoveringIndicator: FunctionComponent<{
   );
 };
 
+const DataLine: FunctionComponent<{
+  color: string,
+  xSelector: FieldSelector,
+  ySelector: FieldSelector,
+  rows: object[],
+}> = ({ color, xSelector, ySelector, rows }) => {
+  const lineDots = rows.map((dataRow, index) => (
+    <circle
+      key={`c-${index}`}
+      cx={xSelector.getScaledVal(dataRow)}
+      cy={ySelector.getScaledVal(dataRow)}
+      r={3.5}
+      fill={color}
+    />
+  ));
+  return (
+    <>
+      {/* Draw the line */}
+      <LinePath
+        data={rows}
+        x={xSelector.getScaledVal}
+        y={ySelector.getScaledVal}
+        stroke={color}
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Draw dots on the line */}
+      {lineDots}
+    </>
+  );
+};
+
 export const LineChart: FunctionComponent<LineChartProps> = ({
   data,
   x,
   y,
+  color,
   margin = {
     top: 20,
     right: 20,
@@ -104,20 +145,36 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   const xSelector = xAxis.selector;
   const ySelector = yAxis.selector;
 
-  const bandWidth = graphWidth / (data.length - 1);
-
   /** Width of the collision detection rectangle */
-  const color = theme.colors.category[0];
+  const bandWidth = graphWidth / (data.length - 1);
+  const colorScale = (typeof color !== 'undefined') && getColorScale({
+    data,
+    encoding: color,
+    colors: theme.colors,
+  });
+  const defaultColor = theme.colors.category[0];
+  const getColor = colorScale
+    ? colorScale.selector.getScaledVal
+    : () => defaultColor;
+  const sortedData = data.sort(
+    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB)
+  );
+  const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
+  const dataGroup = getDataGroupByEncodings(sortedData, encodings);
 
-  const lineDots = data.map((dataRow, index) => (
-    <circle
-      key={`c-${index}`}
-      cx={xSelector.getScaledVal(dataRow)}
-      cy={ySelector.getScaledVal(dataRow)}
-      r={3.5}
-      fill={color}
-    />
-  ));
+  const graphGroup = dataGroup.map(
+    rows => {
+      const colorString: string = getColor(rows[0]);
+      return (
+        <DataLine
+          color={colorString}
+          rows={rows}
+          xSelector={xSelector}
+          ySelector={ySelector}
+        />
+      );
+    }
+  );
 
   return (
     <div
@@ -126,7 +183,6 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
     >
       <svg width={outerWidth} height={outerHeight}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
-          {/* Draw the axes */}
           <AxisLayer
             width={graphWidth}
             height={graphHeight}
@@ -137,25 +193,13 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
             yAxis={yAxis}
           />
 
-          {/* Draw the line */}
-          <LinePath
-            data={data}
-            x={xSelector.getScaledVal}
-            y={ySelector.getScaledVal}
-            stroke={color}
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Draw dots on the line */}
-          {lineDots}
+          {graphGroup}
           <HoveringIndicator
             hovering={hovering}
             xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
             yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
             height={graphHeight}
-            color={color}
+            color={getColor(data[hoveredPoint.index])}
           />
 
           {/* Areas which are used to detect mouse or touch interactions */}
@@ -190,7 +234,6 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
           />
         </g>
       </svg>
-
       {/* Draw the tooltip */}
       <TooltipLayer
         hovering={hovering}
@@ -201,7 +244,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
         margin={margin}
         xSelector={xSelector}
         ySelector={ySelector}
-        color={color}
+        getColor={getColor}
       />
     </div>
   );

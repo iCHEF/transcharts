@@ -1,4 +1,4 @@
-import { AxisScale } from '../common/types';
+import { Scale } from '../common/types';
 
 /**
  * Returns the data value selectors for a data record
@@ -7,7 +7,7 @@ import { AxisScale } from '../common/types';
  * @param fieldIndex - the current index of the field
  */
 export function getRecordFieldSelector(
-  axis: Pick<AxisScale, Extract<keyof AxisScale, 'field' | 'scale' | 'getValue' | 'scaleType'>>,
+  axis: Pick<Scale, Extract<keyof Scale, 'field' | 'scale' | 'getValue' | 'scaleType'>>,
 ) {
   const { field, scale, getValue, scaleType } = axis;
 

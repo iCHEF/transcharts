@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+import { schemeCategory10, interpolateBlues, schemeBlues } from 'd3-scale-chromatic';
 import deepmerge from 'deepmerge';
 
 import { Theme } from '../common/types';
@@ -14,6 +14,10 @@ export const themes = {
   default: {
     colors: {
       category: schemeCategory10,
+      sequential: {
+        scheme: schemeBlues[9],
+        interpolator: interpolateBlues,
+      },
     },
     xAxis: {
       strokeColor: '#7c8a94',

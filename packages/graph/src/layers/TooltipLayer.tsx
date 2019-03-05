@@ -13,7 +13,7 @@ export interface TooltipLayerProps {
   margin: Margin;
   xSelector: FieldSelector;
   ySelector: FieldSelector;
-  color: string;
+  getColor: FieldSelector['getScaledVal'];
 }
 
 /** Generates the tooltip box */
@@ -26,7 +26,7 @@ export const TooltipLayer: React.FC<TooltipLayerProps> = ({
   margin,
   xSelector,
   ySelector,
-  color,
+  getColor,
 }) => {
   const { index, position } = hoveredPoint;
 
@@ -42,8 +42,10 @@ export const TooltipLayer: React.FC<TooltipLayerProps> = ({
       show={hovering}
     >
       <h3>{xSelector.getFormattedStringVal(data[index])}</h3>
-      {/* TODO: unify the way of dealing colors of the fields */}
-      <TooltipItem color={color} text={ySelector.getFormattedStringVal(data[index])} />
+      <TooltipItem
+        color={getColor(data[index])}
+        text={ySelector.getFormattedStringVal(data[index])}
+      />
     </Tooltip>
   );
 };

@@ -34,7 +34,7 @@ export interface Scale {
   /**
    * Range of input channel
    */
-  range: [any, any];
+  range?: ReadonlyArray<any>;
 
   /** Returns the formatted value according to the type of the axis */
   getValue: (val: any) => any;
@@ -55,10 +55,13 @@ export interface AxisScale extends Scale {
    * Range of the axis: [min, max]
    * it should match the inner width and height of the graph
    */
-  range: [number, number];
+  range?: [number, number];
 }
 
 export type EncodingDataType = 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
+export interface ColorScale extends Scale {
+  range?: [string, string] | ReadonlyArray<string>
+}
 
 export interface Encoding {
   field: string;
@@ -69,6 +72,8 @@ export interface Encoding {
 export interface AxisEncoding extends Encoding {
   scale?: AxisScaleType;
 }
+
+export type ColorEncoding = Encoding;
 
 export interface Margin {
   top: number;
@@ -93,6 +98,10 @@ export interface Theme {
   colors: {
     /** colors used for nominal data */
     category: ReadonlyArray<string>;
+    sequential: {
+      scheme: ReadonlyArray<string>;
+      interpolator: (val: number) => string;
+    }
   };
   /** x-axis theme config */
   xAxis: AxisTheme;
