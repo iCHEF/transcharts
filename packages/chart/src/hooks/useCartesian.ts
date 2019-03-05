@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useMemo } from 'react';
 import {
   // from hooks
   useHoverState,
@@ -40,12 +40,6 @@ export const useCartesian = (
     bottom: 30,
     left: 60,
   },
-
-  /** Should show the axis on the left or not */
-  showLeftAxis: boolean = true,
-
-  /** Should show the axis on the bottom or not */
-  showBottomAxis: boolean = true,
 ) => {
   // deal with the theme
   const theme = useContext(ThemeContext);
@@ -71,34 +65,56 @@ export const useCartesian = (
     : () => defaultColor;
 
   // the scales and configs of the axis based on its encodings
-  const xAxis = getXAxisScale({
-    data,
-    axisLength: graphWidth,
-    encoding: x,
-  });
-  const yAxis = getYAxisScale({
-    data,
-    axisLength: graphHeight,
-    encoding: y,
-  });
+  const xAxis = useMemo(
+    () => getXAxisScale({
+      data,
+      axisLength: graphWidth,
+      encoding: x,
+    }),
+    [data, graphWidth, x],
+  );
+  const yAxis = useMemo(
+    () => getYAxisScale({
+      data,
+      axisLength: graphHeight,
+      encoding: y,
+    }),
+    [data, graphWidth, y],
+  );
 
   // selectors to get the original/scaled/formatted values
   const xSelector = xAxis.selector;
   const ySelector = yAxis.selector;
 
   // sort the data
-  const sortedData = data.sort(
-    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB),
+  const sortedData = useMemo(
+    () => data.sort(
+      (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB),
+    ),
+    [data, xSelector],
   );
 
-  // TODO: memoization?
   // groups the data by colors
-  const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
-  const dataGroups = getDataGroupByEncodings(sortedData, encodings);
+  const dataGroups = useMemo(
+    () => {
+      const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
+      return getDataGroupByEncodings(sortedData, encodings);
+    },
+    [color, sortedData],
+  );
 
   return {
     /** Ref to the chart, which is to be passed in the props of the container */
     chartRef,
+
+    /** Theme of the chart */
+    theme,
+
+    /** Info and functions related to touch/hover interactions */
+    hoverControls,
+
+    /** Array of data grouped by fields of colors  */
+    dataGroups,
 
     /** Width and height of the outer and inner graph */
     dimension: {
@@ -114,15 +130,6 @@ export const useCartesian = (
       /** Height of inner graph (does not contain axes, legend, etc...) */
       graphHeight,
     },
-
-    /** Theme of the chart */
-    theme,
-
-    /** Info and functions related to touch/hover interactions */
-    hoverControls,
-
-    /** Array of data grouped by fields of colors  */
-    dataGroups,
 
     /** Contains functions to select values from a data row */
     rowValSelectors: {
