@@ -9,6 +9,7 @@ export * from './layers/HoverLayer';
 export * from './layers/TooltipLayer';
 export * from './themes';
 export * from './legend/Legend';
+export * from './legend/LegendGroup';
 export * from './tooltip/Tooltip';
 export * from './tooltip/TooltipItem';
 export * from './utils/getAxisScale';
