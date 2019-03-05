@@ -13,15 +13,12 @@ interface ColorScaleArgs {
 }
 
 function getNumericDomain(values: number[]): [number, number] {
-  const extent = d3Extent(values);
   /**
    * The `d3Extent` return [number, number] | [undefined, undefined].
    * Maybe there is better way to make compiler happy, it's a workaround now.
    */
-  return [
-    typeof extent[0] === 'undefined' ? 0 : extent[0],
-    typeof extent[1] === 'undefined' ? 0 : extent[1],
-  ];
+  const [extentMin = 0, extentMax = 0] = d3Extent(values);
+  return [extentMin, extentMax];
 }
 
 const getColorScaleSetting = ({
