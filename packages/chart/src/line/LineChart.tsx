@@ -11,6 +11,8 @@ import {
   TooltipLayer,
   // from common types
   Margin,
+  FieldSelector,
+  Encoding,
   AxisEncoding,
   ColorEncoding,
   // from utils
@@ -23,9 +25,6 @@ import {
   ThemeContext,
   // from hooks
   useContainerDimension,
-  // from types
-  FieldSelector,
-  Encoding,
 } from '@ichef/transcharts-graph';
 
 import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
@@ -76,7 +75,7 @@ const HoveringIndicator: FunctionComponent<{
   );
 };
 
-const DataLine: React.FC<{
+const DataLine: FunctionComponent<{
   color: string,
   xSelector: FieldSelector,
   ySelector: FieldSelector,
@@ -91,22 +90,24 @@ const DataLine: React.FC<{
       fill={color}
     />
   ));
-  return (<>
-    {/* Draw the line */}
-    <LinePath
-      data={rows}
-      x={xSelector.getScaledVal}
-      y={ySelector.getScaledVal}
-      stroke={color}
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  return (
+    <>
+      {/* Draw the line */}
+      <LinePath
+        data={rows}
+        x={xSelector.getScaledVal}
+        y={ySelector.getScaledVal}
+        stroke={color}
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
 
-    {/* Draw dots on the line */}
-    {lineDots}
-  </>
-)};
+      {/* Draw dots on the line */}
+      {lineDots}
+    </>
+  );
+};
 
 export const LineChart: FunctionComponent<LineChartProps> = ({
   data,
@@ -146,7 +147,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
 
   /** Width of the collision detection rectangle */
   const bandWidth = graphWidth / (data.length - 1);
-  const colorScale = typeof color !== 'undefined' && getColorScale({
+  const colorScale = (typeof color !== 'undefined') && getColorScale({
     data,
     encoding: color,
     colors: theme.colors,
