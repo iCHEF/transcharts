@@ -67,6 +67,8 @@ const lineData = [
 
 ## Multiple lines
 
+`<LineChart>` will have multiple lines when passing `color` prop.
+
 ### Nominal color field
 
 <Playground>
@@ -114,6 +116,69 @@ const lineData = [
   </div>
 </Playground>
 
+### Multiple lines Without legend
+
+Add `legend: { hide: true }` in `color` will hide legend.
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          hide: true,
+        },
+      }}
+    />
+  </div>
+</Playground>
+
+### Multiple lines with custom legend
+
+You could also pass render props in `color.legend.render`. The `render` function will be passed into `<Legend>` in @vx/legend package.
+
+See [vx/legend custom legend example](https://vx-demo.now.sh/legends) and [legend component document](https://vx-demo.now.sh/static/docs/vx-legend.html#legend-)
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          render: (labels) => {
+            return (
+              <div>
+                {labels.map((label, idx) => {
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        backgroundColor: label.value,
+                        color: '#eee',
+                        padding: '5px 10px',
+                        marginBottom: 5,
+                      }}
+                    >
+                      {label.text}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          }
+        },
+      }}
+    />
+  </div>
+</Playground>
 
 ## Props
 
