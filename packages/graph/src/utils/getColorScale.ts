@@ -69,7 +69,7 @@ const getColorScaleSetting = ({
     }
     case 'quantitative': {
       const values = data.map(row => Number(row[field]));
-      let domain = getNumericDomain(values);
+      const domain = getNumericDomain(values);
       const scale = scaleSequential(colors.sequential.interpolator).domain(domain);
       return {
         domain,
