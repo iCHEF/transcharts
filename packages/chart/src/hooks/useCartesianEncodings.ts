@@ -1,9 +1,6 @@
-import { useContext, useRef, useMemo } from 'react';
+import { useMemo } from 'react';
 import {
-  // from hooks
-  useHoverState,
   // from TooltipLayer
-  Margin,
   Encoding,
   AxisEncoding,
   ColorEncoding,
@@ -12,15 +9,23 @@ import {
   getDataGroupByEncodings,
   getXAxisScale,
   getYAxisScale,
+  // from common types
+  GraphDimension,
   // from themes
-  ThemeContext,
-  // from hooks
-  useContainerDimension,
+  Theme,
 } from '@ichef/transcharts-graph';
 
-import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
+/**
+ * It returns calculated groups of data and its value selectors
+ * from the given encodings of Cartesian plots.
+ */
+export const useCartesianEncodings = (
+  /** Width and height of the inner graph (does not contain axes, legend, etc...) */
+  graphDimension: GraphDimension,
 
-export const useCartesian = (
+  /** Theme of the chart */
+  theme: Theme,
+
   /** Array of rows of data */
   data: object[],
 
@@ -32,33 +37,19 @@ export const useCartesian = (
 
   /** Fields and definitions for colors */
   color?: ColorEncoding,
-
-  /** Margin between the inner graph area and the outer svg */
-  margin: Margin = {
-    top: 20,
-    right: 20,
-    bottom: 30,
-    left: 60,
-  },
 ) => {
-  // deal with the theme
-  const theme = useContext(ThemeContext);
-
-  // compute the outer and inner dimension of the chart
-  const chartRef = useRef<HTMLDivElement>(null);
-  const dimension = useContainerDimension(chartRef);
-  const { width: outerWidth, height: outerHeight } = dimension;
-  const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin);
-
-  // control the hovering/touch interactions
-  const hoverControls = useHoverState();
+  // get the inner width and height of the graph
+  const { width, height } = graphDimension;
 
   // handle the colors
-  const colorScale = (typeof color !== 'undefined') && getColorScale({
-    data,
-    encoding: color,
-    colors: theme.colors,
-  });
+  const colorScale = useMemo(
+    () => (typeof color !== 'undefined') && getColorScale({
+      data,
+      encoding: color,
+      colors: theme.colors,
+    }),
+    [color, data, theme.colors],
+  );
   const defaultColor = theme.colors.category[0];
   const getColorString = colorScale
     ? colorScale.selector.getScaledVal
@@ -68,18 +59,18 @@ export const useCartesian = (
   const xAxis = useMemo(
     () => getXAxisScale({
       data,
-      axisLength: graphWidth,
+      axisLength: width,
       encoding: x,
     }),
-    [data, graphWidth, x],
+    [data, width, x],
   );
   const yAxis = useMemo(
     () => getYAxisScale({
       data,
-      axisLength: graphHeight,
+      axisLength: height,
       encoding: y,
     }),
-    [data, graphWidth, y],
+    [data, height, y],
   );
 
   // selectors to get the original/scaled/formatted values
@@ -104,32 +95,8 @@ export const useCartesian = (
   );
 
   return {
-    /** Ref to the chart, which is to be passed in the props of the container */
-    chartRef,
-
-    /** Theme of the chart */
-    theme,
-
-    /** Info and functions related to touch/hover interactions */
-    hoverControls,
-
     /** Array of data grouped by fields of colors  */
     dataGroups,
-
-    /** Width and height of the outer and inner graph */
-    dimension: {
-      /** Width of the container of the graph */
-      outerWidth,
-
-      /** Height of the container of the graph */
-      outerHeight,
-
-      /** Width of inner graph (does not contain axes, legend, etc...) */
-      graphWidth,
-
-      /** Height of inner graph (does not contain axes, legend, etc...) */
-      graphHeight,
-    },
 
     /** Contains functions to select values from a data row */
     rowValSelectors: {
