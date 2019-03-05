@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject, forwardRef } from 'react';
 
 import { ColorScale, LegendConfig } from '../common/types';
 import { styled } from '../utils/styled-components';
@@ -21,18 +21,20 @@ const LegendGroupWrapper = styled.div`
  * LegendGroup will return corresponding legend.
  *
  */
-export const LegendGroup = (props: LegendGroupProps) => {
+export const LegendGroup = forwardRef((
+  { color }: LegendGroupProps,
+  ref: RefObject<HTMLDivElement>,
+) => {
   /**
    * TODO: May support more different scales(shape / size) here
    * to include multiple legends.
    */
-  const { color } = props;
   if (!color || (color.legend && color.legend.hide)) {
     return null;
   }
   const { scale, scaleType, field, legend = {} } = color;
   return (
-    <LegendGroupWrapper>
+    <LegendGroupWrapper ref={ref}>
       <Legend
         scale={scale}
         scaleType={scaleType}
@@ -41,4 +43,4 @@ export const LegendGroup = (props: LegendGroupProps) => {
       />
     </LegendGroupWrapper>
   );
-};
+});

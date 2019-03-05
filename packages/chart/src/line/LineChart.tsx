@@ -127,9 +127,11 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
 }) => {
   const theme = useContext(ThemeContext);
   const chartRef = useRef<HTMLDivElement>(null);
+  const legendRef = useRef<HTMLDivElement>(null);
   const dimension = useContainerDimension(chartRef);
+  const { width: legendWidth } = useContainerDimension(legendRef);
   const { width: outerWidth, height: outerHeight } = dimension;
-  const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin);
+  const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin, legendWidth);
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
   const xAxis = getXAxisScale({
     data,
@@ -252,6 +254,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
           ...color,
           ...colorScale!,
         }}
+        ref={legendRef}
       />
     </div>
   );
