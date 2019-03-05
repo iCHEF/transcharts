@@ -10,7 +10,7 @@ import {
   // from TooltipLayer
   TooltipLayer,
   // from Legend,
-  Legend,
+  LegendGroup,
   // from common types
   Margin,
   FieldSelector,
@@ -149,33 +149,36 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
 
   /** Width of the collision detection rectangle */
   const bandWidth = graphWidth / (data.length - 1);
-  const colorScale = (typeof color !== 'undefined') && getColorScale({
-    data,
-    encoding: color,
-    colors: theme.colors,
-  });
+  const colorScale = typeof color !== 'undefined'
+    ? getColorScale({
+      data,
+      encoding: color,
+      colors: theme.colors,
+    })
+    : null;
   const defaultColor = theme.colors.category[0];
   const getColor = colorScale
     ? colorScale.selector.getScaledVal
     : () => defaultColor;
   const sortedData = data.sort(
-    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB)
+    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB),
   );
   const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
   const dataGroup = getDataGroupByEncodings(sortedData, encodings);
 
   const graphGroup = dataGroup.map(
-    rows => {
+    (rows, index) => {
       const colorString: string = getColor(rows[0]);
       return (
         <DataLine
+          key={index}
           color={colorString}
           rows={rows}
           xSelector={xSelector}
           ySelector={ySelector}
         />
       );
-    }
+    },
   );
 
   return (
@@ -247,14 +250,12 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
         ySelector={ySelector}
         getColor={getColor}
       />
-      {/* Draw the legend */}
-      {color && (
-        <Legend
-          scaleType={colorScale.scaleType}
-          scale={colorScale.scale}
-          title={colorScale.field}
-        />
-      )}
+      <LegendGroup
+        color={color && {
+          ...color,
+          ...colorScale!,
+        }}
+      />
     </div>
   );
 };
