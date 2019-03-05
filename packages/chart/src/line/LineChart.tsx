@@ -130,9 +130,6 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   const dimension = useContainerDimension(chartRef);
   const { width: outerWidth, height: outerHeight } = dimension;
   const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin);
-  if (graphWidth <= 0 || graphHeight <= 0) {
-    return null;
-  }
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
   const xAxis = getXAxisScale({
     data,

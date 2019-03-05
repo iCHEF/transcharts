@@ -67,15 +67,19 @@ export function useContainerDimension(
   useEffect(
     () => {
       // connect the resize observer on mounted
-      resizeObsrRef.current = new resizeObserverPolyfill(debouncedResize);
-      resizeObsrRef.current.observe(containerRef.current!);
+      if (containerRef.current) {
+        resizeObsrRef.current = new resizeObserverPolyfill(debouncedResize);
+        resizeObsrRef.current.observe(containerRef.current!);
+      }
 
       return () => {
         // disconnect the resize observer on unmounted
-        resizeObsrRef.current!.disconnect();
+        if (resizeObsrRef.current) {
+          resizeObsrRef.current!.disconnect();
+        }
       };
     },
-    [],
+    [containerRef],
   );
 
   return dimension;
