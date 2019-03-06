@@ -101,15 +101,21 @@ const DataLine: FunctionComponent<{
   );
 };
 
-export const LineChart: FunctionComponent<LineChartProps> = ({
+export const LineChart = ({
   data,
-  margin,
+  // FIXME: remove the default margin after fixing the defaultProps of`<SvgWithAxisFrame>`
+  margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 60,
+  },
   x,
   y,
   color,
   showLeftAxis,
   showBottomAxis,
-}) => {
+}: LineChartProps) => {
   const theme = useContext(ThemeContext);
   const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
@@ -143,9 +149,9 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
       ref={chartRef}
       outerDimension={outerDimension}
       graphDimension={graphDimension}
-      margin={margin}
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
+      margin={margin}
       data={data}
       scalesConfig={scalesConfig}
       svgOverlay={

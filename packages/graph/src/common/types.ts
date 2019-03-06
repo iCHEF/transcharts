@@ -58,7 +58,7 @@ export interface AxisScale extends Scale {
 
 export type EncodingDataType = 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
 export interface ColorScale extends Scale {
-  range?: [string, string] | ReadonlyArray<string>
+  range?: [string, string] | ReadonlyArray<string>;
 }
 
 export interface Encoding {
