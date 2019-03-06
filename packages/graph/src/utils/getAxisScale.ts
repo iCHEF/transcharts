@@ -7,8 +7,6 @@ import {
 
 import { AxisScale, AxisEncoding } from '../common/types';
 
-import { getRecordFieldSelector } from './getRecordFieldSelector';
-
 export interface GetAxisScaleArgs {
   data: object[];
   encoding: AxisEncoding;

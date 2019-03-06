@@ -4,8 +4,6 @@ import { scaleOrdinal, scaleSequential } from 'd3-scale';
 
 import { Theme, ColorEncoding, ColorScale } from '../common/types';
 
-import { getRecordFieldSelector } from './getRecordFieldSelector';
-
 interface ColorScaleArgs {
   colors: Theme['colors'];
   encoding: ColorEncoding;
