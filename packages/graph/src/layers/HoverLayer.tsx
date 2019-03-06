@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { throttle } from 'lodash-es';
 import { localPoint } from '@vx/event';
 
@@ -24,13 +24,18 @@ export interface HoverLayerProps {
   throttleTime: number;
 }
 
-export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
+const defaultProps = {
+  handleHover: () => null,
+  throttleTime: 180,
+};
+
+export const HoverLayer = ({
   setHoveredPosAndIndex,
-  handleHover= () => null,
+  handleHover,
   clearHovering,
   collisionComponents,
-  throttleTime = 180,
-}) => {
+  throttleTime,
+}: HoverLayerProps) => {
   /** use requestAnimationFrame to schedule updates of hovered position and data index */
   const { requestWindowAnimationFrame } = useAnimationFrame();
 
@@ -93,3 +98,5 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
     </>
   );
 };
+
+HoverLayer.defaultProps = defaultProps;

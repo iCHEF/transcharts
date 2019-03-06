@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import {
   // from AxisLayer
   AxisLayer,
@@ -39,33 +39,33 @@ export interface SvgFrameProps {
   children: React.ReactNode;
 }
 
-export const SvgWithAxisFrame: FunctionComponent<SvgFrameProps> = React.forwardRef((
-  {
-    outerDimension,
-    graphDimension,
-    margin = {
-      top: 20,
-      right: 20,
-      bottom: 30,
-      left: 60,
-    },
-    data,
-    showLeftAxis = true,
-    showBottomAxis = true,
-    scalesConfig,
-    svgOverlay,
-    children,
+const defaultProps = {
+  margin: {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 60,
   },
-  ref: React.RefObject<HTMLDivElement>,
-) => {
+  showLeftAxis: true,
+  showBottomAxis: true,
+};
+
+const FrameContent = ({
+  outerDimension,
+  graphDimension,
+  margin,
+  data,
+  scalesConfig,
+  showLeftAxis,
+  showBottomAxis,
+  svgOverlay,
+  children,
+}: SvgFrameProps) => {
   const { width: outerWidth, height: outerHeight } = outerDimension;
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
   return (
-    <div
-      ref={ref}
-      style={{ width: '100%', height: '100%', position: 'relative' }}
-    >
+    <>
       <svg width={outerWidth} height={outerHeight}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           <AxisLayer
@@ -81,6 +81,19 @@ export const SvgWithAxisFrame: FunctionComponent<SvgFrameProps> = React.forwardR
         </g>
       </svg>
       {svgOverlay}
-    </div>
+    </>
   );
-});
+};
+FrameContent.defaultProps = defaultProps;
+
+export const SvgWithAxisFrame = React.forwardRef<
+  HTMLDivElement,
+  JSX.LibraryManagedAttributes<typeof FrameContent, SvgFrameProps>
+>((props, ref) => (
+  <div
+    ref={ref}
+    style={{ width: '100%', height: '100%', position: 'relative' }}
+  >
+    <FrameContent {...props} />
+  </div>
+));
