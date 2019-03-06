@@ -11,6 +11,7 @@ import {
   getYAxisScale,
   getRecordFieldSelector,
   // from common types
+  AxisScale,
   GraphDimension,
   // from themes
   Theme,
@@ -43,7 +44,7 @@ export const useCartesianEncodings = (
   const { width, height } = graphDimension;
 
   // the scales and configs of the axis based on its encodings
-  const xAxis = useMemo(
+  const xAxis: AxisScale = useMemo(
     () => getXAxisScale({
       data,
       axisLength: width,
@@ -51,7 +52,7 @@ export const useCartesianEncodings = (
     }),
     [data, width, x],
   );
-  const yAxis = useMemo(
+  const yAxis: AxisScale = useMemo(
     () => getYAxisScale({
       data,
       axisLength: height,
@@ -118,27 +119,27 @@ export const useCartesianEncodings = (
     /** d3 scale functions and other related configurations computed for various encodings */
     scalesConfig: {
       /** scale function and configs for x-axis */
-      xAxis,
+      x: xAxis,
 
       /** scale function and configs for y-axis */
-      yAxis,
+      y: yAxis,
 
       /** scale function and configs for the color scale; null if there is no color encoding */
-      colorScale,
+      color: colorScale,
     },
 
     /** Contains functions to select values from a data row */
     rowValSelectors: {
       /** Functions to get value on the x-axis */
-      xAxis: xSelector,
+      x: xSelector,
 
       /** Functions to get value on the y-axis */
-      yAxis: ySelector,
+      y: ySelector,
 
       /** Functions to get colors */
       color: {
         /** Function to get the color string */
-        getColorString,
+        getString: getColorString,
       },
     },
   };

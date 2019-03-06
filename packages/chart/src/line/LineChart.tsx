@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useRef } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { LinePath } from '@vx/shape';
 import {
   // from AxisLayer
@@ -12,22 +12,15 @@ import {
   // from common types
   Margin,
   FieldSelector,
-  Encoding,
   AxisEncoding,
   ColorEncoding,
-  // from utils
-  getColorScale,
-  getDataGroupByEncodings,
-  getXAxisScale,
-  getYAxisScale,
   // from themes
   Theme,
   ThemeContext,
-  // from hooks
-  useContainerDimension,
 } from '@ichef/transcharts-graph';
 
-import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
+import { useChartDimensions } from '../hooks/useChartDimensions';
+import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 
 export interface LineChartProps {
    /** Margin between the inner graph area and the outer svg */
@@ -124,64 +117,39 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   showBottomAxis = true,
 }) => {
   const theme = useContext(ThemeContext);
-  const chartRef = useRef<HTMLDivElement>(null);
-  const dimension = useContainerDimension(chartRef);
-  const { width: outerWidth, height: outerHeight } = dimension;
-  const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin);
-  if (graphWidth <= 0 || graphHeight <= 0) {
-    return null;
-  }
+  const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
+  const { width: graphWidth, height: graphHeight } = graphDimension;
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
-  const xAxis = getXAxisScale({
-    data,
-    axisLength: graphWidth,
-    encoding: x,
-  });
-  const yAxis = getYAxisScale({
-    data,
-    axisLength: graphHeight,
-    encoding: y,
-  });
-  const xSelector = xAxis.selector;
-  const ySelector = yAxis.selector;
+  const {
+    dataGroups,
+    scalesConfig,
+    rowValSelectors,
+  } = useCartesianEncodings(graphDimension, theme, data, x, y, color);
 
-  /** Width of the collision detection rectangle */
-  const bandWidth = graphWidth / (data.length - 1);
-  const colorScale = (typeof color !== 'undefined') && getColorScale({
-    data,
-    encoding: color,
-    colors: theme.colors,
-  });
-  const defaultColor = theme.colors.category[0];
-  const getColor = colorScale
-    ? colorScale.selector.getScaledVal
-    : () => defaultColor;
-  const sortedData = data.sort(
-    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB)
-  );
-  const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
-  const dataGroup = getDataGroupByEncodings(sortedData, encodings);
-
-  const graphGroup = dataGroup.map(
-    rows => {
-      const colorString: string = getColor(rows[0]);
+  const graphGroup = dataGroups.map(
+    (rows: object[], index: number) => {
+      const colorString: string = rowValSelectors.color.getString(rows[0]);
       return (
         <DataLine
+          key={`row-${index}`}
           color={colorString}
           rows={rows}
-          xSelector={xSelector}
-          ySelector={ySelector}
+          xSelector={rowValSelectors.x}
+          ySelector={rowValSelectors.y}
         />
       );
     }
   );
+
+  /** Width of the collision detection rectangle */
+  const collisBandWidth = graphWidth / (data.length - 1);
 
   return (
     <div
       style={{ width: '100%', height: '100%', position: 'relative' }}
       ref={chartRef}
     >
-      <svg width={outerWidth} height={outerHeight}>
+      <svg width={outerDimension.width} height={outerDimension.height}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           <AxisLayer
             width={graphWidth}
@@ -189,17 +157,17 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
             showLeftAxis={showLeftAxis}
             showBottomAxis={showBottomAxis}
             data={data}
-            xAxis={xAxis}
-            yAxis={yAxis}
+            xAxis={scalesConfig.x}
+            yAxis={scalesConfig.y}
           />
 
           {graphGroup}
           <HoveringIndicator
             hovering={hovering}
-            xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
-            yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
+            xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
+            yPos={rowValSelectors.y.getScaledVal(data[hoveredPoint.index])}
             height={graphHeight}
-            color={getColor(data[hoveredPoint.index])}
+            color={rowValSelectors.color.getString(data[hoveredPoint.index])}
           />
 
           {/* Areas which are used to detect mouse or touch interactions */}
@@ -210,14 +178,14 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
               (dataRow, index) => {
                 const rectX = index === 0
                   ? 0
-                  : xSelector.getScaledVal(
+                  : rowValSelectors.x.getScaledVal(
                       dataRow,
                     ) -
-                    bandWidth * 0.5;
+                    collisBandWidth * 0.5;
 
                 const rectWidth = index === 0 || index === data.length - 1
-                  ? bandWidth / 2
-                  : bandWidth;
+                  ? collisBandWidth / 2
+                  : collisBandWidth;
 
                 return (
                   <rect
@@ -230,7 +198,8 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
                     opacity={0}
                   />
                 );
-              })}
+              }
+            )}
           />
         </g>
       </svg>
@@ -242,9 +211,9 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
         graphWidth={graphWidth}
         graphHeight={graphHeight}
         margin={margin}
-        xSelector={xSelector}
-        ySelector={ySelector}
-        getColor={getColor}
+        xSelector={rowValSelectors.x}
+        ySelector={rowValSelectors.y}
+        getColor={rowValSelectors.color.getString}
       />
     </div>
   );
