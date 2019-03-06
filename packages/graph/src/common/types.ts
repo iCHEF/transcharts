@@ -38,8 +38,6 @@ export interface Scale {
 
   /** Returns the formatted value according to the type of the axis */
   getValue: (val: any) => any;
-
-  selector: FieldSelector;
 }
 
 export type AxisScaleType = 'point' | 'time' | 'linear';

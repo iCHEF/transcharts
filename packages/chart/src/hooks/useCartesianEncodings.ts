@@ -9,6 +9,7 @@ import {
   getDataGroupByEncodings,
   getXAxisScale,
   getYAxisScale,
+  getRecordFieldSelector,
   // from common types
   GraphDimension,
   // from themes
@@ -41,20 +42,6 @@ export const useCartesianEncodings = (
   // get the inner width and height of the graph
   const { width, height } = graphDimension;
 
-  // handle the colors
-  const colorScale = useMemo(
-    () => (typeof color !== 'undefined') && getColorScale({
-      data,
-      encoding: color,
-      colors: theme.colors,
-    }),
-    [color, data, theme.colors],
-  );
-  const defaultColor = theme.colors.category[0];
-  const getColorString = colorScale
-    ? colorScale.selector.getScaledVal
-    : () => defaultColor;
-
   // the scales and configs of the axis based on its encodings
   const xAxis = useMemo(
     () => getXAxisScale({
@@ -74,8 +61,38 @@ export const useCartesianEncodings = (
   );
 
   // selectors to get the original/scaled/formatted values
-  const xSelector = xAxis.selector;
-  const ySelector = yAxis.selector;
+  const xSelector = useMemo(
+    () => getRecordFieldSelector(xAxis),
+    [xAxis],
+  );
+  const ySelector = useMemo(
+    () => getRecordFieldSelector(yAxis),
+    [yAxis],
+  );
+
+  // handle the colors
+  const colorScale = useMemo(
+    () => {
+      if (typeof color === 'undefined') {
+        return null;
+      }
+      return getColorScale({
+        data,
+        encoding: color,
+        colors: theme.colors,
+      });
+    },
+    [color, data, theme.colors],
+  );
+  const defaultColor = theme.colors.category[0];
+  const getColorString = useMemo(
+    () => (
+      colorScale
+      ? getRecordFieldSelector(colorScale).getScaledVal
+      : () => defaultColor
+    ),
+    [colorScale, defaultColor],
+  );
 
   // sort the data
   const sortedData = useMemo(
@@ -97,6 +114,18 @@ export const useCartesianEncodings = (
   return {
     /** Array of data grouped by fields of colors  */
     dataGroups,
+
+    /** d3 scale functions and other related configurations computed for various encodings */
+    scalesConfig: {
+      /** scale function and configs for x-axis */
+      xAxis,
+
+      /** scale function and configs for y-axis */
+      yAxis,
+
+      /** scale function and configs for the color scale; null if there is no color encoding */
+      colorScale,
+    },
 
     /** Contains functions to select values from a data row */
     rowValSelectors: {

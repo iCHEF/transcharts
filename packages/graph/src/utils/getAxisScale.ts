@@ -62,7 +62,6 @@ export function getAxisScale(
     }
   }
 
-  const selector = getRecordFieldSelector({ field, scale, scaleType, getValue });
   const axisScale = {
     field,
     range,
@@ -71,7 +70,6 @@ export function getAxisScale(
     scaleType,
     type,
     scale,
-    selector,
   };
   return axisScale;
 }
