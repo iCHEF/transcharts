@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add a custom effect `useChartDimensions` to calculate the outer and inner dimension of the chart. (#16)
+- Add `useCartesianEncodings` to calculate the processed data and the visual encodings that we need in order to draw the graph. (#16)
+- Add a <SvgWithAxisFrame> component to deal with the size of the chart container, SVG, and the axes that generally used across different charts. (#16)
 - Add `getColorScale` to receive color encoding in charts. (#11)
 - Extract the animation frame controls as a custom effect hook. (#10)
 - Add `tslint-react-hooks` rules to lint React Hooks. (#8)
@@ -24,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Remove `selectors` from `AxisScale` and `ColorScale`. (#16)
+- Modify the config of `tslint` so that it won't continuing warning about the lack of dangling commas in functions. (#16)
 - Rewrite `<HoverLayer>` using Hooks. (#10)
 - Remove `AxisConfig` type. Add new `Encoding` (`AxisEncoding`) and `Scale` (`AxisScale`) type for `getAxisScale`. (#9)
 - Replace `fieldX` `fieldY` `scaleX` `scaleY` with `x` and `y` props in `LineChart`. (#9)
