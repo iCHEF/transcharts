@@ -23,7 +23,7 @@ export const useChartDimensions = (
   },
 ) => {
   // compute the outer and inner dimension of the chart
-  const chartRef = useRef<HTMLElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
   const outerDimension = useContainerDimension(chartRef);
   const graphDimension = useMemo(
     () => {
