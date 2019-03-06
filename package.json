@@ -7,6 +7,8 @@
   "scripts": {
     "start": "docz dev",
     "build": "docz build",
+    "type-check": "lerna run type-check --parallel --stream",
+    "type-check:watch": "lerna run type-check:watch --parallel --stream -- -- --preserveWatchOutput",
     "prepublish": "lerna run prepublish",
     "lint": "lerna run lint --parallel --stream",
     "clean": "lerna run --parallel clean"
