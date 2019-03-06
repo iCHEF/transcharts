@@ -8,6 +8,10 @@ import {
   GraphDimension,
 } from '@ichef/transcharts-graph';
 
+/**
+ * It manages the size of the chart container, SVG, and the axes
+ * that generally used across different charts.
+ */
 export interface SvgFrameProps {
   /** Width and height of the outer container including the margin */
   outerDimension: GraphDimension;
@@ -40,6 +44,8 @@ export interface SvgFrameProps {
 }
 
 const defaultProps = {
+  // FIXME: Typescript does not seem to be able to interpret the defaultProps of `margin`,
+  // while there is no issue with props of primitive types (showLeftAxis & showBottomAxis)
   margin: {
     top: 20,
     right: 20,

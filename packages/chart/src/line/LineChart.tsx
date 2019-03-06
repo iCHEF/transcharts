@@ -13,6 +13,7 @@ import {
   AxisEncoding,
   ColorEncoding,
   // from themes
+  Theme,
   ThemeContext,
 } from '@ichef/transcharts-graph';
 
@@ -116,7 +117,7 @@ export const LineChart = ({
   showLeftAxis,
   showBottomAxis,
 }: LineChartProps) => {
-  const theme = useContext(ThemeContext);
+  const theme = useContext<Theme>(ThemeContext);
   const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
