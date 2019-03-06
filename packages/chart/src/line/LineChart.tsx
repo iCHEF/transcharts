@@ -1,8 +1,6 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { LinePath } from '@vx/shape';
 import {
-  // from AxisLayer
-  AxisLayer,
   // from HoverLayer
   HoverLayer,
   // from hooks
@@ -15,26 +13,27 @@ import {
   AxisEncoding,
   ColorEncoding,
   // from themes
-  Theme,
   ThemeContext,
 } from '@ichef/transcharts-graph';
 
 import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
+import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 
 export interface LineChartProps {
-   /** Margin between the inner graph area and the outer svg */
-  margin: Margin;
+  /** Margin between the inner graph area and the outer svg */
+  margin?: Margin;
+
+  /** Should show the axis on the left or not */
+  showLeftAxis?: boolean;
+
+  /** Should show the axis on the bottom or not */
+  showBottomAxis?: boolean;
+
   data: object[];
   x: AxisEncoding;
   y: AxisEncoding;
   color?: ColorEncoding;
-  /** Should show the axis on the left or not */
-  showLeftAxis: boolean;
-  /** Should show the axis on the bottom or not */
-  showBottomAxis: boolean;
-  /** Theme object */
-  theme: Theme;
 }
 
 /** A line and a dot for the point being hovered */
@@ -104,17 +103,12 @@ const DataLine: FunctionComponent<{
 
 export const LineChart: FunctionComponent<LineChartProps> = ({
   data,
+  margin,
   x,
   y,
   color,
-  margin = {
-    top: 20,
-    right: 20,
-    bottom: 30,
-    left: 60,
-  },
-  showLeftAxis = true,
-  showBottomAxis = true,
+  showLeftAxis,
+  showBottomAxis,
 }) => {
   const theme = useContext(ThemeContext);
   const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
@@ -145,76 +139,70 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   const collisBandWidth = graphWidth / (data.length - 1);
 
   return (
-    <div
-      style={{ width: '100%', height: '100%', position: 'relative' }}
+    <SvgWithAxisFrame
       ref={chartRef}
+      outerDimension={outerDimension}
+      graphDimension={graphDimension}
+      margin={margin}
+      showLeftAxis={showLeftAxis}
+      showBottomAxis={showBottomAxis}
+      data={data}
+      scalesConfig={scalesConfig}
+      svgOverlay={
+        // Draw the tooltip
+        <TooltipLayer
+          hovering={hovering}
+          hoveredPoint={hoveredPoint}
+          data={data}
+          graphWidth={graphWidth}
+          graphHeight={graphHeight}
+          margin={margin}
+          xSelector={rowValSelectors.x}
+          ySelector={rowValSelectors.y}
+          getColor={rowValSelectors.color.getString}
+        />
+      }
     >
-      <svg width={outerDimension.width} height={outerDimension.height}>
-        <g transform={`translate(${margin.left}, ${margin.top})`}>
-          <AxisLayer
-            width={graphWidth}
-            height={graphHeight}
-            showLeftAxis={showLeftAxis}
-            showBottomAxis={showBottomAxis}
-            data={data}
-            xAxis={scalesConfig.x}
-            yAxis={scalesConfig.y}
-          />
-
-          {graphGroup}
-          <HoveringIndicator
-            hovering={hovering}
-            xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
-            yPos={rowValSelectors.y.getScaledVal(data[hoveredPoint.index])}
-            height={graphHeight}
-            color={rowValSelectors.color.getString(data[hoveredPoint.index])}
-          />
-
-          {/* Areas which are used to detect mouse or touch interactions */}
-          <HoverLayer
-            setHoveredPosAndIndex={setHoveredPosAndIndex}
-            clearHovering={clearHovering}
-            collisionComponents={data.map(
-              (dataRow, index) => {
-                const rectX = index === 0
-                  ? 0
-                  : rowValSelectors.x.getScaledVal(
-                      dataRow,
-                    ) -
-                    collisBandWidth * 0.5;
-
-                const rectWidth = index === 0 || index === data.length - 1
-                  ? collisBandWidth / 2
-                  : collisBandWidth;
-
-                return (
-                  <rect
-                    // #TODO: use unique keys rather than array index
-                    key={`colli-${index}`}
-                    x={rectX}
-                    y={0}
-                    width={rectWidth}
-                    height={graphHeight}
-                    opacity={0}
-                  />
-                );
-              }
-            )}
-          />
-        </g>
-      </svg>
-      {/* Draw the tooltip */}
-      <TooltipLayer
+      {graphGroup}
+      <HoveringIndicator
         hovering={hovering}
-        hoveredPoint={hoveredPoint}
-        data={data}
-        graphWidth={graphWidth}
-        graphHeight={graphHeight}
-        margin={margin}
-        xSelector={rowValSelectors.x}
-        ySelector={rowValSelectors.y}
-        getColor={rowValSelectors.color.getString}
+        xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
+        yPos={rowValSelectors.y.getScaledVal(data[hoveredPoint.index])}
+        height={graphHeight}
+        color={rowValSelectors.color.getString(data[hoveredPoint.index])}
       />
-    </div>
+
+      {/* Areas which are used to detect mouse or touch interactions */}
+      <HoverLayer
+        setHoveredPosAndIndex={setHoveredPosAndIndex}
+        clearHovering={clearHovering}
+        collisionComponents={data.map(
+          (dataRow, index) => {
+            const rectX = index === 0
+              ? 0
+              : rowValSelectors.x.getScaledVal(
+                  dataRow,
+                ) -
+                collisBandWidth * 0.5;
+
+            const rectWidth = index === 0 || index === data.length - 1
+              ? collisBandWidth / 2
+              : collisBandWidth;
+
+            return (
+              <rect
+                // #TODO: use unique keys rather than array index
+                key={`colli-${index}`}
+                x={rectX}
+                y={0}
+                width={rectWidth}
+                height={graphHeight}
+                opacity={0}
+              />
+            );
+          }
+        )}
+      />
+    </SvgWithAxisFrame>
   );
 };

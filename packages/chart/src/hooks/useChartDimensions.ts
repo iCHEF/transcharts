@@ -1,7 +1,8 @@
 import { useRef, useMemo } from 'react';
 import {
-  // from TooltipLayer
+  // from common types
   Margin,
+  GraphDimension,
   // from hooks
   useContainerDimension,
 } from '@ichef/transcharts-graph';
@@ -24,8 +25,8 @@ export const useChartDimensions = (
 ) => {
   // compute the outer and inner dimension of the chart
   const chartRef = useRef<HTMLDivElement>(null);
-  const outerDimension = useContainerDimension(chartRef);
-  const graphDimension = useMemo(
+  const outerDimension: GraphDimension = useContainerDimension(chartRef);
+  const graphDimension: GraphDimension  = useMemo(
     () => {
       return getInnerGraphDimension(outerDimension, margin);
     },
