@@ -1,4 +1,5 @@
-import { values, groupBy } from 'lodash-es';
+import groupBy from 'lodash/groupBy';
+import values from 'lodash/values';
 
 import { Encoding } from '../common/types';
 

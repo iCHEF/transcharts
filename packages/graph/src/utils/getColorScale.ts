@@ -1,4 +1,5 @@
-import { map, sortedUniq } from 'lodash-es';
+import map from 'lodash/map';
+import sortedUniq from 'lodash/sortedUniq'
 import { extent as d3Extent } from 'd3-array';
 import { scaleOrdinal, scaleSequential } from 'd3-scale';
 
