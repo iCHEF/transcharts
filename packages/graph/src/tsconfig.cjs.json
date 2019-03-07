@@ -3,5 +3,9 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "../lib/cjs"
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.tsx"
+  ]
 }
