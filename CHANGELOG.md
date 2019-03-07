@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add `test` and `test:watch` scripts in root directory and every single package.(#17)
+- Add `jest`, `ts-jest`, `enzyme`, `enzyme-adapter-react-16` dependency.(#17)
+- Add a sample test of `ResponsiveLayer`. (#17)
 - Add a custom effect `useChartDimensions` to calculate the outer and inner dimension of the chart. (#16)
 - Add `useCartesianEncodings` to calculate the processed data and the visual encodings that we need in order to draw the graph. (#16)
 - Add a <SvgWithAxisFrame> component to deal with the size of the chart container, SVG, and the axes that generally used across different charts. (#16)
@@ -29,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Replace `lodash-es` with `lodash`.(#17)
 - Remove `selectors` from `AxisScale` and `ColorScale`. (#16)
 - Modify the config of `tslint` so that it won't continuing warning about the lack of dangling commas in functions. (#16)
 - Fix `HoverLayer` default props. (#14)
