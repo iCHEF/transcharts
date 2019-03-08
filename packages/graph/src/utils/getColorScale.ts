@@ -94,13 +94,11 @@ export function getColorScale({
 }: ColorScaleArgs): ColorScale {
   const { type, field } = encoding;
   const { scale, scaleType, domain, range } = getColorScaleSetting({ colors, encoding, data });
-  const getValue = (val: any) => val;
   return {
     scale,
     domain,
     type,
     field,
-    getValue,
     range,
     scaleType,
   };

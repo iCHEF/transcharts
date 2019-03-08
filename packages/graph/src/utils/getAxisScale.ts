@@ -6,7 +6,10 @@ import {
   scaleBand,
 } from 'd3-scale';
 
-import { AxisScale, AxisEncoding } from '../common/types';
+import { getValByScaleType } from './getValByScaleType';
+
+import { AxisScale, ScaleType, AxisEncoding } from '../common/types';
+import { DEFAULT_VALS } from '../common/config';
 
 export interface GetAxisScaleArgs {
   data: object[];
@@ -37,8 +40,8 @@ export function getAxisScale(
 
   let domain: AxisScale['domain'];
   let scale;
-  const scaleType = encoding.scale || 'linear';
-  let getValue = (val: any) => val;
+  const scaleType: ScaleType = encoding.scale || DEFAULT_VALS.SCALE_TYPE;
+  const getValue = getValByScaleType(scaleType);
 
   switch (scaleType) {
     case 'point': {
@@ -47,8 +50,6 @@ export function getAxisScale(
       break;
     }
     case 'time': {
-      // TODO: think out a way to deal with the date type
-      getValue = (val: string) => new Date(val);
       domain = d3Extent(dataVals.map(time => getValue(time)));
       scale = scaleTime().domain(domain).range(range);
       break;
@@ -76,7 +77,6 @@ export function getAxisScale(
     field,
     range,
     domain,
-    getValue,
     scaleType,
     type,
     scale,
