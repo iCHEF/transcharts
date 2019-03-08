@@ -65,6 +65,55 @@ const lineData = [
   </div>
 </Playground>
 
+## Multiple lines
+
+### Nominal color field
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+      }}
+    />
+  </div>
+</Playground>
+
+### Quantitative color field
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={[
+        { x: 1, y: 5, size: 3 },
+        { x: 3, y: 6, size: 3 },
+        { x: 2, y: 3, size: 3 },
+        { x: 9, y: 7, size: 3 },
+        { x: 7, y: 1, size: 3 },
+        { x: 4, y: 2, size: 5 },
+        { x: 1, y: 10, size: 5 },
+        { x: 6, y: 4, size: 5 },
+        { x: 8, y: 9, size: 5 },
+        { x: 9, y: 0, size: 5 },
+        { x: 5, y: 3, size: 8 },
+        { x: 3, y: 8, size: 8 },
+        { x: 4, y: 4, size: 8 },
+        { x: 10, y:7, size: 8 },
+      ]}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "size",
+        type: "quantitative",
+      }}
+    />
+  </div>
+</Playground>
+
 ## Props
 
 <PropsTable of={BarChart} />
