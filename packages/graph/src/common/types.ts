@@ -2,6 +2,7 @@ import {
   ScaleLinear,
   ScalePoint,
   ScaleTime,
+  ScaleBand,
 } from 'd3-scale';
 
 export interface FieldSelector {
@@ -40,11 +41,14 @@ export interface Scale {
   getValue: (val: any) => any;
 }
 
-export type AxisScaleType = 'point' | 'time' | 'linear';
+export type AxisScaleType = 'point' | 'time' | 'linear' | 'band';
 
 export interface AxisScale extends Scale {
   /** d3's Scaling function employed in this axis */
-  scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
+  scale: ScalePoint<any>
+    | ScaleTime<any, any>
+    | ScaleLinear<any, any>
+    | ScaleBand<any>; // d3 scale function
 
   /** scale type string */
   scaleType: AxisScaleType;

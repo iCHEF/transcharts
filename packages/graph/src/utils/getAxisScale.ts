@@ -3,6 +3,7 @@ import {
   scaleLinear,
   scalePoint,
   scaleTime,
+  scaleBand,
 } from 'd3-scale';
 
 import { AxisScale, AxisEncoding } from '../common/types';
@@ -50,6 +51,11 @@ export function getAxisScale(
       getValue = (val: string) => new Date(val);
       domain = d3Extent(dataVals.map(time => getValue(time)));
       scale = scaleTime().domain(domain).range(range);
+      break;
+    }
+    case 'band': {
+      domain = dataVals;
+      scale = scaleBand().domain(domain).range(range);
       break;
     }
     case 'linear':
