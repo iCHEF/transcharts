@@ -56,8 +56,9 @@ export const BarChart = ({
   const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
-  // TODO: 1. add padding the scaleBand
-  const xBand: AxisEncoding = { ...x, scale: 'band' };
+  const xBand: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
+    paddingInner: 0.1,
+  }};
   const yBand: AxisEncoding = { ...y, scale: 'linear' };
   const {
     dataGroups,

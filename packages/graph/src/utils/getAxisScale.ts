@@ -25,7 +25,7 @@ export function getAxisScale(
   encoding: AxisEncoding,
 ): AxisScale {
   const range: AxisScale['range'] = [min, max];
-  const { field, type } = encoding;
+  const { field, type, scaleConfig } = encoding;
 
   const dataVals: any[] = [];
   data.forEach((row) => {
@@ -56,6 +56,12 @@ export function getAxisScale(
     case 'band': {
       domain = dataVals;
       scale = scaleBand().domain(domain).range(range);
+      if (scaleConfig) {
+        const { padding, paddingInner, paddingOuter } = scaleConfig;
+        if (padding) scale.padding(padding);
+        if (paddingInner) scale.paddingInner(paddingInner);
+        if (paddingOuter) scale.paddingOuter(paddingOuter);
+      }
       break;
     }
     case 'linear':

@@ -69,6 +69,13 @@ export interface Encoding {
   field: string;
   type: EncodingDataType;
   scale?: string;
+
+  /** Extra configurations to generate D3 scale */
+  scaleConfig?: {
+    padding?: number;
+    paddingInner?: number;
+    paddingOuter?: number;
+  };
 }
 
 export interface AxisEncoding extends Encoding {
