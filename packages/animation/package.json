@@ -30,9 +30,7 @@
     "clean": "rimraf ./dist ./lib ./es5 ./deploy",
     "lint": "tslint --project ./src",
     "type-check": "tsc -p ./src --noEmit",
-    "type-check:watch": "tsc -p ./src --noEmit --watch",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "type-check:watch": "tsc -p ./src --noEmit --watch"
   },
   "peerDependencies": {
     "prop-types": "^15.7.1",

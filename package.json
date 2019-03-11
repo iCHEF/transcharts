@@ -12,8 +12,8 @@
     "prepublish": "lerna run prepublish",
     "lint": "lerna run lint --parallel --stream",
     "clean": "lerna run --parallel clean",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest ./packages --config=config/jest.config.js --coverage",
+    "test:watch": "jest ./packages --watch --config=config/jest.config.js"
   },
   "devDependencies": {
     "@types/d3": "^5.7.0",
