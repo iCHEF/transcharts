@@ -6,10 +6,10 @@
   ],
   "scripts": {
     "start": "docz dev",
-    "build": "docz build",
+    "build:doc": "docz build",
     "type-check": "lerna run type-check --parallel --stream",
     "type-check:watch": "lerna run type-check:watch --parallel --stream -- -- --preserveWatchOutput",
-    "prepublish": "lerna run prepublish",
+    "prepublish": "lerna run prepublish && yarn run build:doc;",
     "lint": "lerna run lint --parallel --stream",
     "clean": "lerna run --parallel clean",
     "test": "jest ./packages --config=config/jest.config.js --coverage",
