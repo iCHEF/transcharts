@@ -56,15 +56,15 @@ export const BarChart = ({
   const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
-  const xBand: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
+  const xEncoding: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
     paddingInner: 0.1,
   }};
-  const yBand: AxisEncoding = { ...y, scale: 'linear' };
+  const yEncoding: AxisEncoding = { ...y, scale: 'linear' };
   const {
     dataGroups,
     scalesConfig,
     rowValSelectors,
-  } = useCartesianEncodings(graphDimension, theme, data, xBand, yBand, color);
+  } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
 
   const graphGroup = dataGroups.map(
     (rows: object[], groupIdx: number) => {

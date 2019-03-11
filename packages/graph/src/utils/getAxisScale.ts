@@ -7,6 +7,7 @@ import {
 } from 'd3-scale';
 
 import { getValByScaleType } from './getValByScaleType';
+import { getFieldValuesFromData } from './getFieldValuesFromData';
 
 import { AxisScale, ScaleType, AxisEncoding } from '../common/types';
 import { DEFAULT_VALS } from '../common/config';
@@ -30,13 +31,7 @@ export function getAxisScale(
   const range: AxisScale['range'] = [min, max];
   const { field, type, scaleConfig } = encoding;
 
-  const dataVals: any[] = [];
-  data.forEach((row) => {
-    const val = row[field];
-    if (val !== undefined && val !== null) {
-      dataVals.push(val);
-    }
-  });
+  const dataVals = getFieldValuesFromData(data, field);
 
   let domain: AxisScale['domain'];
   let scale;

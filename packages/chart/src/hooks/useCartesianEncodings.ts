@@ -6,6 +6,8 @@ import {
   getXAxisScale,
   getYAxisScale,
   getRecordFieldSelector,
+  getValByScaleType,
+  getFieldValuesFromData,
   // from common types
   Encoding,
   AxisEncoding,
@@ -15,6 +17,23 @@ import {
   // from themes
   Theme,
 } from '@ichef/transcharts-graph';
+
+/**
+ * Return [min, max] of a column selected from the grouped data
+ */
+function getRangeFromDataGroup(
+  dataGroups: object[][],
+  fieldName: string,
+) {
+  const min: number = Math.min(...getFieldValuesFromData(dataGroups[0], fieldName));
+  let max = min;
+  dataGroups.forEach((group: object[]) => {
+    const values = getFieldValuesFromData(group, fieldName);
+    max += (Math.max(...values) - Math.min(...values));
+  });
+
+  return [min, max];
+}
 
 /**
  * It returns calculated groups of data and its value selectors
@@ -42,21 +61,61 @@ export const useCartesianEncodings = (
   // get the inner width and height of the graph
   const { width, height } = graphDimension;
 
+  // sort the data
+  const sortedData = useMemo(
+    () => {
+      const getValue = getValByScaleType(x.scaleType);
+      const getOriginalVal = (record: object) => getValue(record[x.field]);
+
+      return (
+        data.sort(
+          (rowA, rowB) => getOriginalVal(rowA) - getOriginalVal(rowB),
+        )
+      );
+    },
+    [data, x],
+  );
+
+  // groups the data by colors
+  const dataGroups = useMemo(
+    () => {
+      const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
+      return getDataGroupByEncodings(sortedData, encodings);
+    },
+    [color, sortedData],
+  );
+
   // the scales and configs of the axis based on its encodings
   const xAxis: AxisScale = useMemo(
-    () => getXAxisScale({
-      data,
-      axisLength: width,
-      encoding: x,
-    }),
+    () => {
+      const axisScale = getXAxisScale({
+        data,
+        axisLength: width,
+        encoding: x,
+      });
+
+      // update the domain if the domains of x-y scales is band-linear
+      if (dataGroups.length > 1 && (x.scale === 'linear' && y.scale === 'band')) {
+        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, x.field));
+      }
+      return axisScale;
+    },
     [data, width, x],
   );
   const yAxis: AxisScale = useMemo(
-    () => getYAxisScale({
-      data,
-      axisLength: height,
-      encoding: y,
-    }),
+    () => {
+      const axisScale = getYAxisScale({
+        data,
+        axisLength: height,
+        encoding: y,
+      });
+
+      // update the domain if the domains of x-y scales is linear-band
+      if (dataGroups.length > 1 && (x.scale === 'band' && y.scale === 'linear')) {
+        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, y.field));
+      }
+      return axisScale;
+    },
     [data, height, y],
   );
 
@@ -92,23 +151,6 @@ export const useCartesianEncodings = (
       : () => defaultColor
     ),
     [colorScale, defaultColor],
-  );
-
-  // sort the data
-  const sortedData = useMemo(
-    () => data.sort(
-      (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB),
-    ),
-    [data, xSelector],
-  );
-
-  // groups the data by colors
-  const dataGroups = useMemo(
-    () => {
-      const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
-      return getDataGroupByEncodings(sortedData, encodings);
-    },
-    [color, sortedData],
   );
 
   return {
