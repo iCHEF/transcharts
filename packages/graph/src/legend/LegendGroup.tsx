@@ -10,11 +10,35 @@ interface LegendGroupProps {
 }
 
 const LegendGroupWrapper = styled.div`
+  background: #fff;
   position: absolute;
+`;
+
+const LeftLegendGroupWrapper = styled(LegendGroupWrapper)`
+  top: 0;
+  left: 0;
+`;
+
+const RightLegendGroupWrapper = styled(LegendGroupWrapper)`
   top: 0;
   right: 0;
-  background: #fff;
 `;
+
+const TopLegendGroupWrapper = styled(LegendGroupWrapper)`
+  top: 0;
+  left: 0;
+`;
+const BottomLegendGroupWrapper = styled(LegendGroupWrapper)`
+  bottom: 0;
+  left: 0;
+`;
+
+const LEGEND_WRAPPER_MAP = {
+  top: TopLegendGroupWrapper,
+  right: RightLegendGroupWrapper,
+  bottom: BottomLegendGroupWrapper,
+  left: LeftLegendGroupWrapper,
+};
 
 /**
  * Pass scales(color / shape / size, etc.) props,
@@ -33,14 +57,19 @@ export const LegendGroup = forwardRef((
     return null;
   }
   const { scale, scaleType, field, legend = {} } = color;
+  const orient = legend.orient || 'right';
+  const isSideLegend = ['left', 'right'].indexOf(orient) !== -1;
+  const direction = legend.direction || (isSideLegend ? 'vertical' : 'horizontal');
+  const LegendGroupWrapperComponent = LEGEND_WRAPPER_MAP[orient];
   return (
-    <LegendGroupWrapper ref={ref}>
+    <LegendGroupWrapperComponent ref={ref} >
       <Legend
         scale={scale}
         scaleType={scaleType}
         title={field}
         render={legend.render}
+        direction={direction}
       />
-    </LegendGroupWrapper>
+    </LegendGroupWrapperComponent>
   );
 });

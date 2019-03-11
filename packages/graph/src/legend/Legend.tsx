@@ -17,7 +17,7 @@ export interface LegendProps {
 }
 
 const defaultProps = {
-  direction: 'horizontal',
+  direction: 'vertical',
 };
 
 export const Legend = ({
@@ -28,7 +28,7 @@ export const Legend = ({
   title,
 }: LegendProps) => {
   const LegendComponent = SCALE_TYPE_TO_LEGEND[scaleType];
-  const vxDirection = direction === 'horizontal' ? 'column' : 'row';
+  const vxDirection = direction === 'horizontal' ? 'row' : 'column';
   return (
     <div>
       <div>{title}</div>

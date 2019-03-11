@@ -76,6 +76,8 @@ export interface AxisEncoding extends Encoding {
 export interface LegendConfig {
   /** direction of label  */
   direction?: 'horizontal' | 'vertical';
+  /** where we put legend */
+  orient?: 'top' | 'right' | 'bottom' | 'left';
   /** hide legend or not, default is false */
   hide?: boolean;
   /**

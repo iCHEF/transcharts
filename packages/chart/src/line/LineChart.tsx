@@ -29,7 +29,7 @@ import {
   useContainerDimension,
 } from '@ichef/transcharts-graph';
 
-import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
+import { getInnerGraphDimensionAndMargin } from '../utils/getInnerGraphDimensionAndMargin';
 
 export interface LineChartProps {
    /** Margin between the inner graph area and the outer svg */
@@ -129,9 +129,15 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
   const chartRef = useRef<HTMLDivElement>(null);
   const legendRef = useRef<HTMLDivElement>(null);
   const dimension = useContainerDimension(chartRef);
-  const { width: legendWidth } = useContainerDimension(legendRef);
+  const legendDimension = useContainerDimension(legendRef);
   const { width: outerWidth, height: outerHeight } = dimension;
-  const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin, legendWidth);
+  const legendOrient = (color && color.legend && color.legend.orient) || 'right';
+  const { graphWidth, graphHeight, graphMargin } = getInnerGraphDimensionAndMargin(
+    dimension,
+    margin,
+    legendDimension,
+    legendOrient,
+  );
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
   const xAxis = getXAxisScale({
     data,
@@ -186,7 +192,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
       ref={chartRef}
     >
       <svg width={outerWidth} height={outerHeight}>
-        <g transform={`translate(${margin.left}, ${margin.top})`}>
+        <g transform={`translate(${graphMargin.left}, ${graphMargin.top})`}>
           <AxisLayer
             width={graphWidth}
             height={graphHeight}
@@ -244,7 +250,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
         data={data}
         graphWidth={graphWidth}
         graphHeight={graphHeight}
-        margin={margin}
+        margin={graphMargin}
         xSelector={xSelector}
         ySelector={ySelector}
         getColor={getColor}

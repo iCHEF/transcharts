@@ -1,2 +1,2 @@
 export * from './line/LineChart';
-export * from './utils/getInnerGraphDimension';
+export * from './utils/getInnerGraphDimensionAndMargin';
