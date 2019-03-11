@@ -28,7 +28,9 @@
     "build:esm": "tsc -p ./src",
     "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
     "clean": "rimraf ./dist ./lib ./es5 ./deploy",
-    "lint": "tslint --project ./src"
+    "lint": "tslint --project ./src",
+    "type-check": "tsc -p ./src --noEmit",
+    "type-check:watch": "tsc -p ./src --noEmit --watch"
   },
   "peerDependencies": {
     "prop-types": "^15.7.1",

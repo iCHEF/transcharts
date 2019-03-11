@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add `type-check` and `type-check:watch` script in package.json. (#15)
 - Add `getColorScale` to receive color encoding in charts. (#11)
 - Extract the animation frame controls as a custom effect hook. (#10)
 - Add `tslint-react-hooks` rules to lint React Hooks. (#8)

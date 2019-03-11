@@ -7,6 +7,8 @@
   "scripts": {
     "start": "docz dev",
     "build": "docz build",
+    "type-check": "lerna run type-check --parallel --stream",
+    "type-check:watch": "lerna run type-check:watch --parallel --stream -- -- --preserveWatchOutput",
     "prepublish": "lerna run prepublish",
     "lint": "lerna run lint --parallel --stream",
     "clean": "lerna run --parallel clean"
@@ -19,6 +21,7 @@
     "@types/styled-components": "^4.1.6",
     "docz": "^0.13.7",
     "docz-theme-default": "^0.13.7",
+    "fork-ts-checker-webpack-plugin": "^1.0.0",
     "lerna": "^3.8.0",
     "npm-run-all": "^4.1.5",
     "prop-types": "^15.7.1",
