@@ -44,14 +44,6 @@ export interface SvgFrameProps {
 }
 
 const defaultProps = {
-  // FIXME: Typescript does not seem to be able to interpret the defaultProps of `margin`,
-  // while there is no issue with props of primitive types (showLeftAxis & showBottomAxis)
-  margin: {
-    top: 20,
-    right: 20,
-    bottom: 30,
-    left: 60,
-  },
   showLeftAxis: true,
   showBottomAxis: true,
 };

@@ -20,10 +20,11 @@ import {
 import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
+import { DEFAULT_VALS } from '../common/config';
 
 export interface LineChartProps {
   /** Margin between the inner graph area and the outer svg */
-  margin?: Margin;
+  margin: Margin;
 
   /** Should show the axis on the left or not */
   showLeftAxis?: boolean;
@@ -102,15 +103,13 @@ const DataLine: FunctionComponent<{
   );
 };
 
+const defaultProps = {
+  margin: DEFAULT_VALS.MARGIN,
+};
+
 export const LineChart = ({
   data,
-  // FIXME: remove the default margin after fixing the defaultProps of`<SvgWithAxisFrame>`
-  margin = {
-    top: 20,
-    right: 20,
-    bottom: 30,
-    left: 60,
-  },
+  margin,
   x,
   y,
   color,
@@ -213,3 +212,4 @@ export const LineChart = ({
     </SvgWithAxisFrame>
   );
 };
+LineChart.defaultProps = defaultProps;

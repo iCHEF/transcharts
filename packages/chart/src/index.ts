@@ -1,3 +1,4 @@
+export * from './common/config';
 export * from './hooks/useChartDimensions';
 export * from './hooks/useCartesianEncodings';
 export * from './line/LineChart';
