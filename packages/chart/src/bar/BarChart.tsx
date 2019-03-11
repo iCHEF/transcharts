@@ -66,17 +66,29 @@ export const BarChart = ({
     rowValSelectors,
   } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
 
+  const accumY = {};
+  const getAccumY = (xPos: number, yPos: number, height: number) => {
+    if (!accumY[xPos]) {
+      accumY[xPos] = graphHeight;
+    }
+    accumY[xPos] -= height;
+    return accumY[xPos];
+  };
+
   const graphGroup = dataGroups.map(
     (rows: object[], groupIdx: number) => {
       return rows.map((row: object, rowIdx: number) => {
         const colorString: string = rowValSelectors.color.getString(rows[0]);
+        const xPos = rowValSelectors.x.getScaledVal(row);
+        const yPos = rowValSelectors.y.getScaledVal(row);
+        const height = graphHeight - yPos;
         return (
           <rect
             key={`bar-${rowIdx}`}
-            x={rowValSelectors.x.getScaledVal(row)}
-            y={rowValSelectors.y.getScaledVal(row)}
+            x={xPos}
+            y={getAccumY(xPos, yPos, height)}
             width={scalesConfig.x.scale.bandwidth()}
-            height={graphHeight - rowValSelectors.y.getScaledVal(row)}
+            height={height}
             fill={colorString}
           />
         );
