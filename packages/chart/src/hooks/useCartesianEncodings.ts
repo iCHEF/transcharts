@@ -1,9 +1,5 @@
 import { useMemo } from 'react';
 import {
-  // from TooltipLayer
-  Encoding,
-  AxisEncoding,
-  ColorEncoding,
   // from utils
   getColorScale,
   getDataGroupByEncodings,
@@ -11,6 +7,9 @@ import {
   getYAxisScale,
   getRecordFieldSelector,
   // from common types
+  Encoding,
+  AxisEncoding,
+  ColorEncoding,
   AxisScale,
   GraphDimension,
   // from themes
