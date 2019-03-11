@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add Apache License. (#23)
 - Add release script. (#21)
+- Add auto type check with github action. (#20)
 - Add webpack bundle build. (#19)
 - Add `test` and `test:watch` scripts in root directory and every single package.(#17)
 - Add `jest`, `ts-jest`, `enzyme`, `enzyme-adapter-react-16` dependency.(#17)
