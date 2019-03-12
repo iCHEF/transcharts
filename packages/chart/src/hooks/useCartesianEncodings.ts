@@ -7,7 +7,6 @@ import {
   getYAxisScale,
   getRecordFieldSelector,
   getValByScaleType,
-  getFieldValuesFromData,
   // from common types
   Encoding,
   AxisEncoding,
@@ -23,16 +22,23 @@ import {
  */
 function getRangeFromDataGroup(
   dataGroups: object[][],
-  fieldName: string,
+  keyField: string,
+  valueField: string,
 ) {
-  const min: number = Math.min(...getFieldValuesFromData(dataGroups[0], fieldName));
-  let max = min;
-  dataGroups.forEach((group: object[]) => {
-    const values = getFieldValuesFromData(group, fieldName);
-    max += (Math.max(...values) - Math.min(...values));
+  const aggreated = {};
+  dataGroups.forEach((data: object[]) => {
+    data.forEach((row) => {
+      const key = row[keyField];
+      const val = row[valueField];
+      aggreated[key] = aggreated[key]
+        ? aggreated[key] + val
+        : val;
+    });
   });
 
-  return [min, max];
+  const max = Math.max(...Object.keys(aggreated).map(key => aggreated[key]));
+
+  return [0, max];
 }
 
 /**
@@ -95,8 +101,8 @@ export const useCartesianEncodings = (
       });
 
       // update the domain if the domains of x-y scales is band-linear
-      if (dataGroups.length > 1 && (x.scale === 'linear' && y.scale === 'band')) {
-        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, x.field));
+      if (x.scale === 'linear' && y.scale === 'band') {
+        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, y.field, x.field));
       }
       return axisScale;
     },
@@ -111,8 +117,8 @@ export const useCartesianEncodings = (
       });
 
       // update the domain if the domains of x-y scales is linear-band
-      if (dataGroups.length > 1 && (x.scale === 'band' && y.scale === 'linear')) {
-        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, y.field));
+      if (x.scale === 'band' && y.scale === 'linear') {
+        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, x.field, y.field));
       }
       return axisScale;
     },
