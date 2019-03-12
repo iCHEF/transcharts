@@ -82,9 +82,7 @@ const FrameContent = ({
     <>
       <svg width={outerWidth} height={outerHeight}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
-          {
-            axisInBackground ? [axisLayer, children] : [children, axisLayer]
-          }
+          {axisInBackground ? (<>{axisLayer}{children}</>) : (<>{children}{axisLayer}</>)}
         </g>
       </svg>
       {svgOverlay}
