@@ -13,6 +13,13 @@ export interface TooltipLayerProps {
   margin: Margin;
   xSelector: FieldSelector;
   ySelector: FieldSelector;
+
+  /** X position of the tooltip */
+  x: number;
+
+  /** Y position of the tooltip */
+  y: number;
+
   getColor: FieldSelector['getScaledVal'];
 }
 
@@ -26,9 +33,11 @@ export const TooltipLayer: React.FC<TooltipLayerProps> = ({
   margin,
   xSelector,
   ySelector,
+  x = xSelector.getScaledVal(data[hoveredPoint.index]),
+  y = hoveredPoint.position.y,
   getColor,
 }) => {
-  const { index, position } = hoveredPoint;
+  const { index } = hoveredPoint;
 
   return (
     <Tooltip
@@ -36,8 +45,8 @@ export const TooltipLayer: React.FC<TooltipLayerProps> = ({
       graphHeight={graphHeight}
       graphMargin={margin}
       position={{
-        x: xSelector.getScaledVal(data[index]),
-        y: position.y,
+        x,
+        y,
       }}
       show={hovering}
     >

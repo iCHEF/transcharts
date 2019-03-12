@@ -21,6 +21,30 @@ import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 
+/** A line and a dot for the point being hovered */
+const HoveringIndicator: FunctionComponent<{
+  hovering: boolean,
+  xPos: number,
+  rectWidth: number,
+  height: number,
+  color: string,
+}> = ({ hovering, xPos, rectWidth, height, color }) => {
+  if (!hovering) {
+    return null;
+  }
+
+  return(
+    <rect
+      x={xPos}
+      y={0}
+      width={rectWidth}
+      height={height}
+      opacity={0.5}
+      fill="rgba(124, 137, 147, 0.25)"
+    />
+  );
+};
+
 export interface BarChartProps {
   /** Margin between the inner graph area and the outer svg */
   margin?: Margin;
@@ -30,6 +54,9 @@ export interface BarChartProps {
 
   /** Should show the axis on the bottom or not */
   showBottomAxis?: boolean;
+
+  /** Ration of the paddings between bars */
+  paddingInner: number;
 
   data: object[];
   x: AxisEncoding;
@@ -51,13 +78,14 @@ export const BarChart = ({
   color,
   showLeftAxis,
   showBottomAxis,
+  paddingInner = 0.1,
 }: BarChartProps) => {
   const theme = useContext<Theme>(ThemeContext);
   const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
   const xEncoding: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
-    paddingInner: 0.1,
+    paddingInner,
   }};
   const yEncoding: AxisEncoding = { ...y, scale: 'linear' };
   const {
@@ -65,6 +93,9 @@ export const BarChart = ({
     scalesConfig,
     rowValSelectors,
   } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
+  const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
+
+  const bandWidth = scalesConfig.x.scale.bandwidth();
 
   const graphGroup = useMemo(
     () => {
@@ -90,7 +121,7 @@ export const BarChart = ({
                 key={`bar-${rowIdx}`}
                 x={xPos}
                 y={getAccumY(xPos, yPos, height)}
-                width={scalesConfig.x.scale.bandwidth()}
+                width={bandWidth}
                 height={height}
                 fill={colorString}
               />
@@ -114,8 +145,54 @@ export const BarChart = ({
       margin={margin}
       data={data}
       scalesConfig={scalesConfig}
+      svgOverlay={
+        // Draw the tooltip
+        <TooltipLayer
+          hovering={hovering}
+          hoveredPoint={hoveredPoint}
+          data={data}
+          graphWidth={graphWidth}
+          graphHeight={graphHeight}
+          margin={margin}
+          xSelector={rowValSelectors.x}
+          ySelector={rowValSelectors.y}
+          x={rowValSelectors.x.getScaledVal(data[hoveredPoint.index]) + bandWidth / 2}
+          getColor={rowValSelectors.color.getString}
+        />
+      }
     >
       {graphGroup}
+      <HoveringIndicator
+        hovering={hovering}
+        xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
+        rectWidth={bandWidth}
+        height={graphHeight}
+        color={rowValSelectors.color.getString(data[hoveredPoint.index])}
+      />
+
+      {/* Areas which are used to detect mouse or touch interactions */}
+      <HoverLayer
+        setHoveredPosAndIndex={setHoveredPosAndIndex}
+        clearHovering={clearHovering}
+        collisionComponents={data.map(
+          (dataRow, index) => {
+            const rectX = rowValSelectors.x.getScaledVal(dataRow);
+
+            return (
+              <rect
+                // #TODO: use unique keys rather than array index
+                key={`colli-${index}`}
+                x={rectX}
+                y={0}
+                width={bandWidth}
+                height={graphHeight}
+                opacity={0.5}
+                fill={'#fcabcd'}
+              />
+            );
+          }
+        )}
+      />
     </SvgWithAxisFrame>
   );
 };
