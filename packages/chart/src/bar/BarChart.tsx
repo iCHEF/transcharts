@@ -93,7 +93,6 @@ export const BarChart = ({
           />
         );
       });
-      console.log(rows, colorString)
     }
   );
 
@@ -104,6 +103,8 @@ export const BarChart = ({
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
+      // put the axes on top of the bars
+      axisInBackground={false}
       margin={margin}
       data={data}
       scalesConfig={scalesConfig}
