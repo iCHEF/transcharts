@@ -9,6 +9,8 @@ import {
   useHoverState,
   // from TooltipLayer
   TooltipLayer,
+  // from Legend,
+  LegendGroup,
   // from common types
   Margin,
   FieldSelector,
@@ -27,7 +29,7 @@ import {
   useContainerDimension,
 } from '@ichef/transcharts-graph';
 
-import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
+import { getInnerGraphDimensionAndMargin } from '../utils/getInnerGraphDimensionAndMargin';
 
 export interface LineChartProps {
    /** Margin between the inner graph area and the outer svg */
@@ -125,12 +127,17 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
 }) => {
   const theme = useContext(ThemeContext);
   const chartRef = useRef<HTMLDivElement>(null);
+  const legendRef = useRef<HTMLDivElement>(null);
   const dimension = useContainerDimension(chartRef);
+  const legendDimension = useContainerDimension(legendRef);
   const { width: outerWidth, height: outerHeight } = dimension;
-  const { graphWidth, graphHeight } = getInnerGraphDimension(dimension, margin);
-  if (graphWidth <= 0 || graphHeight <= 0) {
-    return null;
-  }
+  const legendOrient = (color && color.legend && color.legend.orient) || 'right';
+  const { graphWidth, graphHeight, graphMargin } = getInnerGraphDimensionAndMargin(
+    dimension,
+    margin,
+    legendDimension,
+    legendOrient,
+  );
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
   const xAxis = getXAxisScale({
     data,
@@ -147,33 +154,36 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
 
   /** Width of the collision detection rectangle */
   const bandWidth = graphWidth / (data.length - 1);
-  const colorScale = (typeof color !== 'undefined') && getColorScale({
-    data,
-    encoding: color,
-    colors: theme.colors,
-  });
+  const colorScale = typeof color !== 'undefined'
+    ? getColorScale({
+      data,
+      encoding: color,
+      colors: theme.colors,
+    })
+    : null;
   const defaultColor = theme.colors.category[0];
   const getColor = colorScale
     ? colorScale.selector.getScaledVal
     : () => defaultColor;
   const sortedData = data.sort(
-    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB)
+    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB),
   );
   const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
   const dataGroup = getDataGroupByEncodings(sortedData, encodings);
 
   const graphGroup = dataGroup.map(
-    rows => {
+    (rows, index) => {
       const colorString: string = getColor(rows[0]);
       return (
         <DataLine
+          key={index}
           color={colorString}
           rows={rows}
           xSelector={xSelector}
           ySelector={ySelector}
         />
       );
-    }
+    },
   );
 
   return (
@@ -182,7 +192,7 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
       ref={chartRef}
     >
       <svg width={outerWidth} height={outerHeight}>
-        <g transform={`translate(${margin.left}, ${margin.top})`}>
+        <g transform={`translate(${graphMargin.left}, ${graphMargin.top})`}>
           <AxisLayer
             width={graphWidth}
             height={graphHeight}
@@ -218,7 +228,6 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
                 const rectWidth = index === 0 || index === data.length - 1
                   ? bandWidth / 2
                   : bandWidth;
-
                 return (
                   <rect
                     // #TODO: use unique keys rather than array index
@@ -241,10 +250,17 @@ export const LineChart: FunctionComponent<LineChartProps> = ({
         data={data}
         graphWidth={graphWidth}
         graphHeight={graphHeight}
-        margin={margin}
+        margin={graphMargin}
         xSelector={xSelector}
         ySelector={ySelector}
         getColor={getColor}
+      />
+      <LegendGroup
+        color={color && {
+          ...color,
+          ...colorScale!,
+        }}
+        ref={legendRef}
       />
     </div>
   );

@@ -1,15 +1,12 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { throttle } from 'lodash-es';
 import { localPoint } from '@vx/event';
 
 import { useAnimationFrame } from '../hooks/useAnimationFrame';
 
-export interface HoverLayerProps {
+export type HoverLayerProps = {
   /** Set the information related to hover or touch interactions  */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
-
-  /** Function to be called before the latest tooltip position is set */
-  handleHover: () => void;
 
   /** Function to hide the tooltip */
   clearHovering: () => void;
@@ -19,19 +16,24 @@ export interface HoverLayerProps {
    * **Note:** The order of the components should correspond to the order of the data.
    */
   collisionComponents: JSX.Element[];
+} & typeof defaultProps;
 
+const defaultProps = {
+  /** Function to be called before the latest tooltip position is set */
+  handleHover: () => null,
   /** The throttle time for the mouse and touch events */
-  throttleTime: number;
-}
+  throttleTime: 180,
+};
 
-export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
-  setHoveredPosAndIndex,
-  handleHover= () => null,
-  clearHovering,
-  collisionComponents,
-  throttleTime = 180,
-}) => {
+export const HoverLayer = (props: HoverLayerProps) => {
   /** use requestAnimationFrame to schedule updates of hovered position and data index */
+  const {
+    setHoveredPosAndIndex,
+    handleHover,
+    clearHovering,
+    collisionComponents,
+    throttleTime,
+  } = props;
   const { requestWindowAnimationFrame } = useAnimationFrame();
 
   /** Function to update the position of the tooltip and sets the currently active data index */
@@ -93,3 +95,5 @@ export const HoverLayer: FunctionComponent<HoverLayerProps> = ({
     </>
   );
 };
+
+HoverLayer.defaultProps = defaultProps;

@@ -67,6 +67,8 @@ const lineData = [
 
 ## Multiple lines
 
+`<LineChart>` will have multiple lines when passing `color` prop.
+
 ### Nominal color field
 
 <Playground>
@@ -83,7 +85,7 @@ const lineData = [
   </div>
 </Playground>
 
-### Quantitative color field
+### Ordinal color field
 
 <Playground>
   <div style={{ width: '100%', height: '320px' }}>
@@ -108,12 +110,11 @@ const lineData = [
       y={{ type: 'quantitative', field: 'y' }}
       color={{
         field: "size",
-        type: "quantitative",
+        type: "ordinal",
       }}
     />
   </div>
 </Playground>
-
 
 ## Props
 

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add `type-check` and `type-check:watch` script in package.json. (#15)
+- Add legend setting in color encoding and show `<Legend>` in `<LineChart>`. (#14)
 - Add `getColorScale` to receive color encoding in charts. (#11)
 - Extract the animation frame controls as a custom effect hook. (#10)
 - Add `tslint-react-hooks` rules to lint React Hooks. (#8)
@@ -25,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Fix `HoverLayer` default props. (#14)
+- Fix color too light / deep with ordinal data field. (#14)
 - Rewrite `<HoverLayer>` using Hooks. (#10)
 - Remove `AxisConfig` type. Add new `Encoding` (`AxisEncoding`) and `Scale` (`AxisScale`) type for `getAxisScale`. (#9)
 - Replace `fieldX` `fieldY` `scaleX` `scaleY` with `x` and `y` props in `LineChart`. (#9)

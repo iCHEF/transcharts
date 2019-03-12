@@ -60,7 +60,7 @@ export interface AxisScale extends Scale {
 
 export type EncodingDataType = 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
 export interface ColorScale extends Scale {
-  range?: [string, string] | ReadonlyArray<string>
+  range?: [string, string] | ReadonlyArray<string>;
 }
 
 export interface Encoding {
@@ -73,7 +73,23 @@ export interface AxisEncoding extends Encoding {
   scale?: AxisScaleType;
 }
 
-export type ColorEncoding = Encoding;
+export interface LegendConfig {
+  /** direction of label  */
+  direction?: 'horizontal' | 'vertical';
+  /** where we put legend */
+  orient?: 'top' | 'right' | 'bottom' | 'left';
+  /** hide legend or not, default is false */
+  hide?: boolean;
+  /**
+   * render props of that legend, default is null
+   * which will make <Legend> render default legend.
+   */
+  render?: (labels: ReadonlyArray<object>) => React.ReactNode;
+}
+
+export interface ColorEncoding extends Encoding {
+  legend?: LegendConfig;
+}
 
 export interface Margin {
   top: number;
@@ -99,7 +115,7 @@ export interface Theme {
     /** colors used for nominal data */
     category: ReadonlyArray<string>;
     sequential: {
-      scheme: ReadonlyArray<string>;
+      scheme: ReadonlyArray<ReadonlyArray<string>>;
       interpolator: (val: number) => string;
     }
   };

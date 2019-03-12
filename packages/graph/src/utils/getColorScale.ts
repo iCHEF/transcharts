@@ -1,4 +1,4 @@
-import { map } from 'lodash-es';
+import { map, sortedUniq } from 'lodash-es';
 import { extent as d3Extent } from 'd3-array';
 import { scaleOrdinal, scaleSequential } from 'd3-scale';
 
@@ -42,13 +42,18 @@ const getColorScaleSetting = ({
       };
     }
     case 'ordinal': {
-      const domain = map(data, field).sort((a, b) => Number(a) - Number(b));
-      const scale = scaleOrdinal(colors.sequential.scheme).domain(domain);
+      /**
+       * make sure the element is unique or
+       * scaleOrdinal will treat same element in domain as different value and map it incorrectly.
+       */
+      const domain = sortedUniq(map(data, field).sort((a, b) => Number(a) - Number(b)));
+      const range = colors.sequential.scheme[domain.length];
+      const scale = scaleOrdinal(range).domain(domain);
       return {
         domain,
+        range,
         scale,
         scaleType: 'ordinal',
-        range: colors.sequential.scheme,
       };
     }
     case 'temporal': {
@@ -64,7 +69,7 @@ const getColorScaleSetting = ({
     }
     case 'quantitative': {
       const values = data.map(row => Number(row[field]));
-      let domain = getNumericDomain(values);
+      const domain = getNumericDomain(values);
       const scale = scaleSequential(colors.sequential.interpolator).domain(domain);
       return {
         domain,
