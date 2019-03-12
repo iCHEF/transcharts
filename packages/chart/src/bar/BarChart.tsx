@@ -1,5 +1,4 @@
-import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { LinePath } from '@vx/shape';
+import React, { FunctionComponent, useContext, useMemo, useCallback } from 'react';
 import {
   // from HoverLayer
   HoverLayer,
@@ -9,7 +8,6 @@ import {
   TooltipLayer,
   // from common types
   Margin,
-  FieldSelector,
   AxisEncoding,
   ColorEncoding,
   // from themes
@@ -24,20 +22,20 @@ import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 /** A line and a dot for the point being hovered */
 const HoveringIndicator: FunctionComponent<{
   hovering: boolean,
-  xPos: number,
-  rectWidth: number,
+  x: number,
+  y: number,
+  width: number,
   height: number,
-  color: string,
-}> = ({ hovering, xPos, rectWidth, height, color }) => {
+}> = ({ hovering, x, y, width, height }) => {
   if (!hovering) {
     return null;
   }
 
   return(
     <rect
-      x={xPos}
-      y={0}
-      width={rectWidth}
+      x={x}
+      y={y}
+      width={width}
       height={height}
       opacity={0.5}
       fill="rgba(124, 137, 147, 0.25)"
@@ -96,6 +94,29 @@ export const BarChart = ({
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
 
   const bandWidth = scalesConfig.x.scale.bandwidth();
+
+  /**
+   * Returns the size and position of the collision rectangle or hovering highlight rectangle
+   */
+  const getHoveringRectPos = useCallback(
+    (idx: number) => {
+      const paddingVal = bandWidth * paddingInner;
+      const xPos = idx === 0
+        ? 0
+        : rowValSelectors.x.getScaledVal(data[idx]) - paddingVal / 2;
+      const width = idx === 0 || idx === data.length - 1
+            ? bandWidth + paddingVal / 2
+            : bandWidth + paddingVal;
+
+      return {
+        width,
+        height: graphHeight,
+        x: xPos,
+        y: 0,
+      };
+    },
+    [bandWidth, paddingInner],
+  );
 
   const graphGroup = useMemo(
     () => {
@@ -164,10 +185,7 @@ export const BarChart = ({
       {graphGroup}
       <HoveringIndicator
         hovering={hovering}
-        xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
-        rectWidth={bandWidth}
-        height={graphHeight}
-        color={rowValSelectors.color.getString(data[hoveredPoint.index])}
+        {...{ ...getHoveringRectPos(hoveredPoint.index) }}
       />
 
       {/* Areas which are used to detect mouse or touch interactions */}
@@ -175,19 +193,13 @@ export const BarChart = ({
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
         collisionComponents={data.map(
-          (dataRow, index) => {
-            const rectX = rowValSelectors.x.getScaledVal(dataRow);
-
+          (dataRow, idx) => {
             return (
               <rect
                 // #TODO: use unique keys rather than array index
-                key={`colli-${index}`}
-                x={rectX}
-                y={0}
-                width={bandWidth}
-                height={graphHeight}
-                opacity={0.5}
-                fill={'#fcabcd'}
+                key={`colli-${idx}`}
+                opacity={0}
+                {...{ ...getHoveringRectPos(idx) }}
               />
             );
           }
