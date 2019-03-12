@@ -20,7 +20,7 @@ import {
 /**
  * Return [min, max] of a column selected from the grouped data
  */
-function getRangeFromDataGroup(
+function getDomainFromDataGroup(
   dataGroups: object[][],
   keyField: string,
   valueField: string,
@@ -102,7 +102,7 @@ export const useCartesianEncodings = (
 
       // update the domain if the domains of x-y scales is band-linear
       if (x.scale === 'linear' && y.scale === 'band') {
-        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, y.field, x.field));
+        axisScale.scale.domain(getDomainFromDataGroup(dataGroups, y.field, x.field));
       }
       return axisScale;
     },
@@ -118,7 +118,7 @@ export const useCartesianEncodings = (
 
       // update the domain if the domains of x-y scales is linear-band
       if (x.scale === 'band' && y.scale === 'linear') {
-        axisScale.scale.domain(getRangeFromDataGroup(dataGroups, x.field, y.field));
+        axisScale.scale.domain(getDomainFromDataGroup(dataGroups, x.field, y.field));
       }
       return axisScale;
     },
