@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 import { HoveredPointState, HoveringState } from '../common/types';
 
@@ -27,20 +27,26 @@ export function useHoverState(): HoverStateControls {
     },
   });
 
-  const clearHovering = () => {
-    setHovering(false);
-  };
+  const clearHovering = useCallback(
+    () => {
+      setHovering(false);
+    },
+    [],
+  );
 
-  const setHoveredPosAndIndex = (hoveredIndex: number, xPos: number, yPos: number) => {
-    setHovering(true);
-    setHoveredPoint({
-      index: hoveredIndex,
-      position: {
-        x: xPos,
-        y: yPos,
-      },
-    });
-  };
+  const setHoveredPosAndIndex = useCallback(
+    (hoveredIndex: number, xPos: number, yPos: number) => {
+      setHovering(true);
+      setHoveredPoint({
+        index: hoveredIndex,
+        position: {
+          x: xPos,
+          y: yPos,
+        },
+      });
+    },
+    [],
+  );
 
   return {
     hovering,
