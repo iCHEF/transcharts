@@ -193,7 +193,7 @@ export const BarChart = ({
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
         collisionComponents={data.map(
-          (dataRow, idx) => {
+          (_, idx) => {
             return (
               <rect
                 // #TODO: use unique keys rather than array index
