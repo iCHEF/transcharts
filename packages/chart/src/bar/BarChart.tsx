@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { LinePath } from '@vx/shape';
 import {
   // from HoverLayer
@@ -66,34 +66,40 @@ export const BarChart = ({
     rowValSelectors,
   } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
 
-  const accumY = {};
-  const getAccumY = (xPos: number, yPos: number, height: number) => {
-    if (!accumY[xPos]) {
-      accumY[xPos] = graphHeight;
-    }
-    accumY[xPos] -= height;
-    return accumY[xPos];
-  };
+  const graphGroup = useMemo(
+    () => {
+      // calculate the accumulated y position of certain points
+      const accumY = {};
+      const getAccumY = (xPos: number, yPos: number, height: number) => {
+        if (!accumY[xPos]) {
+          accumY[xPos] = graphHeight;
+        }
+        accumY[xPos] -= height;
+        return accumY[xPos];
+      };
 
-  const graphGroup = dataGroups.map(
-    (rows: object[], groupIdx: number) => {
-      return rows.map((row: object, rowIdx: number) => {
-        const colorString: string = rowValSelectors.color.getString(rows[0]);
-        const xPos = rowValSelectors.x.getScaledVal(row);
-        const yPos = rowValSelectors.y.getScaledVal(row);
-        const height = graphHeight - yPos;
-        return (
-          <rect
-            key={`bar-${rowIdx}`}
-            x={xPos}
-            y={getAccumY(xPos, yPos, height)}
-            width={scalesConfig.x.scale.bandwidth()}
-            height={height}
-            fill={colorString}
-          />
-        );
-      });
-    }
+      return dataGroups.map(
+        (rows: object[], groupIdx: number) => {
+          return rows.map((row: object, rowIdx: number) => {
+            const colorString: string = rowValSelectors.color.getString(rows[0]);
+            const xPos = rowValSelectors.x.getScaledVal(row);
+            const yPos = rowValSelectors.y.getScaledVal(row);
+            const height = graphHeight - yPos;
+            return (
+              <rect
+                key={`bar-${rowIdx}`}
+                x={xPos}
+                y={getAccumY(xPos, yPos, height)}
+                width={scalesConfig.x.scale.bandwidth()}
+                height={height}
+                fill={colorString}
+              />
+            );
+          });
+        }
+      );
+    },
+    [dataGroups, scalesConfig, rowValSelectors],
   );
 
   return (
