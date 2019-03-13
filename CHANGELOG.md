@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add a custom effect `useChartDimensions` to calculate the outer and inner dimension of the chart. (#16)
+- Add `useCartesianEncodings` to calculate the processed data and the visual encodings that we need in order to draw the graph. (#16)
+- Add a <SvgWithAxisFrame> component to deal with the size of the chart container, SVG, and the axes that generally used across different charts. (#16)
 - Add `type-check` and `type-check:watch` script in package.json. (#15)
 - Add legend setting in color encoding and show `<Legend>` in `<LineChart>`. (#14)
 - Add `getColorScale` to receive color encoding in charts. (#11)
@@ -26,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Remove `selectors` from `AxisScale` and `ColorScale`. (#16)
+- Modify the config of `tslint` so that it won't continuing warning about the lack of dangling commas in functions. (#16)
 - Fix `HoverLayer` default props. (#14)
 - Fix color too light / deep with ordinal data field. (#14)
 - Rewrite `<HoverLayer>` using Hooks. (#10)

@@ -7,8 +7,6 @@ import {
 
 import { AxisScale, AxisEncoding } from '../common/types';
 
-import { getRecordFieldSelector } from './getRecordFieldSelector';
-
 export interface GetAxisScaleArgs {
   data: object[];
   encoding: AxisEncoding;
@@ -62,7 +60,6 @@ export function getAxisScale(
     }
   }
 
-  const selector = getRecordFieldSelector({ field, scale, scaleType, getValue });
   const axisScale = {
     field,
     range,
@@ -71,7 +68,6 @@ export function getAxisScale(
     scaleType,
     type,
     scale,
-    selector,
   };
   return axisScale;
 }

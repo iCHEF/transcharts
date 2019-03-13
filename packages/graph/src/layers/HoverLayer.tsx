@@ -21,19 +21,19 @@ export type HoverLayerProps = {
 const defaultProps = {
   /** Function to be called before the latest tooltip position is set */
   handleHover: () => null,
+
   /** The throttle time for the mouse and touch events */
   throttleTime: 180,
 };
 
-export const HoverLayer = (props: HoverLayerProps) => {
+export const HoverLayer = ({
+  setHoveredPosAndIndex,
+  handleHover,
+  clearHovering,
+  collisionComponents,
+  throttleTime,
+}: HoverLayerProps) => {
   /** use requestAnimationFrame to schedule updates of hovered position and data index */
-  const {
-    setHoveredPosAndIndex,
-    handleHover,
-    clearHovering,
-    collisionComponents,
-    throttleTime,
-  } = props;
   const { requestWindowAnimationFrame } = useAnimationFrame();
 
   /** Function to update the position of the tooltip and sets the currently active data index */

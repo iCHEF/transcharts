@@ -1,8 +1,6 @@
-import React, { FunctionComponent, useContext, useRef } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { LinePath } from '@vx/shape';
 import {
-  // from AxisLayer
-  AxisLayer,
   // from HoverLayer
   HoverLayer,
   // from hooks
@@ -14,36 +12,32 @@ import {
   // from common types
   Margin,
   FieldSelector,
-  Encoding,
   AxisEncoding,
   ColorEncoding,
-  // from utils
-  getColorScale,
-  getDataGroupByEncodings,
-  getXAxisScale,
-  getYAxisScale,
   // from themes
   Theme,
   ThemeContext,
-  // from hooks
-  useContainerDimension,
 } from '@ichef/transcharts-graph';
 
-import { getInnerGraphDimensionAndMargin } from '../utils/getInnerGraphDimensionAndMargin';
+import { useChartDimensions } from '../hooks/useChartDimensions';
+import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
+import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
+import { DEFAULT_VALS } from '../common/config';
 
 export interface LineChartProps {
-   /** Margin between the inner graph area and the outer svg */
+  /** Margin between the inner graph area and the outer svg */
   margin: Margin;
+
+  /** Should show the axis on the left or not */
+  showLeftAxis?: boolean;
+
+  /** Should show the axis on the bottom or not */
+  showBottomAxis?: boolean;
+
   data: object[];
   x: AxisEncoding;
   y: AxisEncoding;
   color?: ColorEncoding;
-  /** Should show the axis on the left or not */
-  showLeftAxis: boolean;
-  /** Should show the axis on the bottom or not */
-  showBottomAxis: boolean;
-  /** Theme object */
-  theme: Theme;
 }
 
 /** A line and a dot for the point being hovered */
@@ -111,157 +105,129 @@ const DataLine: FunctionComponent<{
   );
 };
 
-export const LineChart: FunctionComponent<LineChartProps> = ({
+const defaultProps = {
+  margin: DEFAULT_VALS.MARGIN,
+};
+
+export const LineChart = ({
   data,
+  margin,
   x,
   y,
   color,
-  margin = {
-    top: 20,
-    right: 20,
-    bottom: 30,
-    left: 60,
-  },
-  showLeftAxis = true,
-  showBottomAxis = true,
-}) => {
-  const theme = useContext(ThemeContext);
-  const chartRef = useRef<HTMLDivElement>(null);
-  const legendRef = useRef<HTMLDivElement>(null);
-  const dimension = useContainerDimension(chartRef);
-  const legendDimension = useContainerDimension(legendRef);
-  const { width: outerWidth, height: outerHeight } = dimension;
-  const legendOrient = (color && color.legend && color.legend.orient) || 'right';
-  const { graphWidth, graphHeight, graphMargin } = getInnerGraphDimensionAndMargin(
-    dimension,
-    margin,
-    legendDimension,
-    legendOrient,
-  );
+  showLeftAxis,
+  showBottomAxis,
+}: LineChartProps) => {
+  const theme = useContext<Theme>(ThemeContext);
+  const {
+    chartRef,
+    legendRef,
+    outerDimension,
+    graphDimension,
+    graphMargin,
+  } = useChartDimensions(margin, color);
+  const { width: graphWidth, height: graphHeight } = graphDimension;
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
-  const xAxis = getXAxisScale({
-    data,
-    axisLength: graphWidth,
-    encoding: x,
-  });
-  const yAxis = getYAxisScale({
-    data,
-    axisLength: graphHeight,
-    encoding: y,
-  });
-  const xSelector = xAxis.selector;
-  const ySelector = yAxis.selector;
+  const {
+    dataGroups,
+    scalesConfig,
+    rowValSelectors,
+  } = useCartesianEncodings(graphDimension, theme, data, x, y, color);
 
-  /** Width of the collision detection rectangle */
-  const bandWidth = graphWidth / (data.length - 1);
-  const colorScale = typeof color !== 'undefined'
-    ? getColorScale({
-      data,
-      encoding: color,
-      colors: theme.colors,
-    })
-    : null;
-  const defaultColor = theme.colors.category[0];
-  const getColor = colorScale
-    ? colorScale.selector.getScaledVal
-    : () => defaultColor;
-  const sortedData = data.sort(
-    (rowA, rowB) => xSelector.getOriginalVal(rowA) - xSelector.getOriginalVal(rowB),
-  );
-  const encodings = [color].filter((encoding): encoding is Encoding => !!encoding);
-  const dataGroup = getDataGroupByEncodings(sortedData, encodings);
-
-  const graphGroup = dataGroup.map(
-    (rows, index) => {
-      const colorString: string = getColor(rows[0]);
+  const graphGroup = dataGroups.map(
+    (rows: object[], index: number) => {
+      const colorString: string = rowValSelectors.color.getString(rows[0]);
       return (
         <DataLine
-          key={index}
+          key={`row-${index}`}
           color={colorString}
           rows={rows}
-          xSelector={xSelector}
-          ySelector={ySelector}
+          xSelector={rowValSelectors.x}
+          ySelector={rowValSelectors.y}
         />
       );
     },
   );
 
+  /** Width of the collision detection rectangle */
+  const collisBandWidth = graphWidth / (data.length - 1);
+
   return (
-    <div
-      style={{ width: '100%', height: '100%', position: 'relative' }}
+    <SvgWithAxisFrame
       ref={chartRef}
-    >
-      <svg width={outerWidth} height={outerHeight}>
-        <g transform={`translate(${graphMargin.left}, ${graphMargin.top})`}>
-          <AxisLayer
-            width={graphWidth}
-            height={graphHeight}
-            showLeftAxis={showLeftAxis}
-            showBottomAxis={showBottomAxis}
-            data={data}
-            xAxis={xAxis}
-            yAxis={yAxis}
-          />
-
-          {graphGroup}
-          <HoveringIndicator
+      outerDimension={outerDimension}
+      graphDimension={graphDimension}
+      showLeftAxis={showLeftAxis}
+      showBottomAxis={showBottomAxis}
+      margin={graphMargin}
+      data={data}
+      scalesConfig={scalesConfig}
+      svgOverlay={
+        <>
+          {/* Draw the tooltip */}
+          <TooltipLayer
             hovering={hovering}
-            xPos={xSelector.getScaledVal(data[hoveredPoint.index])}
-            yPos={ySelector.getScaledVal(data[hoveredPoint.index])}
-            height={graphHeight}
-            color={getColor(data[hoveredPoint.index])}
+            hoveredPoint={hoveredPoint}
+            data={data}
+            graphWidth={graphWidth}
+            graphHeight={graphHeight}
+            margin={graphMargin}
+            xSelector={rowValSelectors.x}
+            ySelector={rowValSelectors.y}
+            getColor={rowValSelectors.color.getString}
           />
-
-          {/* Areas which are used to detect mouse or touch interactions */}
-          <HoverLayer
-            setHoveredPosAndIndex={setHoveredPosAndIndex}
-            clearHovering={clearHovering}
-            collisionComponents={data.map(
-              (dataRow, index) => {
-                const rectX = index === 0
-                  ? 0
-                  : xSelector.getScaledVal(
-                      dataRow,
-                    ) -
-                    bandWidth * 0.5;
-
-                const rectWidth = index === 0 || index === data.length - 1
-                  ? bandWidth / 2
-                  : bandWidth;
-                return (
-                  <rect
-                    // #TODO: use unique keys rather than array index
-                    key={`colli-${index}`}
-                    x={rectX}
-                    y={0}
-                    width={rectWidth}
-                    height={graphHeight}
-                    opacity={0}
-                  />
-                );
-              })}
+          {/* Draw the legned */}
+          <LegendGroup
+            color={color && {
+              ...color,
+              ...scalesConfig.color!,
+            }}
+            ref={legendRef}
           />
-        </g>
-      </svg>
-      {/* Draw the tooltip */}
-      <TooltipLayer
+        </>
+      }
+    >
+      {graphGroup}
+      <HoveringIndicator
         hovering={hovering}
-        hoveredPoint={hoveredPoint}
-        data={data}
-        graphWidth={graphWidth}
-        graphHeight={graphHeight}
-        margin={graphMargin}
-        xSelector={xSelector}
-        ySelector={ySelector}
-        getColor={getColor}
+        xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
+        yPos={rowValSelectors.y.getScaledVal(data[hoveredPoint.index])}
+        height={graphHeight}
+        color={rowValSelectors.color.getString(data[hoveredPoint.index])}
       />
-      <LegendGroup
-        color={color && {
-          ...color,
-          ...colorScale!,
-        }}
-        ref={legendRef}
+
+      {/* Areas which are used to detect mouse or touch interactions */}
+      <HoverLayer
+        setHoveredPosAndIndex={setHoveredPosAndIndex}
+        clearHovering={clearHovering}
+        collisionComponents={data.map(
+          (dataRow, index) => {
+            const rectX = index === 0
+              ? 0
+              : rowValSelectors.x.getScaledVal(
+                  dataRow,
+                ) -
+                collisBandWidth * 0.5;
+
+            const rectWidth = index === 0 || index === data.length - 1
+              ? collisBandWidth / 2
+              : collisBandWidth;
+
+            return (
+              <rect
+                // #TODO: use unique keys rather than array index
+                key={`colli-${index}`}
+                x={rectX}
+                y={0}
+                width={rectWidth}
+                height={graphHeight}
+                opacity={0}
+              />
+            );
+          }
+        )}
       />
-    </div>
+    </SvgWithAxisFrame>
   );
 };
+LineChart.defaultProps = defaultProps;

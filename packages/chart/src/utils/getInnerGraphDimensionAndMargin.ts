@@ -49,8 +49,10 @@ export function getInnerGraphDimensionAndMargin(
   }
 
   return {
-    graphWidth,
-    graphHeight,
     graphMargin,
+    graphDimension: {
+      width: graphWidth,
+      height: graphHeight,
+    },
   };
 }
