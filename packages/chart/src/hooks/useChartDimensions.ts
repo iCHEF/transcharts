@@ -3,11 +3,12 @@ import {
   // from common types
   Margin,
   GraphDimension,
+  ColorEncoding,
   // from hooks
   useContainerDimension,
 } from '@ichef/transcharts-graph';
 
-import { getInnerGraphDimension } from '../utils/getInnerGraphDimension';
+import { getInnerGraphDimensionAndMargin } from '../utils/getInnerGraphDimensionAndMargin';
 
 /**
  * Returns a ref to be bind with a container,
@@ -22,25 +23,41 @@ export const useChartDimensions = (
     bottom: 30,
     left: 60,
   },
+  color?: ColorEncoding,
 ) => {
   // compute the outer and inner dimension of the chart
   const chartRef = useRef<HTMLDivElement>(null);
+  const legendRef = useRef<HTMLDivElement>(null);
   const outerDimension: GraphDimension = useContainerDimension(chartRef);
-  const graphDimension: GraphDimension  = useMemo(
+  const legendDimension = useContainerDimension(legendRef);
+  const legendOrient = (color && color.legend && color.legend.orient) || 'right';
+
+  const { graphDimension, graphMargin }  = useMemo(
     () => {
-      return getInnerGraphDimension(outerDimension, margin);
+      return getInnerGraphDimensionAndMargin(
+        outerDimension,
+        margin,
+        legendDimension,
+        legendOrient,
+      );
     },
-    [outerDimension, margin],
+    [outerDimension, margin, legendDimension, legendOrient],
   );
 
   return {
     /** Ref to the chart, which is to be passed in the props of the container */
     chartRef,
 
+    /** Ref to the legend, which is to be passed in the props of the legend */
+    legendRef,
+
     /** Width and height of the outer container */
     outerDimension,
 
     /** Width and height of the inner graph (does not contain axes, legend, etc...) */
     graphDimension,
+
+    /** Margin between the chart container and the inner graph */
+    graphMargin,
   };
 };

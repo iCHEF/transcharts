@@ -1749,6 +1749,15 @@
     classnames "^2.2.5"
     prop-types "^15.6.2"
 
+"@vx/legend@^0.0.183":
+  version "0.0.183"
+  resolved "https://registry.yarnpkg.com/@vx/legend/-/legend-0.0.183.tgz#b9f7b6a1cd20a0a0cb143b4dea8a30957b1838a8"
+  integrity sha512-pb4EYhPythpvILzD9+89tmrZnsOym8f2nAh1s8luqKLL0KOZ1+r26kyVA7l16bECklVo+bXJeORfhjf5ZIddaA==
+  dependencies:
+    "@vx/group" "0.0.183"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
 "@vx/point@0.0.182":
   version "0.0.182"
   resolved "https://registry.yarnpkg.com/@vx/point/-/point-0.0.182.tgz#72abfa6ae923cf9bad23d9dd51709b2f31d81bf8"
@@ -4513,6 +4522,19 @@ for-own@^0.1.3:
 forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
+
+fork-ts-checker-webpack-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-1.0.0.tgz#0f9ff0219f9b6f1a1b10fa25d7cc5015e60c997a"
+  integrity sha512-Kc7LI0OlnWB0FRbDQO+nnDCfZr+LhFSJIP8kZppDXvuXI/opeMg3IrlMedBX/EGgOUK0ma5Hafgkdp3DuxgYdg==
+  dependencies:
+    babel-code-frame "^6.22.0"
+    chalk "^2.4.1"
+    chokidar "^2.0.4"
+    micromatch "^3.1.10"
+    minimatch "^3.0.4"
+    semver "^5.6.0"
+    tapable "^1.0.0"
 
 form-data@^2.3.2, form-data@~2.3.2:
   version "2.3.3"

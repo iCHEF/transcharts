@@ -15,7 +15,7 @@ export const themes = {
     colors: {
       category: schemeCategory10,
       sequential: {
-        scheme: schemeBlues[9],
+        scheme: schemeBlues,
         interpolator: interpolateBlues,
       },
     },

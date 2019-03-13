@@ -28,7 +28,9 @@
     "build:esm": "tsc -p ./src",
     "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
     "clean": "rimraf ./dist ./lib ./es5 ./deploy",
-    "lint": "tslint --project ./src"
+    "lint": "tslint --project ./src",
+    "type-check": "tsc -p ./src --noEmit",
+    "type-check:watch": "tsc -p ./src --noEmit --watch"
   },
   "peerDependencies": {
     "prop-types": "^15.7.1",
@@ -42,6 +44,7 @@
   },
   "dependencies": {
     "@vx/event": "^0.0.182",
+    "@vx/legend": "^0.0.183",
     "d3-array": "^2.0.3",
     "d3-scale": "^2.1.2",
     "d3-scale-chromatic": "^1.3.3",

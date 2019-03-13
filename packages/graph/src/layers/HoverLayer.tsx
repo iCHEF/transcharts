@@ -4,12 +4,9 @@ import { localPoint } from '@vx/event';
 
 import { useAnimationFrame } from '../hooks/useAnimationFrame';
 
-export interface HoverLayerProps {
+export type HoverLayerProps = {
   /** Set the information related to hover or touch interactions  */
   setHoveredPosAndIndex: (hoveredIndex: number, xPos: number, yPos: number) => void;
-
-  /** Function to be called before the latest tooltip position is set */
-  handleHover: () => void;
 
   /** Function to hide the tooltip */
   clearHovering: () => void;
@@ -19,13 +16,13 @@ export interface HoverLayerProps {
    * **Note:** The order of the components should correspond to the order of the data.
    */
   collisionComponents: JSX.Element[];
-
-  /** The throttle time for the mouse and touch events */
-  throttleTime: number;
-}
+} & typeof defaultProps;
 
 const defaultProps = {
+  /** Function to be called before the latest tooltip position is set */
   handleHover: () => null,
+
+  /** The throttle time for the mouse and touch events */
   throttleTime: 180,
 };
 

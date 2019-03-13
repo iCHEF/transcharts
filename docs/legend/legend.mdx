@@ -1,0 +1,281 @@
+---
+name: Legend
+route: /legend
+menu: Legend
+---
+
+import { Playground, PropsTable } from 'docz'
+import { LineChart } from '@ichef/transcharts-chart'
+import lineData from '../sampleData/lineData';
+import multiLinesData from '../sampleData/multiLinesData'
+
+# Legend
+
+By default, when we pass `color` prop to Chart component (`<LineChart>`, or any other charts in future), it will render legend.
+
+You could hide / customize legend if you want. See the following example.
+
+## Default legend
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+      }}
+    />
+  </div>
+</Playground>
+
+Note that the legend shape will depends on the `type` of `color` (which influences the scale), for example:
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={[
+        { x: 1, y: 5, size: 3 },
+        { x: 3, y: 6, size: 3 },
+        { x: 2, y: 3, size: 3 },
+        { x: 9, y: 7, size: 3 },
+        { x: 7, y: 1, size: 3 },
+        { x: 4, y: 2, size: 5 },
+        { x: 1, y: 10, size: 5 },
+        { x: 6, y: 4, size: 5 },
+        { x: 8, y: 9, size: 5 },
+        { x: 9, y: 0, size: 5 },
+        { x: 5, y: 3, size: 8 },
+        { x: 3, y: 8, size: 8 },
+        { x: 4, y: 4, size: 8 },
+        { x: 10, y:7, size: 8 },
+      ]}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "size",
+        type: "ordinal",
+      }}
+    />
+  </div>
+</Playground>
+
+## Hide legend
+
+Add `legend: { hide: true }` in `color` will hide legend.
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          hide: true,
+        },
+      }}
+    />
+  </div>
+</Playground>
+
+## Custom legend
+
+You could also pass render props in `color.legend.render`. The `render` function will be passed into `<Legend>` in @vx/legend package.
+
+See [vx/legend custom legend example](https://vx-demo.now.sh/legends) and [legend component document](https://vx-demo.now.sh/static/docs/vx-legend.html#legend-)
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          render: (labels) => {
+            return (
+              <div>
+                {labels.map((label, idx) => {
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        backgroundColor: label.value,
+                        color: '#eee',
+                        padding: '5px 10px',
+                        marginBottom: 5,
+                      }}
+                    >
+                      {label.text}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          }
+        },
+      }}
+    />
+  </div>
+</Playground>
+
+## `direction`
+
+The direction of label. Default value is.
+
+* `horizontal` if `orient` is `top` or `bottom`.
+* `vertical` if `orient` is `left` or `right`.
+
+### horizontal
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          direction: 'horizontal'
+        }
+      }}
+    />
+  </div>
+</Playground>
+
+### vertical
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          direction: 'vertical'
+        }
+      }}
+    />
+  </div>
+</Playground>
+
+## `orient`
+
+We could change where we put the legend by changing `legend.orient`. Default `orient` would be `right`. Allow `top`, `right`, `bottom` and `left` orient.
+
+### left
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          orient: 'left'
+        }
+      }}
+    />
+  </div>
+</Playground>
+
+### top
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          orient: 'top'
+        }
+      }}
+    />
+  </div>
+</Playground>
+
+### bottom
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <LineChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+        legend: {
+          orient: 'bottom'
+        }
+      }}
+    />
+  </div>
+</Playground>
+
+## Legend config properties table
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        name
+      </th>
+      <th>
+        type
+      </th>
+      <th>
+        description
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>hide</td>
+      <td>boolean</td>
+      <td>Hide legend or not. Default is `false`</td>
+    </tr>
+    <tr>
+      <td>direction</td>
+      <td>`horizontal` | `vertical`</td>
+      <td>
+        The direction of label. Default is `horizontal`
+      </td>
+    </tr>
+    <tr>
+      <td>orient</td>
+      <td>`top` | `right` | `bottom` | `left`;</td>
+      <td>
+        Where we put the legend in the chart. Default is `right`
+      </td>
+    </tr>
+    <tr>
+      <td>render</td>
+      <td>(labels: ReadonlyArray{'<'}object{'>'}) => React.ReactNode;</td>
+      <td>
+        Custom render function. If specify transcharts will call this to render custom legend.<br />
+        `labels` are all labels data in the legend and its attribute is as same as vx-legend label. See
+        <a target="_blank" rel="noopener" href="https://vx-demo.now.sh/legends">vx-legend example</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

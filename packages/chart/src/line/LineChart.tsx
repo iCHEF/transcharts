@@ -7,6 +7,8 @@ import {
   useHoverState,
   // from TooltipLayer
   TooltipLayer,
+  // from Legend,
+  LegendGroup,
   // from common types
   Margin,
   FieldSelector,
@@ -117,7 +119,13 @@ export const LineChart = ({
   showBottomAxis,
 }: LineChartProps) => {
   const theme = useContext<Theme>(ThemeContext);
-  const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
+  const {
+    chartRef,
+    legendRef,
+    outerDimension,
+    graphDimension,
+    graphMargin,
+  } = useChartDimensions(margin, color);
   const { width: graphWidth, height: graphHeight } = graphDimension;
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
   const {
@@ -138,7 +146,7 @@ export const LineChart = ({
           ySelector={rowValSelectors.y}
         />
       );
-    }
+    },
   );
 
   /** Width of the collision detection rectangle */
@@ -151,22 +159,32 @@ export const LineChart = ({
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
-      margin={margin}
+      margin={graphMargin}
       data={data}
       scalesConfig={scalesConfig}
       svgOverlay={
-        // Draw the tooltip
-        <TooltipLayer
-          hovering={hovering}
-          hoveredPoint={hoveredPoint}
-          data={data}
-          graphWidth={graphWidth}
-          graphHeight={graphHeight}
-          margin={margin}
-          xSelector={rowValSelectors.x}
-          ySelector={rowValSelectors.y}
-          getColor={rowValSelectors.color.getString}
-        />
+        <>
+          {/* Draw the tooltip */}
+          <TooltipLayer
+            hovering={hovering}
+            hoveredPoint={hoveredPoint}
+            data={data}
+            graphWidth={graphWidth}
+            graphHeight={graphHeight}
+            margin={graphMargin}
+            xSelector={rowValSelectors.x}
+            ySelector={rowValSelectors.y}
+            getColor={rowValSelectors.color.getString}
+          />
+          {/* Draw the legned */}
+          <LegendGroup
+            color={color && {
+              ...color,
+              ...scalesConfig.color!,
+            }}
+            ref={legendRef}
+          />
+        </>
       }
     >
       {graphGroup}
