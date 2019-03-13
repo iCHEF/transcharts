@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { throttle } from 'lodash-es';
+import throttle from 'lodash/throttle';
 import { localPoint } from '@vx/event';
 
 import { useAnimationFrame } from '../hooks/useAnimationFrame';

@@ -5,7 +5,7 @@ import {
   useEffect,
   useCallback,
 } from 'react';
-import { debounce } from 'lodash-es';
+import debounce from 'lodash/debounce';
 import resizeObserverPolyfill from 'resize-observer-polyfill';
 
 import { GraphDimension } from '../common/types';
