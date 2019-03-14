@@ -15,16 +15,16 @@ export interface TooltipLayerProps {
   ySelector: FieldSelector;
 
   /** X position of the tooltip */
-  x: number;
+  x?: number;
 
   /** Y position of the tooltip */
-  y: number;
+  y?: number;
 
   getColor: FieldSelector['getScaledVal'];
 }
 
 /** Generates the tooltip box */
-export const TooltipLayer: React.FC<TooltipLayerProps> = ({
+export const TooltipLayer = ({
   hovering,
   hoveredPoint,
   data,
@@ -36,7 +36,7 @@ export const TooltipLayer: React.FC<TooltipLayerProps> = ({
   x = xSelector.getScaledVal(data[hoveredPoint.index]),
   y = hoveredPoint.position.y,
   getColor,
-}) => {
+}: TooltipLayerProps) => {
   const { index } = hoveredPoint;
 
   return (
