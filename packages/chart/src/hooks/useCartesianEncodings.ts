@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import values from 'lodash/values';
 import {
   // from utils
   getColorScale,
@@ -24,20 +25,28 @@ function getDomainFromDataGroup(
   keyField: string,
   valueField: string,
 ) {
-  const aggreated = {};
+  const aggreatedMax: object = {};
+  const aggreatedMin: object = {};
   dataGroups.forEach((data: object[]) => {
     data.forEach((row) => {
       const key = row[keyField];
       const val = row[valueField];
-      aggreated[key] = aggreated[key]
-        ? aggreated[key] + val
-        : val;
+      if (val >= 0) {
+        aggreatedMax[key] = aggreatedMax[key]
+          ? aggreatedMax[key] + val
+          : val;
+      } else {
+        aggreatedMin[key] = aggreatedMin[key]
+          ? aggreatedMin[key] + val
+          : val;
+      }
     });
   });
 
-  const max = Math.max(...Object.keys(aggreated).map(key => aggreated[key]));
+  const min = Math.min(0, ...values(aggreatedMin));
+  const max = Math.max(0, ...values(aggreatedMax));
 
-  return [0, max];
+  return [min, max];
 }
 
 /**
