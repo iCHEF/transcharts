@@ -11,7 +11,6 @@ import {
   Encoding,
   AxisEncoding,
   ColorEncoding,
-  AxisScale,
   GraphDimension,
   // from themes
   Theme,
@@ -70,7 +69,7 @@ export const useCartesianEncodings = (
   // sort the data
   const sortedData = useMemo(
     () => {
-      const getValue = getValByScaleType(x.scaleType);
+      const getValue = getValByScaleType(x.scale);
       const getOriginalVal = (record: object) => getValue(record[x.field]);
 
       return (
@@ -92,7 +91,7 @@ export const useCartesianEncodings = (
   );
 
   // the scales and configs of the axis based on its encodings
-  const xAxis: AxisScale = useMemo(
+  const xAxis = useMemo(
     () => {
       const axisScale = getXAxisScale({
         data,
@@ -108,7 +107,7 @@ export const useCartesianEncodings = (
     },
     [data, width, x],
   );
-  const yAxis: AxisScale = useMemo(
+  const yAxis = useMemo(
     () => {
       const axisScale = getYAxisScale({
         data,

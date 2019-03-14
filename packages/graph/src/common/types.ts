@@ -16,7 +16,12 @@ export interface GraphDimension {
   height: number;
 }
 
-export type ScaleType = 'point' | 'time' | 'linear' | 'band' | 'color';
+export type ScaleType = 'point'
+| 'time'
+| 'linear'
+| 'band'
+| 'ordinal'
+| 'sequential';
 
 export interface Scale {
   /** d3's Scaling function employed in specific channel */

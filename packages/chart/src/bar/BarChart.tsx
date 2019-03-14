@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useContext, useMemo, useCallback } from 'react';
+import { ScaleBand } from 'd3-scale';
 import {
   // from HoverLayer
   HoverLayer,
@@ -99,7 +100,8 @@ export const BarChart = ({
   } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
 
-  const bandWidth = scalesConfig.x.scale.bandwidth();
+  const bandScale = scalesConfig.x.scale as ScaleBand<any>;
+  const bandWidth = bandScale.bandwidth();
 
   /**
    * Returns the size and position of the collision rectangle or hovering highlight rectangle

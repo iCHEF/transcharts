@@ -6,11 +6,11 @@ import {
   scaleBand,
 } from 'd3-scale';
 
-import { getValByScaleType } from './getValByScaleType';
-import { getFieldValuesFromData } from './getFieldValuesFromData';
-
 import { AxisScale, ScaleType, AxisEncoding } from '../common/types';
 import { DEFAULT_VALS } from '../common/config';
+
+import { getValByScaleType } from './getValByScaleType';
+import { getFieldValuesFromData } from './getFieldValuesFromData';
 
 export interface GetAxisScaleArgs {
   data: object[];
