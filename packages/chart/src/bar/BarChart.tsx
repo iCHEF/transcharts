@@ -18,6 +18,7 @@ import {
 import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
+import { DEFAULT_VALS } from '../common/config';
 
 /** A line and a dot for the point being hovered */
 const HoveringIndicator: FunctionComponent<{
@@ -53,7 +54,7 @@ export interface BarChartProps {
   /** Should show the axis on the bottom or not */
   showBottomAxis?: boolean;
 
-  /** Ration of the paddings between bars */
+  /** Ratio of the paddings between bars */
   paddingInner: number;
 
   data: object[];
@@ -61,6 +62,11 @@ export interface BarChartProps {
   y: AxisEncoding;
   color?: ColorEncoding;
 }
+
+const defaultProps = {
+  margin: DEFAULT_VALS.MARGIN,
+  paddingInner: 0.1,
+};
 
 export const BarChart = ({
   data,
@@ -208,3 +214,4 @@ export const BarChart = ({
     </SvgWithAxisFrame>
   );
 };
+BarChart.defaultProps = defaultProps;

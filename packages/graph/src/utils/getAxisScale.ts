@@ -54,9 +54,15 @@ export function getAxisScale(
       scale = scaleBand().domain(domain).range(range);
       if (scaleConfig) {
         const { padding, paddingInner, paddingOuter } = scaleConfig;
-        if (padding) scale.padding(padding);
-        if (paddingInner) scale.paddingInner(paddingInner);
-        if (paddingOuter) scale.paddingOuter(paddingOuter);
+        if (padding) {
+          scale.padding(padding);
+        }
+        if (paddingInner) {
+          scale.paddingInner(paddingInner);
+        }
+        if (paddingOuter) {
+          scale.paddingOuter(paddingOuter);
+        }
       }
       break;
     }
