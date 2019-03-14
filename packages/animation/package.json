@@ -26,6 +26,7 @@
     "prepublish": "npm run clean && npm run build",
     "build": "run-p \"build:*\"",
     "build:esm": "tsc -p ./src/tsconfig.esm.json",
+    "build:dist": "webpack --config=webpack.config.dist.js",
     "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
     "clean": "rimraf ./dist ./lib ./es5 ./deploy",
     "lint": "tslint --project ./src",

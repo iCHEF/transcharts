@@ -6,10 +6,10 @@
   ],
   "scripts": {
     "start": "docz dev",
-    "build": "docz build",
+    "build:doc": "docz build",
     "type-check": "lerna run type-check --parallel --stream",
     "type-check:watch": "lerna run type-check:watch --parallel --stream -- -- --preserveWatchOutput",
-    "prepublish": "lerna run prepublish",
+    "prepublish": "lerna run prepublish && yarn run build:doc;",
     "lint": "lerna run lint --parallel --stream",
     "clean": "lerna run --parallel clean",
     "test": "jest ./packages --config=config/jest.config.js --coverage",
@@ -40,11 +40,14 @@
     "rimraf": "^2.6.3",
     "styled-components": "^4.1.3",
     "ts-jest": "^24.0.0",
+    "ts-loader": "^5.3.3",
     "tslint": "^5.12.0",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-react": "^3.6.0",
     "tslint-react-hooks": "^1.1.0",
-    "typescript": "^3.3.3"
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
   }
 }

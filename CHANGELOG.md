@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add webpack bundle build. (#19)
 - Add `test` and `test:watch` scripts in root directory and every single package.(#17)
 - Add `jest`, `ts-jest`, `enzyme`, `enzyme-adapter-react-16` dependency.(#17)
 - Add a sample test of `ResponsiveLayer`. (#17)
