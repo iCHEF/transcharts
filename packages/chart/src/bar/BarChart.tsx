@@ -7,6 +7,8 @@ import {
   useHoverState,
   // from TooltipLayer
   TooltipLayer,
+  // from Legend,
+  LegendGroup,
   // from common types
   Margin,
   AxisEncoding,
@@ -86,7 +88,7 @@ export const BarChart = ({
   paddingInner = 0.1,
 }: BarChartProps) => {
   const theme = useContext<Theme>(ThemeContext);
-  const { chartRef, outerDimension, graphDimension } = useChartDimensions(margin);
+  const { chartRef, legendRef, outerDimension, graphDimension } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
   const xEncoding: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
@@ -175,19 +177,29 @@ export const BarChart = ({
       data={data}
       scalesConfig={scalesConfig}
       svgOverlay={
-        // Draw the tooltip
-        <TooltipLayer
-          hovering={hovering}
-          hoveredPoint={hoveredPoint}
-          data={data}
-          graphWidth={graphWidth}
-          graphHeight={graphHeight}
-          margin={margin}
-          xSelector={rowValSelectors.x}
-          ySelector={rowValSelectors.y}
-          x={rowValSelectors.x.getScaledVal(data[hoveredPoint.index]) + bandWidth / 2}
-          getColor={rowValSelectors.color.getString}
-        />
+        <>
+          {/* Draw the tooltip */}
+          <TooltipLayer
+            hovering={hovering}
+            hoveredPoint={hoveredPoint}
+            data={data}
+            graphWidth={graphWidth}
+            graphHeight={graphHeight}
+            margin={margin}
+            xSelector={rowValSelectors.x}
+            ySelector={rowValSelectors.y}
+            x={rowValSelectors.x.getScaledVal(data[hoveredPoint.index]) + bandWidth / 2}
+            getColor={rowValSelectors.color.getString}
+          />
+          {/* Draw the legned */}
+          <LegendGroup
+            color={color && {
+              ...color,
+              ...scalesConfig.color!,
+            }}
+            ref={legendRef}
+          />
+        </>
       }
     >
       {graphGroup}
