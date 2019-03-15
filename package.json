@@ -1,6 +1,5 @@
 {
   "name": "transcharts",
-  "private": true,
   "workspaces": [
     "packages/*"
   ],
