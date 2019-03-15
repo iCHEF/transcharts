@@ -12,11 +12,9 @@
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "dist"
   ],
-  "publishConfig": {
-    "registry": "https://registry.yarnpkg.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iCHEF/transcharts.git"
@@ -41,8 +39,9 @@
     "url": "https://github.com/iCHEF/transcharts/issues"
   },
   "dependencies": {
-    "@ichef/transcharts-graph": "^0.0.0",
+    "@ichef/transcharts-graph": "^0.0.1",
     "@vx/axis": "^0.0.183",
     "@vx/shape": "^0.0.183"
-  }
+  },
+  "gitHead": "9c4cb286afff119b642535c7389ddc4d6d9015a1"
 }

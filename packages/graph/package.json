@@ -12,11 +12,9 @@
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "dist"
   ],
-  "publishConfig": {
-    "registry": "https://registry.yarnpkg.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iCHEF/transcharts.git"
@@ -52,5 +50,6 @@
     "lodash": "^4.17.11",
     "memoize-one": "^5.0.0",
     "resize-observer-polyfill": "^1.5.1"
-  }
+  },
+  "gitHead": "9c4cb286afff119b642535c7389ddc4d6d9015a1"
 }
