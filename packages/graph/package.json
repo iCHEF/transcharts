@@ -2,7 +2,6 @@
   "name": "@ichef/transcharts-graph",
   "version": "0.0.0",
   "description": "Basic reusable graphs",
-  "author": "garfieldduck <garfieldduck@gmail.com>",
   "homepage": "https://github.com/iCHEF/transcharts#readme",
   "license": "Apache-2.0",
   "main": "lib/cjs/index.js",
