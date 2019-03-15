@@ -4,7 +4,7 @@
   "description": "Basic reusable graphs",
   "author": "garfieldduck <garfieldduck@gmail.com>",
   "homepage": "https://github.com/iCHEF/transcharts#readme",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
   "typings": "lib/esm/index.d.ts",
