@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makes simple components such as `<Foo>` and `<ResponsiveLayer>` as an experiment to see if the project settings go well. (#1)
 
 # Changed
+- Reset `private: true` in root package.json. (#24)
 - Remove author field in package.json. (#23)
 - Replace `lodash-es` with `lodash`.(#17)
 - Remove `selectors` from `AxisScale` and `ColorScale`. (#16)
