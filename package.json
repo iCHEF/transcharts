@@ -1,9 +1,9 @@
 {
   "name": "transcharts",
-  "private": true,
   "workspaces": [
     "packages/*"
   ],
+  "license": "Apache-2.0",
   "scripts": {
     "start": "docz dev",
     "build:doc": "docz build",
