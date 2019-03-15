@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext, useMemo, useCallback } from 'react';
-import { ScaleBand } from 'd3-scale';
+import { ScaleBand, ScaleLinear } from 'd3-scale';
 import {
   // from HoverLayer
   HoverLayer,
@@ -103,6 +103,7 @@ export const BarChart = ({
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
 
   const bandScale = scalesConfig.x.scale as ScaleBand<any>;
+  const linearScale = scalesConfig.y.scale as ScaleLinear<any, any>;
   const bandWidth = bandScale.bandwidth();
 
   /**
@@ -130,14 +131,24 @@ export const BarChart = ({
 
   const graphGroup = useMemo(
     () => {
+      const baseY = linearScale(0);
+
       // calculate the accumulated y position of certain points
-      const accumY = {};
-      const getAccumY = (xPos: number, yPos: number, height: number) => {
-        if (!accumY[xPos]) {
-          accumY[xPos] = graphHeight;
+      const positiveY = {};
+      const nonPositiveY = {};
+      const getAccumY = (xPos: number, scaledY: number) => {
+        if (scaledY >= 0) {
+          if (!positiveY[xPos]) {
+            positiveY[xPos] = baseY;
+          }
+          positiveY[xPos] -= scaledY;
+          return positiveY[xPos];
         }
-        accumY[xPos] -= height;
-        return accumY[xPos];
+
+        // scaledY < 0
+        const yPos = !nonPositiveY[xPos] ? baseY : nonPositiveY[xPos];
+        nonPositiveY[xPos] = yPos - scaledY;
+        return yPos;
       };
 
       return dataGroups.map(
@@ -145,15 +156,18 @@ export const BarChart = ({
           return rows.map((row: object, rowIdx: number) => {
             const colorString: string = rowValSelectors.color.getString(rows[0]);
             const xPos = rowValSelectors.x.getScaledVal(row);
-            const yPos = rowValSelectors.y.getScaledVal(row);
-            const height = graphHeight - yPos;
+            const scaledY = rowValSelectors.y.getScaledVal(row);
+            const height = scaledY >= 0
+              ? baseY - scaledY
+              : baseY - graphHeight - scaledY;
+
             return (
               <rect
                 key={`bar-${rowIdx}`}
                 x={xPos}
-                y={getAccumY(xPos, yPos, height)}
+                y={getAccumY(xPos, height)}
                 width={bandWidth}
-                height={height}
+                height={Math.abs(height)}
                 fill={colorString}
               />
             );
