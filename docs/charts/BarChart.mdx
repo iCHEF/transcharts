@@ -1,0 +1,123 @@
+---
+name: Bar Chart
+route: /charts/bar_chart
+menu: Charts
+---
+
+import { Playground, PropsTable } from 'docz'
+import { BarChart } from '@ichef/transcharts-chart'
+import lineData from '../sampleData/lineData';
+import multiLinesData from '../sampleData/multiLinesData'
+
+# Bar Chart
+
+The `<BarChart>` component supports drawing bars.
+
+We use the following example data to generate the example charts below.
+
+**Example Data:**
+
+```js
+const lineData = [
+  { x: 0, y: 9, date: '2019/01/21 00:00:00', weekday: 'Mon' },
+  { x: 1, y: 5, date: '2019/01/22 00:00:00', weekday: 'Tue' },
+  { x: 2, y: 5, date: '2019/01/23 00:00:00', weekday: 'Wed' },
+  { x: 3, y: 3, date: '2019/01/24 00:00:00', weekday: 'Thu'},
+  { x: 4, y: 1, date: '2019/01/25 00:00:00', weekday: 'Fri' },
+];
+```
+
+## Using different scales on the X-axis
+
+### Linear + Linear
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={lineData}
+      x={{ field: 'x', type: 'quantitative', scale: 'linear' }}
+      y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
+    />
+  </div>
+</Playground>
+
+### Time + Linear
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={lineData}
+      x={{ field: 'date', type: 'quantitative', scale: 'time' }}
+      y={{ field: 'x', type: 'quantitative', scale: 'linear' }}
+    />
+  </div>
+</Playground>
+
+### Point + Linear
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={lineData}
+      x={{ field: 'weekday', type: 'quantitative', scale: 'point' }}
+      y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
+    />
+  </div>
+</Playground>
+
+## Stacked bar chart
+
+### Nominal color field
+
+You can use the same properties of multi-series line charts to create stacked bar charts.
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={multiLinesData}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "type",
+        type: "nominal",
+      }}
+    />
+  </div>
+</Playground>
+
+### Quantitative color field
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={[
+        { x: 1, y: 5, size: 3 },
+        { x: 3, y: -7, size: 3 },
+        { x: 3, y: -3, size: 5 },
+        { x: 3, y: -5, size: 8 },
+        { x: 9, y: 7, size: 3 },
+        { x: 7, y: 1, size: 3 },
+        { x: 7, y: -5, size: 4 },
+        { x: 4, y: -2, size: 5 },
+        { x: 1, y: 10, size: 5 },
+        { x: 6, y: 4, size: 5 },
+        { x: 8, y: 9, size: 5 },
+        { x: 9, y: 0, size: 5 },
+        { x: 5, y: 3, size: 8 },
+        { x: 3, y: 8, size: 8 },
+        { x: 4, y: 4, size: 8 },
+        { x: 10, y: 7, size: 8 },
+      ]}
+      x={{ type: 'quantitative', field: 'x' }}
+      y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "size",
+        type: "ordinal",
+      }}
+    />
+  </div>
+</Playground>
+
+## Props
+
+<PropsTable of={BarChart} />

@@ -3,9 +3,14 @@ import {
   scaleLinear,
   scalePoint,
   scaleTime,
+  scaleBand,
 } from 'd3-scale';
 
-import { AxisScale, AxisEncoding } from '../common/types';
+import { AxisScale, ScaleType, AxisEncoding } from '../common/types';
+import { DEFAULT_VALS } from '../common/config';
+
+import { getValByScaleType } from './getValByScaleType';
+import { getFieldValuesFromData } from './getFieldValuesFromData';
 
 export interface GetAxisScaleArgs {
   data: object[];
@@ -24,20 +29,14 @@ export function getAxisScale(
   encoding: AxisEncoding,
 ): AxisScale {
   const range: AxisScale['range'] = [min, max];
-  const { field, type } = encoding;
+  const { field, type, scaleConfig } = encoding;
 
-  const dataVals: any[] = [];
-  data.forEach((row) => {
-    const val = row[field];
-    if (val !== undefined && val !== null) {
-      dataVals.push(val);
-    }
-  });
+  const dataVals = getFieldValuesFromData(data, field);
 
   let domain: AxisScale['domain'];
   let scale;
-  const scaleType = encoding.scale || 'linear';
-  let getValue = (val: any) => val;
+  const scaleType: ScaleType = encoding.scale || DEFAULT_VALS.SCALE_TYPE;
+  const getValue = getValByScaleType(scaleType);
 
   switch (scaleType) {
     case 'point': {
@@ -46,10 +45,25 @@ export function getAxisScale(
       break;
     }
     case 'time': {
-      // TODO: think out a way to deal with the date type
-      getValue = (val: string) => new Date(val);
       domain = d3Extent(dataVals.map(time => getValue(time)));
       scale = scaleTime().domain(domain).range(range);
+      break;
+    }
+    case 'band': {
+      domain = dataVals;
+      scale = scaleBand().domain(domain).range(range);
+      if (scaleConfig) {
+        const { padding, paddingInner, paddingOuter } = scaleConfig;
+        if (padding) {
+          scale.padding(padding);
+        }
+        if (paddingInner) {
+          scale.paddingInner(paddingInner);
+        }
+        if (paddingOuter) {
+          scale.paddingOuter(paddingOuter);
+        }
+      }
       break;
     }
     case 'linear':
@@ -64,7 +78,6 @@ export function getAxisScale(
     field,
     range,
     domain,
-    getValue,
     scaleType,
     type,
     scale,

@@ -31,6 +31,9 @@ export interface SvgFrameProps {
   /** Should show the axis on the bottom or not */
   showBottomAxis: boolean;
 
+  /** Whether to display the axes in the background or foreground of the chart */
+  axisInBackground: boolean;
+
   scalesConfig: {
     x: AxisScale,
     y: AxisScale,
@@ -46,6 +49,7 @@ export interface SvgFrameProps {
 const defaultProps = {
   showLeftAxis: true,
   showBottomAxis: true,
+  axisInBackground: true,
 };
 
 const FrameContent = ({
@@ -56,26 +60,29 @@ const FrameContent = ({
   scalesConfig,
   showLeftAxis,
   showBottomAxis,
+  axisInBackground,
   svgOverlay,
   children,
 }: SvgFrameProps) => {
   const { width: outerWidth, height: outerHeight } = outerDimension;
   const { width: graphWidth, height: graphHeight } = graphDimension;
+  const axisLayer = (
+    <AxisLayer
+      width={graphWidth}
+      height={graphHeight}
+      showLeftAxis={showLeftAxis}
+      showBottomAxis={showBottomAxis}
+      data={data}
+      xAxis={scalesConfig.x}
+      yAxis={scalesConfig.y}
+    />
+  );
 
   return (
     <>
       <svg width={outerWidth} height={outerHeight}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
-          <AxisLayer
-            width={graphWidth}
-            height={graphHeight}
-            showLeftAxis={showLeftAxis}
-            showBottomAxis={showBottomAxis}
-            data={data}
-            xAxis={scalesConfig.x}
-            yAxis={scalesConfig.y}
-          />
-          {children}
+          {axisInBackground ? (<>{axisLayer}{children}</>) : (<>{children}{axisLayer}</>)}
         </g>
       </svg>
       {svgOverlay}

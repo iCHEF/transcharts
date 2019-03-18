@@ -1,5 +1,7 @@
 import { Scale } from '../common/types';
 
+import { getValByScaleType } from './getValByScaleType';
+
 /**
  * Returns the data value selectors for a data record
  * using the computed axis configurations including the d3Scale function of the axis
@@ -9,7 +11,8 @@ import { Scale } from '../common/types';
 export function getRecordFieldSelector(
   axis: Pick<Scale, Extract<keyof Scale, 'field' | 'scale' | 'getValue' | 'scaleType'>>,
 ) {
-  const { field, scale, getValue, scaleType } = axis;
+  const { field, scale, scaleType } = axis;
+  const getValue = getValByScaleType(scaleType);
 
   /** Given a record of data, it returns the orginal value of the specified field */
   const getOriginalVal = (record: object) => getValue(record[field]);

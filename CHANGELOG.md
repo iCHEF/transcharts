@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add Apache License. (#23)
+- Add vertical bar charts and vertical stacked bar charts. (#22)
 - Add release script. (#21)
 - Add auto type check with github action. (#20)
 - Add webpack bundle build. (#19)
@@ -40,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove author field in package.json. (#23)
 - Replace `lodash-es` with `lodash`.(#17)
 - Remove `selectors` from `AxisScale` and `ColorScale`. (#16)
+- Allow the axes appear in the foreground. (#22)
 - Modify the config of `tslint` so that it won't continuing warning about the lack of dangling commas in functions. (#16)
 - Fix `HoverLayer` default props. (#14)
 - Fix color too light / deep with ordinal data field. (#14)

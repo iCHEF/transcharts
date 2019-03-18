@@ -2,6 +2,7 @@ import {
   ScaleLinear,
   ScalePoint,
   ScaleTime,
+  ScaleBand,
 } from 'd3-scale';
 
 export interface FieldSelector {
@@ -15,12 +16,19 @@ export interface GraphDimension {
   height: number;
 }
 
+export type ScaleType = 'point'
+| 'time'
+| 'linear'
+| 'band'
+| 'ordinal'
+| 'sequential';
+
 export interface Scale {
   /** d3's Scaling function employed in specific channel */
   scale: (...values: any[]) => any;
 
   /** scale type string */
-  scaleType: string;
+  scaleType: ScaleType;
 
   /** field for axis */
   field: string;
@@ -35,19 +43,14 @@ export interface Scale {
    * Range of input channel
    */
   range?: ReadonlyArray<any>;
-
-  /** Returns the formatted value according to the type of the axis */
-  getValue: (val: any) => any;
 }
-
-export type AxisScaleType = 'point' | 'time' | 'linear';
 
 export interface AxisScale extends Scale {
   /** d3's Scaling function employed in this axis */
-  scale: ScalePoint<any> | ScaleTime<any, any> | ScaleLinear<any, any>; // d3 scale function
-
-  /** scale type string */
-  scaleType: AxisScaleType;
+  scale: ScalePoint<any>
+    | ScaleTime<any, any>
+    | ScaleLinear<any, any>
+    | ScaleBand<any>; // d3 scale function
 
   /**
    * Range of the axis: [min, max]
@@ -65,10 +68,17 @@ export interface Encoding {
   field: string;
   type: EncodingDataType;
   scale?: string;
+
+  /** Extra configurations to generate D3 scale */
+  scaleConfig?: {
+    padding?: number;
+    paddingInner?: number;
+    paddingOuter?: number;
+  };
 }
 
 export interface AxisEncoding extends Encoding {
-  scale?: AxisScaleType;
+  scale?: ScaleType;
 }
 
 export interface LegendConfig {
