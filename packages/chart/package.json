@@ -39,7 +39,7 @@
     "url": "https://github.com/iCHEF/transcharts/issues"
   },
   "dependencies": {
-    "@ichef/transcharts-graph": "^0.0.1",
+    "@ichef/transcharts-graph": "^0.0.2",
     "@vx/axis": "^0.0.183",
     "@vx/shape": "^0.0.183"
   },
