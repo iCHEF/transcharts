@@ -62,7 +62,7 @@ const getYtickLabelProps = (styles: {
 /**
  * Always format the value as string to prevent the zero value from not showing
  */
-const tickForat = (val: any) => `${val}`;
+const tickFormat = (val: any) => `${val}`;
 
 export const AxisLayer: React.SFC<AxisLayerProps> = ({
   width,
@@ -93,7 +93,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             // TODO: modify it as a function
             numTicks={getNumberOfTicks(height, data)}
             tickLabelProps={getXtickLabelProps(xAxisTheme)}
-            tickFormat={tickForat}
+            tickFormat={tickFormat}
             // TODO: format the ticks based on the axis types
             // tickComponent={({ formattedValue, ...tickProps }) => (
             //   <text {...tickProps}>{formattedValue}</text>
@@ -109,7 +109,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             tickStroke={yAxisTheme.tickStrokeColor}
             numTicks={getNumberOfTicks(width, data)}
             label="label"
-            tickFormat={tickForat}
+            tickFormat={tickFormat}
             tickLabelProps={getYtickLabelProps(yAxisTheme)}
           />
         )}
