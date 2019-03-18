@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.2]
+
 ### Added
 - Add Apache License. (#23)
 - Add vertical bar charts and vertical stacked bar charts. (#22)
