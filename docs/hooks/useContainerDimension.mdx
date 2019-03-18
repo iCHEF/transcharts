@@ -1,0 +1,41 @@
+---
+name: useContainerDimension
+route: /hooks/use_container_dimension
+menu: Hooks
+---
+
+import { Playground, PropsTable } from 'docz'
+import { ResponsiveLayer } from '@ichef/transcharts-graph'
+
+# useContainerDimension
+
+The `useContainerDimension` hook help you get the bounding `dimension` (an object with `width` and `height`) of a DOM node.
+
+By combining `useRef`, you can easily get the width and height of a DOM node:
+
+```jsx
+const graphRef = useRef(null);
+const { width, height } = useContainerDimension(graphRef);
+
+return (
+  <div ref={graphRef}>
+    ...
+  </div>
+);
+```
+
+## Advanced Usage
+
+### Customizing the `debounceTime`
+
+The `useContainerDimension` hook utilizes the [ResizeObserver](https://developers.google.com/web/updates/2016/10/resizeobserver)
+to listen to the changes in the dimension of element’s content rectangle.
+
+To avoid updating the dimension too frequently, we set a debounce time for updating such change.
+
+The default `debounceTime` is 300 ms, and you can customize it by setting the second parameter of `useContainerDimension`:
+
+```jsx
+const { width, height } = useContainerDimension(graphRef, 100);
+```
+

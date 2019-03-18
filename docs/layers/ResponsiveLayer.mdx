@@ -1,0 +1,37 @@
+---
+name: ResponsiveLayers
+route: /layers/responsive
+menu: Layers
+---
+
+import { Playground, PropsTable } from 'docz'
+import { ResponsiveLayer } from '@ichef/transcharts-graph'
+
+# Responsive Layer
+
+> **Note:** You may use our [useContainerDimension Hook](/hooks/use_container_dimension) to get the width and height of a DOM element instead,
+so that you can avoid unnecessary nestings of the JSX syntax.
+
+The `<ResponsiveLayer>` component is one of the most important building blocks of creating responsive graphs.
+
+It fits the full width and height of the parent component, and it provides its `width` and `height` using the [render props](https://reactjs.org/docs/render-props.html) pattern.
+
+You may interact with the following example by resizing the width of the Playground below or the height of the window:
+
+<Playground>
+  <div style={{ height: '12vh' }}>
+    <ResponsiveLayer>
+      {({ width, height }) => (
+        <div>
+          <p>Width: {width}</p>
+          <p>Height: {height}</p>
+        </div>
+      )}
+    </ResponsiveLayer>
+  </div>
+</Playground>
+
+
+## Props
+
+<PropsTable of={ResponsiveLayer} />
