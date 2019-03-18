@@ -1,6 +1,6 @@
 {
   "name": "@ichef/transcharts-graph",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "Basic reusable graphs",
   "homepage": "https://github.com/iCHEF/transcharts#readme",
   "license": "Apache-2.0",

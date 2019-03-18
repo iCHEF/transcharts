@@ -1,6 +1,6 @@
 {
   "name": "@ichef/transcharts-animation",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "Helpers to make animations of the graphs",
   "homepage": "https://github.com/iCHEF/transcharts#readme",
   "license": "Apache-2.0",
