@@ -1,20 +1,20 @@
 import * as path from 'path';
 import ForkTSCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
-const modifyBundlerConfig = config => {
+const modifyBundlerConfig = (config, dev) => {
   config.resolve.alias = Object.assign({}, config.resolve.alias, {
     '@ichef/transcharts-graph': path.resolve(__dirname, 'packages/graph/src'),
     '@ichef/transcharts-chart': path.resolve(__dirname, 'packages/chart/src'),
     '@ichef/transcharts-animation': path.resolve(__dirname, 'packages/animation/src'),
   });
-  const customPlugins = [
+  const customPlugins = dev ? [
     new ForkTSCheckerWebpackPlugin({
       tsconfig: './config/tsconfig.docz.json',
       async: false,
       watch: ['./packages/**/*.{ts,tsx}'],
       tslint: true,
     }),
-  ];
+  ] : [];
   config.plugins.push(...customPlugins)
   return config;
 };
