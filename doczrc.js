@@ -12,7 +12,7 @@ const modifyBundlerConfig = (config, dev) => {
       tsconfig: './config/tsconfig.docz.json',
       async: false,
       watch: ['./packages/**/*.{ts,tsx}'],
-      tslint: true,
+      tslint: './config/tslint.docz.json'
     }),
   ] : [];
   config.plugins.push(...customPlugins)
