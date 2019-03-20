@@ -61,7 +61,7 @@ const HoveringIndicator: FunctionComponent<{
 
   const circles = projectedPoints.groupedY.map(pointY => (
     <circle
-      key={`${projectedPoints.xVal}-${pointY.yVal}`}
+      key={`c-${pointY.yStrVal}`}
       cx={projectedPoints.xPos}
       cy={pointY.yPos}
       r={4.5}
@@ -161,9 +161,6 @@ export const LineChart = ({
       );
     },
   );
-
-  // TODO: use step() of pointScale to calculate the width of collision band
-  // scalesConfig.x.scale.step().length
 
   return (
     <SvgWithAxisFrame

@@ -173,19 +173,20 @@ export const useCartesianEncodings = (
     () => {
       // project by original values on the axis
       const projections = {};
-      const xValues = {};
+      const xPositions = {};
       dataGroups.forEach((group, groupIdx) => {
         group.forEach((row) => {
-          const xVal = xSelector.getOriginalVal(row);
-          const yVal = ySelector.getOriginalVal(row);
+          const xStrVal = xSelector.getFormattedStringVal(row);
+          const yStrVal = ySelector.getFormattedStringVal(row);
+          const xPos = xSelector.getScaledVal(row);
           const yPos = ySelector.getScaledVal(row);
-          if (!projections[xVal]) {
-            projections[xVal] = [];
-            xValues[xVal] = xVal;
+          if (!projections[xStrVal]) {
+            projections[xStrVal] = [];
+            xPositions[xStrVal] = xPos;
           }
-          projections[xVal].push({
+          projections[xStrVal].push({
             groupIdx,
-            yVal,
+            yStrVal,
             yPos,
             color: getColorString(row),
           });
@@ -194,14 +195,13 @@ export const useCartesianEncodings = (
 
       // convert the position along the axis, and sort by the converted values
       const columns = Object.keys(projections).reduce(
-        (accum, xKey: any) => {
-          const groupedY = projections[xKey];
+        (accum, xStrVal: any) => {
+          const groupedY = projections[xStrVal];
           // ensure that we always get the correct type, not a string instead
-          const xVal = xValues[xKey];
-          const xPos: number = xAxis.scale(xVal) || 0;
+          const xPos: number = xPositions[xStrVal] || 0;
           const column = {
             xPos,
-            xVal,
+            xStrVal,
             groupedY,
           };
 
@@ -225,13 +225,13 @@ export const useCartesianEncodings = (
      * @example
      * [{
      *  "xPos": 0,
-     *  "xVal": "0",
-     *  "groupedY": [{"groupIdx": 0, "yVal": 9, "yPos": 18, "color": "#deebf7"}],
+     *  "xStrVal": "0",
+     *  "groupedY": [{"groupIdx": 0, "yStrVal": 9, "yPos": 18, "color": "#deebf7"}],
      *  },
      * {
      *  "xPos": 109.12812500000001,
-     *  "xVal": "2",
-     *  "groupedY": [{"groupIdx": 0, "yVal": 3, "yPos": 6, "color": "#deebf7"}, ...],
+     *  "xStrVal": "2",
+     *  "groupedY": [{"groupIdx": 0, "yStrVal": 3, "yPos": 6, "color": "#deebf7"}, ...],
      * }]
      */
     axisProjectedValues,

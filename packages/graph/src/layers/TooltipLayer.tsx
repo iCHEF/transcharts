@@ -8,7 +8,7 @@ export interface GroupedY {
   groupIdx: number;
 
   /** Original value on Y */
-  yVal: number;
+  yStrVal: number;
 
   /** Projected position of Y */
   yPos: number;
@@ -21,7 +21,7 @@ export interface AxisProjectedValue {
   xPos: number;
 
   /** Original value on X */
-  xVal: number;
+  xStrVal: number;
 
   /** Corresponding data in `dataGroups` */
   groupedY: GroupedY[];
@@ -56,8 +56,9 @@ export const TooltipLayer = ({
   const projected = axisProjectedValues[hoveredPoint.index];
   const tooltipItems = projected.groupedY.map(pointY => (
     <TooltipItem
+      key={`t-${pointY.yStrVal}`}
       color={pointY.color}
-      text={`${pointY.yVal}`}
+      text={`${pointY.yStrVal}`}
     />
   ));
 
@@ -72,7 +73,7 @@ export const TooltipLayer = ({
       }}
       show={hovering}
     >
-      <h3>{projected.xVal}</h3>
+      <h3>{`${projected.xStrVal}`}</h3>
       {tooltipItems}
     </Tooltip>
   );
