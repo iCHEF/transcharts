@@ -108,7 +108,8 @@ export const BarChart = ({
   const bandWidth = bandScale.bandwidth();
 
   /**
-   * Returns the size and position of the collision rectangle or hovering highlight rectangle
+   * Returns the size and position of the hovering detection rectangle
+   * or hovering highlight rectangle
    */
   const getHoveringRectPos = useCallback(
     (idx: number) => {
@@ -128,6 +129,29 @@ export const BarChart = ({
       };
     },
     [bandWidth, paddingInner],
+  );
+
+  const hoverDetectionComponents = useMemo(
+    () => (
+      axisProjectedValues.map(
+        (row, idx) => {
+          return (
+            <rect
+              // #TODO: use unique keys rather than array index
+              key={`colli-${idx}`}
+              x={row.xPos}
+              y={0}
+              height={graphHeight}
+              width={bandWidth}
+              fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
+              opacity={0.3}
+              {...{ ...getHoveringRectPos(idx) }}
+            />
+          );
+        }
+      )
+    ),
+    [axisProjectedValues, graphHeight, bandWidth, getHoveringRectPos]
   );
 
   const graphGroup = useMemo(
@@ -224,23 +248,7 @@ export const BarChart = ({
       <HoverLayer
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
-        collisionComponents={axisProjectedValues.map(
-          (row, idx) => {
-            return (
-              <rect
-                // #TODO: use unique keys rather than array index
-                key={`colli-${idx}`}
-                x={row.xPos}
-                y={0}
-                height={graphHeight}
-                width={bandWidth}
-                fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
-                opacity={0.3}
-                {...{ ...getHoveringRectPos(idx) }}
-              />
-            );
-          }
-        )}
+        hoverDetectionComponents={hoverDetectionComponents}
       />
     </SvgWithAxisFrame>
   );

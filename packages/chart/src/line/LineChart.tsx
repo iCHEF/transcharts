@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { LinePath } from '@vx/shape';
 import {
   // from HoverLayer
@@ -25,6 +25,10 @@ import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 import { DEFAULT_VALS } from '../common/config';
 
+/**
+ * Return the position of the hovering detection rect.
+ * If the given index exceeds its bound, it will return its closest value.
+ */
 function getXPosByIndex(arr: any[], idx: number) {
   let arrIdx = idx < 0 ? 0 : idx;
   if (idx >= arr.length) {
@@ -147,19 +151,52 @@ export const LineChart = ({
     axisProjectedValues,
   } = useCartesianEncodings(graphDimension, theme, data, x, y, color);
 
-  const graphGroup = dataGroups.map(
-    (rows: object[], index: number) => {
-      const colorString: string = rowValSelectors.color.getString(rows[0]);
-      return (
-        <DataLine
-          key={`row-${index}`}
-          color={colorString}
-          rows={rows}
-          xSelector={rowValSelectors.x}
-          ySelector={rowValSelectors.y}
-        />
-      );
-    },
+  const graphGroup = useMemo(
+    () => (
+      dataGroups.map(
+        (rows: object[], index: number) => {
+          const colorString: string = rowValSelectors.color.getString(rows[0]);
+          return (
+            <DataLine
+              key={`row-${index}`}
+              color={colorString}
+              rows={rows}
+              xSelector={rowValSelectors.x}
+              ySelector={rowValSelectors.y}
+            />
+          );
+        }
+      )
+    ),
+    [dataGroups, rowValSelectors]
+  );
+
+  const hoverDetectionComponents = useMemo(
+    () => (
+      axisProjectedValues.map(
+        (row, idx) => {
+          const rectX = (row.xPos + getXPosByIndex(axisProjectedValues, idx - 1)) / 2;
+
+          const rectWidth = (
+            (row.xPos + getXPosByIndex(axisProjectedValues, idx + 1)) / 2
+          ) - rectX;
+
+          return (
+            <rect
+              // #TODO: use unique keys rather than array index
+              key={`colli-${idx}`}
+              x={rectX}
+              y={0}
+              width={rectWidth}
+              height={graphHeight}
+              fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
+              opacity={0.3}
+            />
+          );
+        }
+      )
+    ),
+    [axisProjectedValues, graphHeight]
   );
 
   return (
@@ -202,32 +239,10 @@ export const LineChart = ({
       />
 
       {/* Areas which are used to detect mouse or touch interactions */}
-      {/* TODO: memoize the collision components */}
       <HoverLayer
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
-        collisionComponents={axisProjectedValues.map(
-          (row, idx) => {
-            const rectX = (row.xPos + getXPosByIndex(axisProjectedValues, idx - 1)) / 2;
-
-            const rectWidth = (
-              (row.xPos + getXPosByIndex(axisProjectedValues, idx + 1)) / 2
-            ) - rectX;
-
-            return (
-              <rect
-                // #TODO: use unique keys rather than array index
-                key={`colli-${idx}`}
-                x={rectX}
-                y={0}
-                width={rectWidth}
-                height={graphHeight}
-                fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
-                opacity={0.3}
-              />
-            );
-          }
-        )}
+        hoverDetectionComponents={hoverDetectionComponents}
       />
     </SvgWithAxisFrame>
   );

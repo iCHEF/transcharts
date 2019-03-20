@@ -15,7 +15,7 @@ export type HoverLayerProps = {
    * Hidden components to detect the mouse or touch interactions.
    * **Note:** The order of the components should correspond to the order of the data.
    */
-  collisionComponents: JSX.Element[];
+  hoverDetectionComponents: JSX.Element[];
 } & typeof defaultProps;
 
 const defaultProps = {
@@ -30,7 +30,7 @@ export const HoverLayer = ({
   setHoveredPosAndIndex,
   handleHover,
   clearHovering,
-  collisionComponents,
+  hoverDetectionComponents,
   throttleTime,
 }: HoverLayerProps) => {
   /** use requestAnimationFrame to schedule updates of hovered position and data index */
@@ -78,7 +78,7 @@ export const HoverLayer = ({
     [updatePosition, clearHovering],
   );
 
-  const detectionAreas = collisionComponents.map((area: JSX.Element, dataIndex: number) => {
+  const detectionAreas = hoverDetectionComponents.map((area: JSX.Element, dataIndex: number) => {
     const handleCurrentTooltip = handleTooltip(dataIndex);
     return React.cloneElement(area, {
       onTouchStart: handleCurrentTooltip,
@@ -88,7 +88,7 @@ export const HoverLayer = ({
     });
   });
 
-  // Render areas to detect collisions of mouse pointers or touches with data points
+  // Render areas to detect hovering interaction with mouse pointers or touches with data points
   return (
     <>
       {detectionAreas}
