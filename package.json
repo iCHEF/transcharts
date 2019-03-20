@@ -17,7 +17,7 @@
     "test": "jest ./packages --config=config/jest.config.js --coverage",
     "test:watch": "jest ./packages --watch --config=config/jest.config.js",
     "bumpversion": "lerna version --no-push --no-git-tag-version",
-    "release": "lerna publish --yes --repo-version $PACKAGE_VERSION --no-push --no-git-tag-version",
+    "release": "lerna publish from-package --yes --no-push --no-git-tag-version",
     "release:beta": "lerna publish --no-push --no-git-tag-version --preid=beta --npm-tag=prerelease",
     "release:canary": "lerna publish -c --yes --exact"
   },
