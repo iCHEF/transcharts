@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { LinePath } from '@vx/shape';
 import {
   // from HoverLayer
@@ -54,11 +54,11 @@ export interface LineChartProps {
 }
 
 /** A line and a dot for the point being hovered */
-const HoveringIndicator: FunctionComponent<{
+const HoveringIndicator = ({ hovering, projectedPoints, height }: {
   hovering: boolean,
   projectedPoints: AxisProjectedValue,
   height: number,
-}> = ({ hovering, projectedPoints, height }) => {
+}) => {
   if (!hovering) {
     return null;
   }
@@ -87,12 +87,12 @@ const HoveringIndicator: FunctionComponent<{
   );
 };
 
-const DataLine: FunctionComponent<{
+const DataLine = ({ color, xSelector, ySelector, rows }: {
   color: string,
   xSelector: FieldSelector,
   ySelector: FieldSelector,
   rows: object[],
-}> = ({ color, xSelector, ySelector, rows }) => {
+}) => {
   const lineDots = rows.map((dataRow, index) => (
     <circle
       key={`c-${index}`}

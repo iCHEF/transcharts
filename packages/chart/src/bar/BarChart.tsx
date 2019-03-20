@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo, useCallback } from 'react';
 import { ScaleBand, ScaleLinear } from 'd3-scale';
 import {
   // from HoverLayer
@@ -24,13 +24,13 @@ import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 import { DEFAULT_VALS } from '../common/config';
 
 /** A line and a dot for the point being hovered */
-const HoveringIndicator: FunctionComponent<{
+const HoveringIndicator = ({ hovering, x, y, width, height }: {
   hovering: boolean,
   x: number,
   y: number,
   width: number,
   height: number,
-}> = ({ hovering, x, y, width, height }) => {
+}) => {
   if (!hovering) {
     return null;
   }
