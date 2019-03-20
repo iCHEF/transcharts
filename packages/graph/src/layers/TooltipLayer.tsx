@@ -40,6 +40,12 @@ export interface TooltipLayerProps {
 
   /** Y position of the tooltip */
   y?: number;
+
+  /** X offset for the position of the tooltip */
+  xOffset?: number;
+
+  /** Y offset for the of the tooltip */
+  yOffset?: number;
 }
 
 /** Generates the tooltip box */
@@ -52,6 +58,8 @@ export const TooltipLayer = ({
   margin,
   x = axisProjectedValues[hoveredPoint.index].xPos,
   y = hoveredPoint.position.y,
+  xOffset = 0,
+  yOffset = 0,
 }: TooltipLayerProps) => {
   const projected = axisProjectedValues[hoveredPoint.index];
   const tooltipItems = projected.groupedY.map(pointY => (
@@ -68,8 +76,8 @@ export const TooltipLayer = ({
       graphHeight={graphHeight}
       graphMargin={margin}
       position={{
-        x,
-        y,
+        x: x + xOffset,
+        y: y + yOffset,
       }}
       show={hovering}
     >

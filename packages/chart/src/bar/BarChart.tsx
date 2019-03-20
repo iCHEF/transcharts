@@ -115,7 +115,7 @@ export const BarChart = ({
       const paddingVal = bandWidth * paddingInner;
       const xPos = idx === 0
         ? 0
-        : rowValSelectors.x.getScaledVal(data[idx]) - paddingVal / 2;
+        : axisProjectedValues[idx].xPos - paddingVal / 2;
       const width = idx === 0 || idx === data.length - 1
             ? bandWidth + paddingVal / 2
             : bandWidth + paddingVal;
@@ -201,7 +201,7 @@ export const BarChart = ({
             graphWidth={graphWidth}
             graphHeight={graphHeight}
             margin={margin}
-            x={rowValSelectors.x.getScaledVal(data[hoveredPoint.index]) + bandWidth / 2}
+            xOffset={bandWidth / 2}
           />
           {/* Draw the legned */}
           <LegendGroup
@@ -224,13 +224,17 @@ export const BarChart = ({
       <HoverLayer
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
-        collisionComponents={data.map(
-          (_, idx) => {
+        collisionComponents={axisProjectedValues.map(
+          (row, idx) => {
             return (
               <rect
                 // #TODO: use unique keys rather than array index
                 key={`colli-${idx}`}
-                fill="#abfa11"
+                x={row.xPos}
+                y={0}
+                height={graphHeight}
+                width={bandWidth}
+                fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
                 opacity={0.3}
                 {...{ ...getHoveringRectPos(idx) }}
               />
