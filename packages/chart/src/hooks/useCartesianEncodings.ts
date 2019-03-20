@@ -172,12 +172,14 @@ export const useCartesianEncodings = (
       // project by original values on the axis
       // expected results: { "value on the axis": [ { "data group index": "value" }, ... ], ... }
       const projections = {};
+      const xValues = {};
       dataGroups.forEach((group, groupIdx) => {
         group.forEach((row) => {
           const xVal = xSelector.getOriginalVal(row);
           const yVal = ySelector.getOriginalVal(row);
           if (!projections[xVal]) {
             projections[xVal] = [];
+            xValues[xVal] = xVal;
           }
           projections[xVal].push({ [groupIdx]: yVal });
         });
@@ -185,8 +187,10 @@ export const useCartesianEncodings = (
 
       // convert the position along the axis, and sort by the converted values
       const columns = Object.keys(projections).reduce(
-        (accum, xVal: any) => {
-          const groupedY = projections[xVal];
+        (accum, xKey: any) => {
+          const groupedY = projections[xKey];
+          // ensure that we always get the correct type, not a string instead
+          const xVal = xValues[xKey];
           const xPos: number = xAxis.scale(xVal) || 0;
           const column = {
             xPos,
@@ -203,6 +207,8 @@ export const useCartesianEncodings = (
     },
     [dataGroups, xSelector, ySelector],
    );
+
+    console.log(axisProjectedValues)
 
   return {
     /** Array of data grouped by fields of colors  */
