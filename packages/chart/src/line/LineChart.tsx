@@ -7,6 +7,7 @@ import {
   useHoverState,
   // from TooltipLayer
   TooltipLayer,
+  AxisProjectedValue,
   // from Legend,
   LegendGroup,
   // from common types
@@ -51,30 +52,33 @@ export interface LineChartProps {
 /** A line and a dot for the point being hovered */
 const HoveringIndicator: FunctionComponent<{
   hovering: boolean,
-  xPos: number,
-  yPos: number,
+  projectedPoints: AxisProjectedValue,
   height: number,
-  color: string,
-}> = ({ hovering, xPos, yPos, height, color }) => {
+}> = ({ hovering, projectedPoints, height }) => {
   if (!hovering) {
     return null;
   }
 
+  const circles = projectedPoints.groupedY.map(pointY => (
+    <circle
+      key={`${projectedPoints.xVal}-${pointY.yVal}`}
+      cx={projectedPoints.xPos}
+      cy={pointY.yPos}
+      r={4.5}
+      fill={pointY.color}
+    />
+  ));
+
   return(
     <>
       <line
-        x1={xPos}
+        x1={projectedPoints.xPos}
         y1={0}
-        x2={xPos}
+        x2={projectedPoints.xPos}
         y2={height}
         style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
       />
-      <circle
-        cx={xPos}
-        cy={yPos}
-        r={4.5}
-        fill={color}
-      />
+      {circles}
     </>
   );
 };
@@ -177,13 +181,10 @@ export const LineChart = ({
           <TooltipLayer
             hovering={hovering}
             hoveredPoint={hoveredPoint}
-            data={data}
+            axisProjectedValues={axisProjectedValues}
             graphWidth={graphWidth}
             graphHeight={graphHeight}
             margin={graphMargin}
-            xSelector={rowValSelectors.x}
-            ySelector={rowValSelectors.y}
-            getColor={rowValSelectors.color.getString}
           />
           {/* Draw the legned */}
           <LegendGroup
@@ -199,14 +200,12 @@ export const LineChart = ({
       {graphGroup}
       <HoveringIndicator
         hovering={hovering}
-        xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
-        yPos={rowValSelectors.y.getScaledVal(data[hoveredPoint.index])}
+        projectedPoints={axisProjectedValues[hoveredPoint.index]}
         height={graphHeight}
-        color={rowValSelectors.color.getString(data[hoveredPoint.index])}
       />
 
       {/* Areas which are used to detect mouse or touch interactions */}
-      {/* TODO: fix time scale + memoize the collision components */}
+      {/* TODO: memoize the collision components */}
       <HoverLayer
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
@@ -226,7 +225,7 @@ export const LineChart = ({
                 y={0}
                 width={rectWidth}
                 height={graphHeight}
-                fill="#abfa11"
+                fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
                 opacity={0.3}
               />
             );

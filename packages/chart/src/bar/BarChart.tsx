@@ -99,6 +99,7 @@ export const BarChart = ({
     dataGroups,
     scalesConfig,
     rowValSelectors,
+    axisProjectedValues,
   } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
 
@@ -196,14 +197,11 @@ export const BarChart = ({
           <TooltipLayer
             hovering={hovering}
             hoveredPoint={hoveredPoint}
-            data={data}
+            axisProjectedValues={axisProjectedValues}
             graphWidth={graphWidth}
             graphHeight={graphHeight}
             margin={margin}
-            xSelector={rowValSelectors.x}
-            ySelector={rowValSelectors.y}
             x={rowValSelectors.x.getScaledVal(data[hoveredPoint.index]) + bandWidth / 2}
-            getColor={rowValSelectors.color.getString}
           />
           {/* Draw the legned */}
           <LegendGroup
@@ -232,7 +230,8 @@ export const BarChart = ({
               <rect
                 // #TODO: use unique keys rather than array index
                 key={`colli-${idx}`}
-                opacity={0}
+                fill="#abfa11"
+                opacity={0.3}
                 {...{ ...getHoveringRectPos(idx) }}
               />
             );

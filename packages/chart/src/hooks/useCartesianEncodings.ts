@@ -15,6 +15,8 @@ import {
   GraphDimension,
   // from themes
   Theme,
+  // from TooltipLayer
+  AxisProjectedValue,
 } from '@ichef/transcharts-graph';
 
 /**
@@ -167,21 +169,26 @@ export const useCartesianEncodings = (
     [colorScale, defaultColor],
   );
 
-  const axisProjectedValues = useMemo(
+  const axisProjectedValues: AxisProjectedValue[] = useMemo(
     () => {
       // project by original values on the axis
-      // expected results: { "value on the axis": [ { "data group index": "value" }, ... ], ... }
       const projections = {};
       const xValues = {};
       dataGroups.forEach((group, groupIdx) => {
         group.forEach((row) => {
           const xVal = xSelector.getOriginalVal(row);
           const yVal = ySelector.getOriginalVal(row);
+          const yPos = ySelector.getScaledVal(row);
           if (!projections[xVal]) {
             projections[xVal] = [];
             xValues[xVal] = xVal;
           }
-          projections[xVal].push({ [groupIdx]: yVal });
+          projections[xVal].push({
+            groupIdx,
+            yVal,
+            yPos,
+            color: getColorString(row),
+          });
         });
       });
 
@@ -206,9 +213,7 @@ export const useCartesianEncodings = (
       return columns.sort((a, b) => (a.xPos - b.xPos));
     },
     [dataGroups, xSelector, ySelector],
-   );
-
-    console.log(axisProjectedValues)
+  );
 
   return {
     /** Array of data grouped by fields of colors  */
@@ -221,12 +226,12 @@ export const useCartesianEncodings = (
      * [{
      *  "xPos": 0,
      *  "xVal": "0",
-     *  "groupedY": [{"0": 9}],
+     *  "groupedY": [{"groupIdx": 0, "yVal": 9, "yPos": 18, "color": "#deebf7"}],
      *  },
      * {
      *  "xPos": 109.12812500000001,
      *  "xVal": "2",
-     *  "groupedY": [{"0": 3}, {"1": 5}],
+     *  "groupedY": [{"groupIdx": 0, "yVal": 3, "yPos": 6, "color": "#deebf7"}, ...],
      * }]
      */
     axisProjectedValues,
