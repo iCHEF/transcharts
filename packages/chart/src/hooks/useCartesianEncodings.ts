@@ -167,9 +167,41 @@ export const useCartesianEncodings = (
     [colorScale, defaultColor],
   );
 
+  const axisProjectedValues = useMemo(
+    () => {
+      const projections = {};
+      dataGroups.forEach((group, groupIdx) => {
+        group.forEach((row) => {
+          // TODO: use rowValSelectors to get values
+          const xVal = xSelector.getOriginalVal(row);
+          const yVal = ySelector.getOriginalVal(row);
+          if (!projections[xVal]) {
+            projections[xVal] = [];
+          }
+          projections[xVal].push({ [groupIdx]: yVal });
+        });
+      });
+
+      return projections;
+    },
+    [dataGroups, xSelector, ySelector],
+   );
+
   return {
     /** Array of data grouped by fields of colors  */
     dataGroups,
+
+    /**
+     * The y-values in the `dataGroups` grouped by x-values.
+     * - Its return structure:
+     *   { "value on the axis": [ { "data group index": "value" }, ... ], ... }
+     * @example {
+     *  0: [{ 0: 100 }, { 1: 200 }],
+     *  2.5: [{ 0: 400 }, { 1: 800 }],
+     *  3: [{ 0: 50 }]
+     * }
+     */
+    axisProjectedValues,
 
     /** d3 scale functions and other related configurations computed for various encodings */
     scalesConfig: {
