@@ -24,6 +24,14 @@ import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 import { DEFAULT_VALS } from '../common/config';
 
+function getXPosByIndex(arr: any[], idx: number) {
+  let arrIdx = idx < 0 ? 0 : idx;
+  if (idx >= arr.length) {
+    arrIdx = arr.length - 1;
+  }
+  return arr[arrIdx].xPos;
+}
+
 export interface LineChartProps {
   /** Margin between the inner graph area and the outer svg */
   margin: Margin;
@@ -132,6 +140,7 @@ export const LineChart = ({
     dataGroups,
     scalesConfig,
     rowValSelectors,
+    axisProjectedValues,
   } = useCartesianEncodings(graphDimension, theme, data, x, y, color);
 
   const graphGroup = dataGroups.map(
@@ -149,8 +158,8 @@ export const LineChart = ({
     },
   );
 
-  /** Width of the collision detection rectangle */
-  const collisBandWidth = graphWidth / (data.length - 1);
+  // TODO: use step() of pointScale to calculate the width of collision band
+  // scalesConfig.x.scale.step().length
 
   return (
     <SvgWithAxisFrame
@@ -197,31 +206,28 @@ export const LineChart = ({
       />
 
       {/* Areas which are used to detect mouse or touch interactions */}
+      {/* TODO: fix time scale + memoize the collision components */}
       <HoverLayer
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
-        collisionComponents={data.map(
-          (dataRow, index) => {
-            const rectX = index === 0
-              ? 0
-              : rowValSelectors.x.getScaledVal(
-                  dataRow,
-                ) -
-                collisBandWidth * 0.5;
+        collisionComponents={axisProjectedValues.map(
+          (row, idx) => {
+            const rectX = (row.xPos + getXPosByIndex(axisProjectedValues, idx - 1)) / 2;
 
-            const rectWidth = index === 0 || index === data.length - 1
-              ? collisBandWidth / 2
-              : collisBandWidth;
+            const rectWidth = (
+              (row.xPos + getXPosByIndex(axisProjectedValues, idx + 1)) / 2
+            ) - rectX;
 
             return (
               <rect
                 // #TODO: use unique keys rather than array index
-                key={`colli-${index}`}
+                key={`colli-${idx}`}
                 x={rectX}
                 y={0}
                 width={rectWidth}
                 height={graphHeight}
-                opacity={0}
+                fill="#abfa11"
+                opacity={0.3}
               />
             );
           }

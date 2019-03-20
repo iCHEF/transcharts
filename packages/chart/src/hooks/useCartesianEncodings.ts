@@ -169,10 +169,11 @@ export const useCartesianEncodings = (
 
   const axisProjectedValues = useMemo(
     () => {
+      // project by original values on the axis
+      // expected results: { "value on the axis": [ { "data group index": "value" }, ... ], ... }
       const projections = {};
       dataGroups.forEach((group, groupIdx) => {
         group.forEach((row) => {
-          // TODO: use rowValSelectors to get values
           const xVal = xSelector.getOriginalVal(row);
           const yVal = ySelector.getOriginalVal(row);
           if (!projections[xVal]) {
@@ -182,7 +183,23 @@ export const useCartesianEncodings = (
         });
       });
 
-      return projections;
+      // convert the position along the axis, and sort by the converted values
+      const columns = Object.keys(projections).reduce(
+        (accum, xVal: any) => {
+          const groupedY = projections[xVal];
+          const xPos: number = xAxis.scale(xVal) || 0;
+          const column = {
+            xPos,
+            xVal,
+            groupedY,
+          };
+
+          return [...accum, column];
+        },
+        []
+      );
+
+      return columns.sort((a, b) => (a.xPos - b.xPos));
     },
     [dataGroups, xSelector, ySelector],
    );
@@ -192,14 +209,19 @@ export const useCartesianEncodings = (
     dataGroups,
 
     /**
-     * The y-values in the `dataGroups` grouped by x-values.
-     * - Its return structure:
-     *   { "value on the axis": [ { "data group index": "value" }, ... ], ... }
-     * @example {
-     *  0: [{ 0: 100 }, { 1: 200 }],
-     *  2.5: [{ 0: 400 }, { 1: 800 }],
-     *  3: [{ 0: 50 }]
-     * }
+     * The y-values in the `dataGroups` grouped by projected x values.
+     * -  Structure of groupedY: "groupedY":[ { "index of dataGroup": "value" }, ... ]
+     * @example
+     * [{
+     *  "xPos": 0,
+     *  "xVal": "0",
+     *  "groupedY": [{"0": 9}],
+     *  },
+     * {
+     *  "xPos": 109.12812500000001,
+     *  "xVal": "2",
+     *  "groupedY": [{"0": 3}, {"1": 5}],
+     * }]
      */
     axisProjectedValues,
 
