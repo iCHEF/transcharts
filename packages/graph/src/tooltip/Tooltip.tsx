@@ -32,7 +32,7 @@ const TooltipWrapper = styled.div`
 
   h3 {
     color: #7c8a94;
-    margin: 0.25rem 0;
+    margin: 0.15rem 0 0.4rem 0.1rem;
     font-size: 1.1rem;
   }
 `;

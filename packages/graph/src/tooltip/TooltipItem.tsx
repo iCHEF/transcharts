@@ -8,7 +8,7 @@ export interface TooltipItemProps {
 }
 
 const ItemWrapper = styled.div`
-  margin: 0.25rem 0;
+  margin: 0.1rem 0;
 
   &:before {
     content: '';
@@ -16,7 +16,7 @@ const ItemWrapper = styled.div`
     height: 0.35rem;
     background-color: ${({ color }) => color};
     float: left;
-    margin: 0.5rem 0.8rem 0 0.2rem;
+    margin: 0.5rem 0.8rem 0 0.1rem;
     border-radius: 50%;
   }
 `;
