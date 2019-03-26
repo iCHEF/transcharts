@@ -59,5 +59,8 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "resolutions": {
+    "ansi-styles": "^3.2.0"
   }
 }
