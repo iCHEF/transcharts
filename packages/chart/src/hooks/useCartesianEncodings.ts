@@ -15,7 +15,11 @@ import {
   GraphDimension,
   // from themes
   Theme,
+  // from TooltipLayer
+  AxisProjectedValue,
 } from '@ichef/transcharts-graph';
+
+import { getAxisProjectedValues } from '../utils/getAxisProjectedValues';
 
 /**
  * Return [min, max] of a column selected from the grouped data
@@ -167,9 +171,33 @@ export const useCartesianEncodings = (
     [colorScale, defaultColor],
   );
 
+  const axisProjectedValues: AxisProjectedValue[] = useMemo(
+    () => {
+      return getAxisProjectedValues(dataGroups, xSelector, ySelector, getColorString);
+    },
+    [dataGroups, xSelector, ySelector, getColorString],
+  );
+
   return {
     /** Array of data grouped by fields of colors  */
     dataGroups,
+
+    /**
+     * The y-values in the `dataGroups` grouped by projected x values.
+     * -  Structure of groupedY: "groupedY":[ { "index of dataGroup": "value" }, ... ]
+     * @example
+     * [{
+     *  "xPos": 0,
+     *  "xStrVal": "0",
+     *  "groupedY": [{"groupIdx": 0, "yStrVal": 9, "yPos": 18, "color": "#deebf7"}],
+     *  },
+     * {
+     *  "xPos": 109.12812500000001,
+     *  "xStrVal": "2",
+     *  "groupedY": [{"groupIdx": 0, "yStrVal": 3, "yPos": 6, "color": "#deebf7"}, ...],
+     * }]
+     */
+    axisProjectedValues,
 
     /** d3 scale functions and other related configurations computed for various encodings */
     scalesConfig: {

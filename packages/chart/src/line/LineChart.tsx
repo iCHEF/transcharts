@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { LinePath } from '@vx/shape';
 import {
   // from HoverLayer
@@ -7,6 +7,7 @@ import {
   useHoverState,
   // from TooltipLayer
   TooltipLayer,
+  AxisProjectedValue,
   // from Legend,
   LegendGroup,
   // from common types
@@ -23,6 +24,18 @@ import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 import { DEFAULT_VALS } from '../common/config';
+
+/**
+ * Return the position of the hovering detection rect.
+ * If the given index exceeds its bound, it will return its closest value.
+ */
+function getXPosByIndex(arr: AxisProjectedValue[], idx: number) {
+  let arrIdx = idx < 0 ? 0 : idx;
+  if (idx >= arr.length) {
+    arrIdx = arr.length - 1;
+  }
+  return arr[arrIdx].xPos;
+}
 
 export interface LineChartProps {
   /** Margin between the inner graph area and the outer svg */
@@ -41,42 +54,45 @@ export interface LineChartProps {
 }
 
 /** A line and a dot for the point being hovered */
-const HoveringIndicator: FunctionComponent<{
+const HoveringIndicator = ({ hovering, projectedPoints, height }: {
   hovering: boolean,
-  xPos: number,
-  yPos: number,
+  projectedPoints: AxisProjectedValue,
   height: number,
-  color: string,
-}> = ({ hovering, xPos, yPos, height, color }) => {
+}) => {
   if (!hovering) {
     return null;
   }
 
+  const circles = projectedPoints.groupedY.map(pointY => (
+    <circle
+      key={`c-${pointY.yStrVal}`}
+      cx={projectedPoints.xPos}
+      cy={pointY.yPos}
+      r={4.5}
+      fill={pointY.color}
+    />
+  ));
+
   return(
     <>
       <line
-        x1={xPos}
+        x1={projectedPoints.xPos}
         y1={0}
-        x2={xPos}
+        x2={projectedPoints.xPos}
         y2={height}
         style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
       />
-      <circle
-        cx={xPos}
-        cy={yPos}
-        r={4.5}
-        fill={color}
-      />
+      {circles}
     </>
   );
 };
 
-const DataLine: FunctionComponent<{
+const DataLine = ({ color, xSelector, ySelector, rows }: {
   color: string,
   xSelector: FieldSelector,
   ySelector: FieldSelector,
   rows: object[],
-}> = ({ color, xSelector, ySelector, rows }) => {
+}) => {
   const lineDots = rows.map((dataRow, index) => (
     <circle
       key={`c-${index}`}
@@ -132,25 +148,55 @@ export const LineChart = ({
     dataGroups,
     scalesConfig,
     rowValSelectors,
+    axisProjectedValues,
   } = useCartesianEncodings(graphDimension, theme, data, x, y, color);
 
-  const graphGroup = dataGroups.map(
-    (rows: object[], index: number) => {
-      const colorString: string = rowValSelectors.color.getString(rows[0]);
-      return (
-        <DataLine
-          key={`row-${index}`}
-          color={colorString}
-          rows={rows}
-          xSelector={rowValSelectors.x}
-          ySelector={rowValSelectors.y}
-        />
-      );
-    },
+  const graphGroup = useMemo(
+    () => (
+      dataGroups.map(
+        (rows: object[], index: number) => {
+          const colorString: string = rowValSelectors.color.getString(rows[0]);
+          return (
+            <DataLine
+              key={`row-${index}`}
+              color={colorString}
+              rows={rows}
+              xSelector={rowValSelectors.x}
+              ySelector={rowValSelectors.y}
+            />
+          );
+        }
+      )
+    ),
+    [dataGroups, rowValSelectors]
   );
 
-  /** Width of the collision detection rectangle */
-  const collisBandWidth = graphWidth / (data.length - 1);
+  const hoverDetectionComponents = useMemo(
+    () => (
+      axisProjectedValues.map(
+        (row, idx) => {
+          const rectX = (row.xPos + getXPosByIndex(axisProjectedValues, idx - 1)) / 2;
+
+          const rectWidth = (
+            (row.xPos + getXPosByIndex(axisProjectedValues, idx + 1)) / 2
+          ) - rectX;
+
+          return (
+            <rect
+              // #TODO: use unique keys rather than array index
+              key={`colli-${idx}`}
+              x={rectX}
+              y={0}
+              width={rectWidth}
+              height={graphHeight}
+              opacity={0}
+            />
+          );
+        }
+      )
+    ),
+    [axisProjectedValues, graphHeight]
+  );
 
   return (
     <SvgWithAxisFrame
@@ -168,13 +214,10 @@ export const LineChart = ({
           <TooltipLayer
             hovering={hovering}
             hoveredPoint={hoveredPoint}
-            data={data}
+            axisProjectedValues={axisProjectedValues}
             graphWidth={graphWidth}
             graphHeight={graphHeight}
             margin={graphMargin}
-            xSelector={rowValSelectors.x}
-            ySelector={rowValSelectors.y}
-            getColor={rowValSelectors.color.getString}
           />
           {/* Draw the legned */}
           <LegendGroup
@@ -190,42 +233,15 @@ export const LineChart = ({
       {graphGroup}
       <HoveringIndicator
         hovering={hovering}
-        xPos={rowValSelectors.x.getScaledVal(data[hoveredPoint.index])}
-        yPos={rowValSelectors.y.getScaledVal(data[hoveredPoint.index])}
+        projectedPoints={axisProjectedValues[hoveredPoint.index]}
         height={graphHeight}
-        color={rowValSelectors.color.getString(data[hoveredPoint.index])}
       />
 
       {/* Areas which are used to detect mouse or touch interactions */}
       <HoverLayer
         setHoveredPosAndIndex={setHoveredPosAndIndex}
         clearHovering={clearHovering}
-        collisionComponents={data.map(
-          (dataRow, index) => {
-            const rectX = index === 0
-              ? 0
-              : rowValSelectors.x.getScaledVal(
-                  dataRow,
-                ) -
-                collisBandWidth * 0.5;
-
-            const rectWidth = index === 0 || index === data.length - 1
-              ? collisBandWidth / 2
-              : collisBandWidth;
-
-            return (
-              <rect
-                // #TODO: use unique keys rather than array index
-                key={`colli-${index}`}
-                x={rectX}
-                y={0}
-                width={rectWidth}
-                height={graphHeight}
-                opacity={0}
-              />
-            );
-          }
-        )}
+        hoverDetectionComponents={hoverDetectionComponents}
       />
     </SvgWithAxisFrame>
   );

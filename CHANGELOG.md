@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add auto release script and github action. (#28)
+# Changed
+- Support multiple value display when there are multiple points on the same x positions. (#33)
+- Rename the collisionComponents as hoverDetectionComponents to made the name more intelligible. (#33)
 
 ## [0.0.2]
 
