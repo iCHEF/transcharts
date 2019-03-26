@@ -19,6 +19,8 @@ import {
   AxisProjectedValue,
 } from '@ichef/transcharts-graph';
 
+import { getAxisProjectedValues } from '../utils/getAxisProjectedValues';
+
 /**
  * Return [min, max] of a column selected from the grouped data
  */
@@ -171,48 +173,9 @@ export const useCartesianEncodings = (
 
   const axisProjectedValues: AxisProjectedValue[] = useMemo(
     () => {
-      // project by original values on the axis
-      const projections = {};
-      const xPositions = {};
-      dataGroups.forEach((group, groupIdx) => {
-        group.forEach((row) => {
-          const xStrVal = xSelector.getFormattedStringVal(row);
-          const yStrVal = ySelector.getFormattedStringVal(row);
-          const xPos = xSelector.getScaledVal(row);
-          const yPos = ySelector.getScaledVal(row);
-          if (!projections[xStrVal]) {
-            projections[xStrVal] = [];
-            xPositions[xStrVal] = xPos;
-          }
-          projections[xStrVal].push({
-            groupIdx,
-            yStrVal,
-            yPos,
-            color: getColorString(row),
-          });
-        });
-      });
-
-      // convert the position along the axis, and sort by the converted values
-      const columns = Object.keys(projections).reduce(
-        (accum, xStrVal: any) => {
-          const groupedY = projections[xStrVal];
-          // ensure that we always get the correct type, not a string instead
-          const xPos: number = xPositions[xStrVal] || 0;
-          const column = {
-            xPos,
-            xStrVal,
-            groupedY,
-          };
-
-          return [...accum, column];
-        },
-        []
-      );
-
-      return columns.sort((a, b) => (a.xPos - b.xPos));
+      return getAxisProjectedValues(dataGroups, xSelector, ySelector, getColorString);
     },
-    [dataGroups, xSelector, ySelector],
+    [dataGroups, xSelector, ySelector, getColorString],
   );
 
   return {
