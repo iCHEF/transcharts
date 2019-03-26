@@ -29,7 +29,7 @@ import { DEFAULT_VALS } from '../common/config';
  * Return the position of the hovering detection rect.
  * If the given index exceeds its bound, it will return its closest value.
  */
-function getXPosByIndex(arr: any[], idx: number) {
+function getXPosByIndex(arr: AxisProjectedValue[], idx: number) {
   let arrIdx = idx < 0 ? 0 : idx;
   if (idx >= arr.length) {
     arrIdx = arr.length - 1;
