@@ -189,8 +189,7 @@ export const LineChart = ({
               y={0}
               width={rectWidth}
               height={graphHeight}
-              fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
-              opacity={0.3}
+              opacity={0}
             />
           );
         }

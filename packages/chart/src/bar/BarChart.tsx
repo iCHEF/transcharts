@@ -143,8 +143,7 @@ export const BarChart = ({
               y={0}
               height={graphHeight}
               width={bandWidth}
-              fill={(idx % 2 === 0) ? '#abfa11' : '#abcdef'}
-              opacity={0.3}
+              opacity={0}
               {...{ ...getHoveringRectPos(idx) }}
             />
           );
