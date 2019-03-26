@@ -44,7 +44,7 @@ export interface TooltipLayerProps {
   /** X offset for the position of the tooltip */
   xOffset?: number;
 
-  /** Y offset for the of the tooltip */
+  /** Y offset for the position of the tooltip */
   yOffset?: number;
 }
 
