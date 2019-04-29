@@ -1,4 +1,5 @@
 import * as path from 'path';
+import { css } from 'styled-components';
 import ForkTSCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const modifyBundlerConfig = (config, dev) => {
@@ -32,7 +33,7 @@ export default {
   },
   modifyBundlerConfig,
   themeConfig: {
-    // See: https://github.com/pedronauck/docz/blob/5fbea6a1469d2e258402621ba81f74f898af906a/packages/docz-theme-default/README.md#default-themeconfig
+    // See: https://github.com/pedronauck/docz/tree/master/core/docz-theme-default
     mode: 'light',
     codemirrorTheme: 'oceanic-next',
     showPlaygroundEditor: true, // always display the code in <Playground>
@@ -46,9 +47,10 @@ export default {
       theadColor: '#555e6d',
     },
     styles: {
-      playground: {
-        background: '#ffffff',
-      },
+      playground: css`
+        background: #ffffff;
+        padding: 1rem;
+      `,
     },
   },
 };
