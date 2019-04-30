@@ -5,5 +5,9 @@
   },
   "include": [
     "../packages/**/*"
+  ],
+  "exclude": [
+    "../packages/**/*.test.ts",
+    "../packages/**/*.test.tsx"
   ]
 }

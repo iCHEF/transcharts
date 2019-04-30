@@ -8,11 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add auto release script and github action. (#28)
+- Add `useWorkspaces` in Lerna's config to allow lerna bootstrap to run. (#35)
+
 # Changed
 - Clean compiled files before the docz server started. (#34)
 - Prevent docz from throwing TypeError. (#34)
 - Support multiple value display when there are multiple points on the same x positions. (#33)
 - Rename the collisionComponents as hoverDetectionComponents to made the name more intelligible. (#33)
+- Upgrade `docz` to `1.0.4` to increase the build speed when developing the project. (#35)
+- Prevent Jest tests from being checked by `ForkTSCheckerWebpackPlugin` of docz when developing. (#35)
+
+# Fixed
+- Fix the typing problems raised by `@types/styled-components` and `react-spring`. (#35)
 
 ## [0.0.2]
 
