@@ -22,6 +22,7 @@ const modifyBundlerConfig = (config, dev) => {
 
 export default {
   title: 'Transchart',
+  repository: 'https://github.com/iCHEF/transcharts',
   typescript: true,
   htmlContext: {
     head: {
@@ -53,4 +54,6 @@ export default {
       `,
     },
   },
+  // The base URL of the site will be deployed at Github Pages
+  base: '/transcharts/',
 };
