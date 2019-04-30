@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "start": "yarn run clean && yarn run dev",
+    "start": "npm run clean && npm run dev",
     "dev": "docz dev",
     "build:doc": "docz build",
     "type-check": "lerna run type-check --parallel --stream",
