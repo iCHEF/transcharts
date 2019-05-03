@@ -21,7 +21,7 @@
     "release": "lerna publish from-package --yes --no-push --no-git-tag-version",
     "release:beta": "lerna publish --no-push --no-git-tag-version --preid=beta --npm-tag=prerelease",
     "release:canary": "lerna publish -c --yes --exact",
-    "deploy": "npm run build:doc && gh-pages -d .docz/dist"
+    "deploy": "DOCZ_BASE=/transcharts/ npm run build:doc && gh-pages -d .docz/dist"
   },
   "devDependencies": {
     "@types/d3": "^5.7.0",

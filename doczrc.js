@@ -54,6 +54,4 @@ export default {
       `,
     },
   },
-  // The base URL of the site will be deployed at Github Pages
-  base: '/transcharts/',
 };
