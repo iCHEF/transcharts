@@ -1,6 +1,6 @@
 workflow "Push workflow" {
   on = "push"
-  resolves = ["release"]
+  resolves = ["deploy"]
 }
 
 action "install" {
@@ -14,11 +14,6 @@ action "type-check" {
   args = "type-check"
 }
 
-action "Filters for GitHub Actions" {
-  uses = "actions/bin/filter@master"
-  args = "branch master"
-}
-
 action "Filters for master" {
   uses = "actions/bin/filter@master"
   needs = ["type-check"]
@@ -29,4 +24,10 @@ action "release" {
   uses = "borales/actions-yarn@master"
   needs = ["Filters for master"]
   args = "release"
+}
+
+action "deploy" {
+  uses = "borales/actions-yarn@master"
+  needs = ["release"]
+  args = "deploy"
 }
