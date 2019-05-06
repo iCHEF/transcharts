@@ -33,10 +33,10 @@ export interface AxisLayerProps {
   data: object[];
 
   /** X-axis configurations produced by `getAxisScale` */
-  xAxis: AxisScale;
+  xAxisScale: AxisScale['scale'];
 
   /** Y-axis configurations produced by `getAxisScale` */
-  yAxis: AxisScale;
+  yAxisScale: AxisScale['scale'];
 }
 
 const getXtickLabelProps = (styles: {
@@ -72,8 +72,8 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   // it should always show the bottom axis by default
   showBottomAxis = true,
   data,
-  xAxis,
-  yAxis,
+  xAxisScale,
+  yAxisScale,
 }) => {
 
   const theme = useContext(ThemeContext);
@@ -85,7 +85,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
           <AxisLeft
             top={0}
             left={0}
-            scale={yAxis.scale}
+            scale={yAxisScale}
             // TODO: support showing labels on axes
             stroke={xAxisTheme.strokeColor}
             strokeWidth={xAxisTheme.strokeWidth}
@@ -103,7 +103,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
         {showBottomAxis && (
           <AxisBottom
             top={height}
-            scale={xAxis.scale}
+            scale={xAxisScale}
             stroke={yAxisTheme.strokeColor}
             strokeWidth={yAxisTheme.strokeWidth}
             tickStroke={yAxisTheme.tickStrokeColor}

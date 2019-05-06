@@ -73,8 +73,8 @@ const FrameContent = ({
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
       data={data}
-      xAxis={scalesConfig.x}
-      yAxis={scalesConfig.y}
+      xAxisScale={scalesConfig.x.scale}
+      yAxisScale={scalesConfig.y.scale}
     />
   );
 
