@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { AxisBottom, AxisLeft } from '@vx/axis';
 
-import { AxisScale } from '../common/types';
+import { AxisScale, AxisEncoding } from '../common/types';
 import { ThemeContext } from '../themes';
 
 /**
@@ -14,6 +14,18 @@ function getNumberOfTicks(axisLength: number, data: object[]): number {
   const lengthBasis = axisLength > 0 ? axisLength : 60;
   const ticksFromLen = Math.ceil(lengthBasis / 60);
   return Math.min(maxTicks, ticksFromLen);
+}
+
+/**
+ * Returns the text of the label displayed along axis
+ */
+function getAxisLabel(axis: AxisEncoding): string | undefined {
+  const { label, field, hideLabel } = axis;
+  if (hideLabel) {
+    return undefined;
+  }
+
+  return label || field;
 }
 
 export interface AxisLayerProps {
@@ -31,6 +43,12 @@ export interface AxisLayerProps {
 
   /** Data of the chart */
   data: object[];
+
+  /** Axis encoding of x-axis */
+  x: AxisEncoding;
+
+  /** Axis encoding of y-axis */
+  y: AxisEncoding;
 
   /** X-axis configurations produced by `getAxisScale` */
   xAxisScale: AxisScale['scale'];
@@ -67,6 +85,8 @@ const tickFormat = (val: any) => `${val}`;
 export const AxisLayer: React.SFC<AxisLayerProps> = ({
   width,
   height,
+  x,
+  y,
   // it should always show the left axis by default
   showLeftAxis = true,
   // it should always show the bottom axis by default
@@ -79,6 +99,9 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   const theme = useContext(ThemeContext);
   const { xAxis: xAxisTheme, yAxis: yAxisTheme } = theme;
 
+  const xAxisLabel = useMemo(() => getAxisLabel(x), [x]);
+  const yAxisLabel = useMemo(() => getAxisLabel(y), [y]);
+
   return (
       <>
         {showLeftAxis && (
@@ -86,7 +109,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             top={0}
             left={0}
             scale={yAxisScale}
-            // TODO: support showing labels on axes
+            label={yAxisLabel}
             stroke={xAxisTheme.strokeColor}
             strokeWidth={xAxisTheme.strokeWidth}
             tickStroke={xAxisTheme.tickStrokeColor}
@@ -104,11 +127,11 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
           <AxisBottom
             top={height}
             scale={xAxisScale}
+            label={xAxisLabel}
             stroke={yAxisTheme.strokeColor}
             strokeWidth={yAxisTheme.strokeWidth}
             tickStroke={yAxisTheme.tickStrokeColor}
             numTicks={getNumberOfTicks(width, data)}
-            label="label"
             tickFormat={tickFormat}
             tickLabelProps={getYtickLabelProps(yAxisTheme)}
           />

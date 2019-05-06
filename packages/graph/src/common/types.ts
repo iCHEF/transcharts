@@ -79,6 +79,12 @@ export interface Encoding {
 
 export interface AxisEncoding extends Encoding {
   scale?: ScaleType;
+
+  /** Label text displayed along the axis */
+  label?: string;
+
+  /** Whether to hide the label text */
+  hideLabel?: boolean;
 }
 
 export interface LegendConfig {

@@ -6,6 +6,7 @@ import {
   AxisScale,
   Margin,
   GraphDimension,
+  AxisEncoding,
 } from '@ichef/transcharts-graph';
 
 /**
@@ -18,6 +19,12 @@ export interface SvgFrameProps {
 
   /** Width and height of the graph to be drawed inside the SVG group */
   graphDimension: GraphDimension;
+
+  /** Axis encoding of x-axis */
+  x: AxisEncoding;
+
+  /** Axis encoding of y-axis */
+  y: AxisEncoding;
 
   /** Margin between the inner graph area and the outer svg */
   margin: Margin;
@@ -55,6 +62,8 @@ const defaultProps = {
 const FrameContent = ({
   outerDimension,
   graphDimension,
+  x,
+  y,
   margin,
   data,
   scalesConfig,
@@ -73,6 +82,8 @@ const FrameContent = ({
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
       data={data}
+      x={x}
+      y={y}
       xAxisScale={scalesConfig.x.scale}
       yAxisScale={scalesConfig.y.scale}
     />

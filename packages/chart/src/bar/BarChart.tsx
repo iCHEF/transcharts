@@ -209,6 +209,8 @@ export const BarChart = ({
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
+      x={x}
+      y={y}
       // put the axes on top of the bars
       axisInBackground={false}
       margin={margin}
