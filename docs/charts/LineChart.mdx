@@ -36,13 +36,13 @@ const lineData = [
   <div style={{ width: '100%', height: '320px' }}>
     <LineChart
       data={taiwanData}
-      x={{ field: 'year', type: 'quantitative', scale: 'linear' }}
-      y={{ field: 'gdpPercap', type: 'quantitative', scale: 'linear' }}
+      x={{ field: 'year', type: 'quantitative' }}
+      y={{ field: 'gdpPercap', type: 'quantitative' }}
     />
   </div>
 </Playground>
 
-Data Source: [GapMinder](https://www.gapminder.org/)
+<small>(Data Source: <a href="https://www.gapminder.org/" target="_blank">GapMinder</a>)</small>
 
 ### Time + Linear
 
@@ -55,6 +55,8 @@ Data Source: [GapMinder](https://www.gapminder.org/)
     />
   </div>
 </Playground>
+
+<small>(Data Source: <a href="https://www.gapminder.org/" target="_blank">GapMinder</a>)</small>
 
 ### Point + Linear
 
