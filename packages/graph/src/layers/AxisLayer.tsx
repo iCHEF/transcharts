@@ -104,18 +104,24 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
 
   return (
       <>
+        {/* Y Axis */}
         {showLeftAxis && (
           <AxisLeft
             top={0}
             left={0}
             scale={yAxisScale}
             label={yAxisLabel}
-            stroke={xAxisTheme.strokeColor}
-            strokeWidth={xAxisTheme.strokeWidth}
-            tickStroke={xAxisTheme.tickStrokeColor}
+            labelProps={{
+              fill: yAxisTheme.labelColor,
+              fontSize: yAxisTheme.labelFontSize,
+              textAnchor: yAxisTheme.labelTextAnchor,
+            }}
+            stroke={yAxisTheme.strokeColor}
+            strokeWidth={yAxisTheme.strokeWidth}
+            tickStroke={yAxisTheme.tickStrokeColor}
             // TODO: modify it as a function
             numTicks={getNumberOfTicks(height, data)}
-            tickLabelProps={getXtickLabelProps(xAxisTheme)}
+            tickLabelProps={getXtickLabelProps(yAxisTheme)}
             tickFormat={tickFormat}
             // TODO: format the ticks based on the axis types
             // tickComponent={({ formattedValue, ...tickProps }) => (
@@ -123,17 +129,23 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             // )}
           />
         )}
+        {/* X Axis */}
         {showBottomAxis && (
           <AxisBottom
             top={height}
             scale={xAxisScale}
             label={xAxisLabel}
-            stroke={yAxisTheme.strokeColor}
-            strokeWidth={yAxisTheme.strokeWidth}
-            tickStroke={yAxisTheme.tickStrokeColor}
+            labelProps={{
+              fill: xAxisTheme.labelColor,
+              fontSize: xAxisTheme.labelFontSize,
+              textAnchor: xAxisTheme.labelTextAnchor,
+            }}
+            stroke={xAxisTheme.strokeColor}
+            strokeWidth={xAxisTheme.strokeWidth}
+            tickStroke={xAxisTheme.tickStrokeColor}
             numTicks={getNumberOfTicks(width, data)}
             tickFormat={tickFormat}
-            tickLabelProps={getYtickLabelProps(yAxisTheme)}
+            tickLabelProps={getYtickLabelProps(xAxisTheme)}
           />
         )}
       </>

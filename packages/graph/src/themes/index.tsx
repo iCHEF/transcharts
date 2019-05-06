@@ -4,6 +4,10 @@ import deepmerge from 'deepmerge';
 
 import { Theme } from '../common/types';
 
+const COLORS = {
+  GRAY: '#7c8a94',
+};
+
 interface ThemeProviderProps {
   /** theme prop can be partial of Theme type */
   theme: Partial<Theme>;
@@ -20,14 +24,20 @@ export const themes = {
       },
     },
     xAxis: {
-      strokeColor: '#7c8a94',
-      tickStrokeColor: '#7c8a94',
+      labelFontSize: 15,
+      labelColor: COLORS.GRAY,
+      labelTextAnchor: 'middle',
+      strokeColor: COLORS.GRAY,
+      tickStrokeColor: COLORS.GRAY,
       strokeWidth: 1.5,
       tickFontSize: 13,
     },
     yAxis: {
-      strokeColor: '#7c8a94',
-      tickStrokeColor: '#7c8a94',
+      labelFontSize: 15,
+      labelColor: COLORS.GRAY,
+      labelTextAnchor: 'middle',
+      strokeColor: COLORS.GRAY,
+      tickStrokeColor: COLORS.GRAY,
       strokeWidth: 1.5,
       tickFontSize: 13,
     },

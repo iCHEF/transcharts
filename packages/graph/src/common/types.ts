@@ -113,12 +113,24 @@ export interface Margin {
 }
 
 export interface AxisTheme {
+  /** font size of the label */
+  labelFontSize: number;
+
+  /** color of the label */
+  labelColor: string;
+
+  /** text anchor of the label */
+  labelTextAnchor: string;
+
   /** color of stroke */
   strokeColor: string;
+
   /** color of ticke stroke */
   tickStrokeColor: string;
+
   /** width of stroke */
   strokeWidth: number;
+
   /** font size of tick */
   tickFontSize: number;
 }
