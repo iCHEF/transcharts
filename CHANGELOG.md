@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add auto release script and github action. (#28)
 - Add `useWorkspaces` in Lerna's config to allow lerna bootstrap to run. (#35)
+- Add the deployment script to publish the compiled `docz` docs. (#36)
 
 # Changed
 - Clean compiled files before the docz server started. (#34)

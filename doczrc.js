@@ -22,7 +22,10 @@ const modifyBundlerConfig = (config, dev) => {
 
 export default {
   title: 'Transchart',
+  repository: 'https://github.com/iCHEF/transcharts',
   typescript: true,
+  // set hashRouter as `true` for Github
+  hashRouter: true,
   htmlContext: {
     head: {
       links: [{
