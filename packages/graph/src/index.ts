@@ -8,6 +8,7 @@ export * from './layers/ResponsiveLayer';
 export * from './layers/AxisLayer';
 export * from './layers/HoverLayer';
 export * from './layers/TooltipLayer';
+export * from './overlays/HeaderBox';
 export * from './themes';
 export * from './legend/Legend';
 export * from './legend/LegendGroup';

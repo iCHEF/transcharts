@@ -88,7 +88,13 @@ export const BarChart = ({
   paddingInner = 0.1,
 }: BarChartProps) => {
   const theme = useContext<Theme>(ThemeContext);
-  const { chartRef, legendRef, outerDimension, graphDimension } = useChartDimensions(margin);
+  const {
+    chartRef,
+    titleRef,
+    legendRef,
+    outerDimension,
+    graphDimension,
+  } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
   const xEncoding: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
@@ -205,6 +211,7 @@ export const BarChart = ({
   return (
     <SvgWithAxisFrame
       ref={chartRef}
+      titleRef={titleRef}
       outerDimension={outerDimension}
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}

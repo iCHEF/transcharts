@@ -28,8 +28,10 @@ export const useChartDimensions = (
   // compute the outer and inner dimension of the chart
   const chartRef = useRef<HTMLDivElement>(null);
   const legendRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
   const outerDimension: GraphDimension = useContainerDimension(chartRef);
   const legendDimension = useContainerDimension(legendRef);
+  const titleDimension = useContainerDimension(titleRef);
   const legendOrient = (color && color.legend && color.legend.orient) || 'right';
 
   const { graphDimension, graphMargin }  = useMemo(
@@ -37,6 +39,7 @@ export const useChartDimensions = (
       return getInnerGraphDimensionAndMargin(
         outerDimension,
         margin,
+        titleDimension,
         legendDimension,
         legendOrient,
       );
@@ -47,6 +50,9 @@ export const useChartDimensions = (
   return {
     /** Ref to the chart, which is to be passed in the props of the container */
     chartRef,
+
+    /** Ref to the title box, which is to be passed in the props of the title box */
+    titleRef,
 
     /** Ref to the legend, which is to be passed in the props of the legend */
     legendRef,

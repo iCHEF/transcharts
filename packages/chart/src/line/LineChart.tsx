@@ -137,6 +137,7 @@ export const LineChart = ({
   const theme = useContext<Theme>(ThemeContext);
   const {
     chartRef,
+    titleRef,
     legendRef,
     outerDimension,
     graphDimension,
@@ -201,6 +202,8 @@ export const LineChart = ({
   return (
     <SvgWithAxisFrame
       ref={chartRef}
+      titleRef={titleRef}
+      title={'TEST TITLE'}
       outerDimension={outerDimension}
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}

@@ -2,6 +2,9 @@ import React from 'react';
 import {
   // from AxisLayer
   AxisLayer,
+  // from Overlays
+  HeaderBox,
+  HeaderBoxProps,
   // from common types
   AxisScale,
   Margin,
@@ -9,11 +12,7 @@ import {
   AxisEncoding,
 } from '@ichef/transcharts-graph';
 
-/**
- * It manages the size of the chart container, SVG, and the axes
- * that generally used across different charts.
- */
-export interface SvgFrameProps {
+export interface FrameContentProps {
   /** Width and height of the outer container including the margin */
   outerDimension: GraphDimension;
 
@@ -52,6 +51,16 @@ export interface SvgFrameProps {
   /** Elements to be drawed inside of the SVG */
   children: React.ReactNode;
 }
+export interface SvgFrameProps extends FrameContentProps {
+  /** Ref to <HeaderBox> */
+  titleRef: React.RefObject<HTMLDivElement>;
+
+  /** Title of <HeaderBox> */
+  title?: HeaderBoxProps['title'];
+
+  /** Description of <HeaderBox> */
+  titleDesc?: HeaderBoxProps['desc'];
+}
 
 const defaultProps = {
   showLeftAxis: true,
@@ -72,7 +81,7 @@ const FrameContent = ({
   axisInBackground,
   svgOverlay,
   children,
-}: SvgFrameProps) => {
+}: FrameContentProps) => {
   const { width: outerWidth, height: outerHeight } = outerDimension;
   const { width: graphWidth, height: graphHeight } = graphDimension;
   const axisLayer = (
@@ -102,14 +111,28 @@ const FrameContent = ({
 };
 FrameContent.defaultProps = defaultProps;
 
+/**
+ * It manages the size of the chart container, SVG, and the axes
+ * that generally used across different charts.
+ */
 export const SvgWithAxisFrame = React.forwardRef<
   HTMLDivElement,
   JSX.LibraryManagedAttributes<typeof FrameContent, SvgFrameProps>
->((props, ref) => (
+>(({
+  titleRef,
+  title,
+  titleDesc,
+  ...restProps
+}, ref) => (
   <div
     ref={ref}
     style={{ width: '100%', height: '100%', position: 'relative' }}
   >
-    <FrameContent {...props} />
+    <FrameContent {...restProps} />
+    <HeaderBox
+      ref={titleRef}
+      title={title}
+      desc={titleDesc}
+    />
   </div>
 ));
