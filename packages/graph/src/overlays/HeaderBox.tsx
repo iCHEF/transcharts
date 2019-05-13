@@ -19,6 +19,7 @@ const Wrapper = styled.div`
 
 const Title = styled.h5`
   font-size: 16px;
+  margin: 0.5rem 1rem;
 `;
 
 const Description = styled.span`

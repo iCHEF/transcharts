@@ -10,9 +10,7 @@ import {
   // from Legend,
   LegendGroup,
   // from common types
-  Margin,
   AxisEncoding,
-  ColorEncoding,
   // from themes
   Theme,
   ThemeContext,
@@ -22,6 +20,7 @@ import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 import { DEFAULT_VALS } from '../common/config';
+import { CommonChartProps } from '../common/types';
 
 /** A line and a dot for the point being hovered */
 const HoveringIndicator = ({ hovering, x, y, width, height }: {
@@ -47,23 +46,9 @@ const HoveringIndicator = ({ hovering, x, y, width, height }: {
   );
 };
 
-export interface BarChartProps {
-  /** Margin between the inner graph area and the outer svg */
-  margin?: Margin;
-
-  /** Should show the axis on the left or not */
-  showLeftAxis?: boolean;
-
-  /** Should show the axis on the bottom or not */
-  showBottomAxis?: boolean;
-
+export interface BarChartProps extends CommonChartProps {
   /** Ratio of the paddings between bars */
   paddingInner: number;
-
-  data: object[];
-  x: AxisEncoding;
-  y: AxisEncoding;
-  color?: ColorEncoding;
 }
 
 const defaultProps = {

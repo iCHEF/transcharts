@@ -11,10 +11,7 @@ import {
   // from Legend,
   LegendGroup,
   // from common types
-  Margin,
   FieldSelector,
-  AxisEncoding,
-  ColorEncoding,
   // from themes
   Theme,
   ThemeContext,
@@ -24,6 +21,7 @@ import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 import { DEFAULT_VALS } from '../common/config';
+import { CommonChartProps } from '../common/types';
 
 /**
  * Return the position of the hovering detection rect.
@@ -37,21 +35,7 @@ function getXPosByIndex(arr: AxisProjectedValue[], idx: number) {
   return arr[arrIdx].xPos;
 }
 
-export interface LineChartProps {
-  /** Margin between the inner graph area and the outer svg */
-  margin: Margin;
-
-  /** Should show the axis on the left or not */
-  showLeftAxis?: boolean;
-
-  /** Should show the axis on the bottom or not */
-  showBottomAxis?: boolean;
-
-  data: object[];
-  x: AxisEncoding;
-  y: AxisEncoding;
-  color?: ColorEncoding;
-}
+export type LineChartProps = CommonChartProps;
 
 /** A line and a dot for the point being hovered */
 const HoveringIndicator = ({ hovering, projectedPoints, height }: {
