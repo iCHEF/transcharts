@@ -155,10 +155,15 @@ export interface HeaderBoxTheme {
   padding: string;
 }
 
+export interface GlobalTheme {
+  /** Color of the fonts */
+  fontColor: string;
+}
+
 export interface Theme {
-  /** common colors */
+  /** Common colors */
   colors: {
-    /** colors used for nominal data */
+    /** Colors used for nominal data */
     category: ReadonlyArray<string>;
 
     sequential: {
@@ -167,10 +172,13 @@ export interface Theme {
     }
   };
 
-  /** x-axis theme config */
+  /** Global style settings for the charts */
+  globalStyle: GlobalTheme;
+
+  /** X-axis theme config */
   xAxis: AxisTheme;
 
-  /** y-axis theme config */
+  /** Y-axis theme config */
   yAxis: AxisTheme;
 
   /** <HeaderBox> theme config */

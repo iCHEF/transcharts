@@ -24,6 +24,9 @@ export const themes = {
         interpolator: interpolateCool,
       },
     },
+    globalStyle: {
+      fontColor: COLORS.DARK,
+    },
     xAxis: {
       labelFontSize: 15,
       labelColor: COLORS.DARK,

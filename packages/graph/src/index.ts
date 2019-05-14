@@ -20,3 +20,4 @@ export * from './utils/getColorScale';
 export * from './utils/getDataGroupByEncodings';
 export * from './utils/getRecordFieldSelector';
 export * from './utils/getFieldValuesFromData';
+export * from './utils/styled-components';

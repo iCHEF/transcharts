@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   // from AxisLayer
   AxisLayer,
@@ -10,6 +10,11 @@ import {
   Margin,
   GraphDimension,
   AxisEncoding,
+  // theme
+  ThemeContext,
+  GlobalTheme,
+  // styled-components
+  styled,
 } from '@ichef/transcharts-graph';
 
 export interface FrameContentProps {
@@ -68,6 +73,13 @@ const defaultProps = {
   axisInBackground: true,
 };
 
+const Wrapper = styled.div<GlobalTheme>`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  color: ${({ fontColor }) => fontColor};
+`;
+
 const FrameContent = ({
   outerDimension,
   graphDimension,
@@ -123,16 +135,21 @@ export const SvgWithAxisFrame = React.forwardRef<
   title,
   titleDesc,
   ...restProps
-}, ref) => (
-  <div
-    ref={ref}
-    style={{ width: '100%', height: '100%', position: 'relative' }}
-  >
-    <FrameContent {...restProps} />
-    <HeaderBox
-      ref={titleRef}
-      title={title}
-      desc={titleDesc}
-    />
-  </div>
-));
+}, ref) => {
+  const theme = useContext(ThemeContext);
+  const { globalStyle } = theme;
+
+  return (
+    <Wrapper
+      ref={ref}
+      {...globalStyle}
+    >
+      <FrameContent {...restProps} />
+      <HeaderBox
+        ref={titleRef}
+        title={title}
+        desc={titleDesc}
+      />
+    </Wrapper>
+  );
+});
