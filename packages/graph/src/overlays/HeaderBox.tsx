@@ -17,6 +17,7 @@ const Wrapper = styled.div<HeaderBoxTheme>`
   box-sizing: border-box;
   padding: ${({ padding }) => padding};
   line-height: ${({ lineHeight }) => lineHeight};
+  text-align: ${({ defaultTextAlign }) => defaultTextAlign};
 `;
 
 const Title = styled.h5<HeaderBoxTheme>`
@@ -36,7 +37,6 @@ export const HeaderBox = React.forwardRef<
 >(({
   title,
   desc,
-  children,
 }, ref) => {
   const theme = useContext(ThemeContext);
   const { headerBox: headerBoxTheme } = theme;

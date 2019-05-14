@@ -153,6 +153,9 @@ export interface HeaderBoxTheme {
 
   /** Padding of the header box */
   padding: string;
+
+  /** Default align of the text of the header box */
+  defaultTextAlign: string;
 }
 
 export interface GlobalTheme {

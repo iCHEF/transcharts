@@ -52,6 +52,7 @@ export const themes = {
       titleDescColor: COLORS.GRAY,
       lineHeight: 1.3,
       padding: '0 1rem',
+      defaultTextAlign: 'left',
     },
   },
 };
