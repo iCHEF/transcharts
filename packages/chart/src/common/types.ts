@@ -1,4 +1,6 @@
 import {
+  // from Overlays
+  HeaderBoxProps,
   // from common types
   Margin,
   AxisEncoding,
@@ -26,4 +28,10 @@ export interface CommonChartProps {
 
   /** Encoding config of the data related to the color display */
   color?: ColorEncoding;
+
+  /** Title of <HeaderBox> */
+  title?: HeaderBoxProps['title'];
+
+  /** Description of <HeaderBox> */
+  titleDesc?: HeaderBoxProps['desc'];
 }

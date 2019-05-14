@@ -115,6 +115,8 @@ export const LineChart = ({
   x,
   y,
   color,
+  title,
+  titleDesc,
   showLeftAxis,
   showBottomAxis,
 }: LineChartProps) => {
@@ -187,7 +189,8 @@ export const LineChart = ({
     <SvgWithAxisFrame
       ref={chartRef}
       titleRef={titleRef}
-      title={'TEST TITLE'}
+      title={title}
+      titleDesc={titleDesc}
       outerDimension={outerDimension}
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}
