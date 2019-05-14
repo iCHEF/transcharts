@@ -135,20 +135,46 @@ export interface AxisTheme {
   tickFontSize: number;
 }
 
+export interface HeaderBoxTheme {
+  /** Font size of the title */
+  titleFontSize: number;
+
+  /** Color of the title */
+  titleColor: string;
+
+  /** Font size of the description placed under the title */
+  titleDescFontSize: number;
+
+  /** Color of the description placed under the title */
+  titleDescColor: string;
+
+  /** Line height of the header box */
+  lineHeight: number;
+
+  /** Padding of the header box */
+  padding: string;
+}
+
 export interface Theme {
   /** common colors */
   colors: {
     /** colors used for nominal data */
     category: ReadonlyArray<string>;
+
     sequential: {
       scheme: ReadonlyArray<ReadonlyArray<string>>;
       interpolator: (val: number) => string;
     }
   };
+
   /** x-axis theme config */
   xAxis: AxisTheme;
+
   /** y-axis theme config */
   yAxis: AxisTheme;
+
+  /** <HeaderBox> theme config */
+  headerBox: HeaderBoxTheme;
 }
 
 export type HoveringState = boolean;

@@ -6,6 +6,7 @@ import { Theme } from '../common/types';
 
 const COLORS = {
   GRAY: '#7c8a94',
+  DARK: '#233142',
 };
 
 interface ThemeProviderProps {
@@ -25,7 +26,7 @@ export const themes = {
     },
     xAxis: {
       labelFontSize: 15,
-      labelColor: COLORS.GRAY,
+      labelColor: COLORS.DARK,
       labelTextAnchor: 'middle',
       strokeColor: COLORS.GRAY,
       tickStrokeColor: COLORS.GRAY,
@@ -34,12 +35,20 @@ export const themes = {
     },
     yAxis: {
       labelFontSize: 15,
-      labelColor: COLORS.GRAY,
+      labelColor: COLORS.DARK,
       labelTextAnchor: 'middle',
       strokeColor: COLORS.GRAY,
       tickStrokeColor: COLORS.GRAY,
       strokeWidth: 1.5,
       tickFontSize: 13,
+    },
+    headerBox: {
+      titleFontSize: 19,
+      titleColor: COLORS.DARK,
+      titleDescFontSize: 15,
+      titleDescColor: COLORS.GRAY,
+      lineHeight: 1.3,
+      padding: '0 1rem',
     },
   },
 };
