@@ -68,6 +68,9 @@ export const BarChart = ({
   x,
   y,
   color,
+  title,
+  titleDesc,
+  titleAlign,
   showLeftAxis,
   showBottomAxis,
   paddingInner = 0.1,
@@ -197,6 +200,9 @@ export const BarChart = ({
     <SvgWithAxisFrame
       ref={chartRef}
       titleRef={titleRef}
+      title={title}
+      titleDesc={titleDesc}
+      titleAlign={titleAlign}
       outerDimension={outerDimension}
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}
