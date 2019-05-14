@@ -33,10 +33,11 @@ const lineData = [
 ### Linear + Linear
 
 <Playground>
-  <div style={{ width: '100%', height: '360px' }}>
+  <div style={{ width: '100%', height: '380px' }}>
     <LineChart
       title="Taiwan's GDP Per Capita"
       titleDesc="(Unit: constant 2011 international $)"
+      titleAlign="right"
       data={taiwanData}
       x={{ field: 'year', type: 'quantitative' }}
       y={{ field: 'gdpPercap', type: 'quantitative' }}
@@ -49,7 +50,7 @@ const lineData = [
 ### Time + Linear
 
 <Playground>
-  <div style={{ width: '100%', height: '360px' }}>
+  <div style={{ width: '100%', height: '380px' }}>
     <LineChart
       data={lineData}
       x={{ field: 'date', type: 'quantitative', scale: 'time' }}
@@ -63,7 +64,7 @@ const lineData = [
 ### Point + Linear
 
 <Playground>
-  <div style={{ width: '100%', height: '360px' }}>
+  <div style={{ width: '100%', height: '380px' }}>
     <LineChart
       data={lineData}
       x={{ field: 'weekday', type: 'quantitative', scale: 'point' }}
@@ -79,7 +80,7 @@ const lineData = [
 ### Nominal color field
 
 <Playground>
-  <div style={{ width: '100%', height: '360px' }}>
+  <div style={{ width: '100%', height: '380px' }}>
     <LineChart
       data={multiLinesData}
       x={{ type: 'quantitative', field: 'x' }}
@@ -95,7 +96,7 @@ const lineData = [
 ### Ordinal color field
 
 <Playground>
-  <div style={{ width: '100%', height: '360px' }}>
+  <div style={{ width: '100%', height: '380px' }}>
     <LineChart
       data={[
         { x: 1, y: 5, size: 3 },

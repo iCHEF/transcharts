@@ -65,6 +65,9 @@ export interface SvgFrameProps extends FrameContentProps {
 
   /** Description of <HeaderBox> */
   titleDesc?: HeaderBoxProps['desc'];
+
+  /** Text align of the header box */
+  titleAlign?: HeaderBoxProps['align'];
 }
 
 const defaultProps = {
@@ -134,6 +137,7 @@ export const SvgWithAxisFrame = React.forwardRef<
   titleRef,
   title,
   titleDesc,
+  titleAlign,
   ...restProps
 }, ref) => {
   const theme = useContext(ThemeContext);
@@ -149,6 +153,7 @@ export const SvgWithAxisFrame = React.forwardRef<
         ref={titleRef}
         title={title}
         desc={titleDesc}
+        align={titleAlign}
       />
     </Wrapper>
   );

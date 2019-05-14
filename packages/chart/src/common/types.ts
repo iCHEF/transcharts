@@ -34,4 +34,7 @@ export interface CommonChartProps {
 
   /** Description of <HeaderBox> */
   titleDesc?: HeaderBoxProps['desc'];
+
+  /** Text align of <HeaderBox> */
+  titleAlign?: HeaderBoxProps['align'];
 }

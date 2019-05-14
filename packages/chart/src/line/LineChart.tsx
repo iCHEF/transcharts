@@ -117,6 +117,7 @@ export const LineChart = ({
   color,
   title,
   titleDesc,
+  titleAlign,
   showLeftAxis,
   showBottomAxis,
 }: LineChartProps) => {
@@ -191,6 +192,7 @@ export const LineChart = ({
       titleRef={titleRef}
       title={title}
       titleDesc={titleDesc}
+      titleAlign={titleAlign}
       outerDimension={outerDimension}
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}
