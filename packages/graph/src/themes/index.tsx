@@ -18,6 +18,7 @@ interface ThemeProviderProps {
 export const themes = {
   default: {
     colors: {
+      /** see [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic) */
       category: schemeCategory10,
       sequential: {
         scheme: schemeBlues,

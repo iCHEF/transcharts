@@ -1,0 +1,59 @@
+---
+name: HeaderBox
+route: /graph_components/header_box
+menu: Graph Components
+---
+
+import { Playground, Props } from 'docz'
+import { HeaderBox } from '@ichef/transcharts-graph'
+
+# HeaderBox
+
+`<HeaderBox>` is a component aiming to help you make the title and description of the graph with ease.
+
+## Example
+<Playground>
+  <div style={{ height: '10vh' }}>
+    <HeaderBox
+      title="Title of the chart"
+      desc={<span>Please visit <a href="https://www.ichefpos.com/" target="blank">iCHEF</a> for more info</span>}
+    />
+  </div>
+</Playground>
+
+You can either pass a component into the `title` or `desc`, or you can pass the text directly.
+
+## Title Only
+<Playground>
+  <div style={{ height: '10vh' }}>
+    <HeaderBox title="Title of the chart" />
+  </div>
+</Playground>
+
+## Align
+
+You can control the text alignment through the `align` props:
+
+- Left (default): `align="left"`
+- center: `align="center"`
+- right: `align="right"`
+
+### Example
+<Playground>
+  <div style={{ height: '10vh' }}>
+    <HeaderBox
+      title="Title of the chart"
+      desc="Description of the chart"
+      align="center"
+    />
+  </div>
+</Playground>
+
+## Customizing the styles
+
+The styles of `<HeaderBox>` is configurable through the global theme settings.
+Check out the `headerBox` of [theme settings](/themes#proptypes) for more information.
+
+## Props
+
+<Props of={HeaderBox} />
