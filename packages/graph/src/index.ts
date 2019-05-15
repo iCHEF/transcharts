@@ -1,4 +1,3 @@
-export * from './components/Foo';
 export * from './common/types';
 export * from './common/config';
 export * from './hooks/useContainerDimension';
