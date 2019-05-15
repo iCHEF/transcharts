@@ -38,11 +38,10 @@ export default {
   menu: [
     'Introduction',
     'Charts',
-    'Layers',
-    'Hooks',
+    'Graph Components',
+    'Graph Hooks',
     'Animations',
     'Themes',
-    'Legend',
   ],
   modifyBundlerConfig,
   themeConfig: {

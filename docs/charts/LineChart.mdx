@@ -1,5 +1,5 @@
 ---
-name: Line Chart
+name: 1. Line Chart
 route: /charts/line_chart
 menu: Charts
 ---
@@ -30,7 +30,7 @@ const lineData = [
 
 ## Using different scales on the X-axis
 
-### Linear + Linear
+### Ordinal + Quantitative
 
 <Playground>
   <div style={{ width: '100%', height: '380px' }}>
@@ -39,7 +39,7 @@ const lineData = [
       titleDesc="(Unit: constant 2011 international $)"
       titleAlign="right"
       data={taiwanData}
-      x={{ field: 'year', type: 'quantitative' }}
+      x={{ field: 'year', type: 'ordinal' }}
       y={{ field: 'gdpPercap', type: 'quantitative' }}
     />
   </div>
