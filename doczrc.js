@@ -38,6 +38,7 @@ export default {
   menu: [
     'Introduction',
     'Charts',
+    'Chart Settings',
     'Graph Components',
     'Graph Hooks',
     'Animations',
