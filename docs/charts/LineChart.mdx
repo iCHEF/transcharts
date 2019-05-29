@@ -7,6 +7,7 @@ menu: Charts
 import { Playground, Props } from 'docz'
 import { LineChart } from '@ichef/transcharts-chart'
 import lineData from '../sampleData/lineData';
+import { taiwanData } from '../sampleData/gapMinderData';
 import multiLinesData from '../sampleData/multiLinesData'
 
 # Line Chart
@@ -34,12 +35,14 @@ const lineData = [
 <Playground>
   <div style={{ width: '100%', height: '320px' }}>
     <LineChart
-      data={lineData}
-      x={{ field: 'x', type: 'quantitative', scale: 'linear' }}
-      y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
+      data={taiwanData}
+      x={{ field: 'year', type: 'quantitative' }}
+      y={{ field: 'gdpPercap', type: 'quantitative' }}
     />
   </div>
 </Playground>
+
+<small>(Data Source: <a href="https://www.gapminder.org/" target="_blank">GapMinder</a>)</small>
 
 ### Time + Linear
 
@@ -52,6 +55,8 @@ const lineData = [
     />
   </div>
 </Playground>
+
+<small>(Data Source: <a href="https://www.gapminder.org/" target="_blank">GapMinder</a>)</small>
 
 ### Point + Linear
 
