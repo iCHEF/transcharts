@@ -79,6 +79,12 @@ export interface Encoding {
 
 export interface AxisEncoding extends Encoding {
   scale?: ScaleType;
+
+  /** Label text displayed along the axis */
+  label?: string;
+
+  /** Whether to hide the label text */
+  hideLabel?: boolean;
 }
 
 export interface LegendConfig {
@@ -107,30 +113,79 @@ export interface Margin {
 }
 
 export interface AxisTheme {
+  /** font size of the label */
+  labelFontSize: number;
+
+  /** color of the label */
+  labelColor: string;
+
+  /** text anchor of the label */
+  labelTextAnchor: string;
+
   /** color of stroke */
   strokeColor: string;
+
   /** color of ticke stroke */
   tickStrokeColor: string;
+
   /** width of stroke */
   strokeWidth: number;
+
   /** font size of tick */
   tickFontSize: number;
 }
 
+export interface HeaderBoxTheme {
+  /** Font size of the title */
+  titleFontSize: number;
+
+  /** Color of the title */
+  titleColor: string;
+
+  /** Font size of the description placed under the title */
+  titleDescFontSize: number;
+
+  /** Color of the description placed under the title */
+  titleDescColor: string;
+
+  /** Line height of the header box */
+  lineHeight: number;
+
+  /** Padding of the header box */
+  padding: string;
+
+  /** Default align of the text of the header box */
+  defaultTextAlign: string;
+}
+
+export interface GlobalTheme {
+  /** Color of the fonts */
+  fontColor: string;
+}
+
 export interface Theme {
-  /** common colors */
+  /** Common colors */
   colors: {
-    /** colors used for nominal data */
+    /** Colors used for nominal data */
     category: ReadonlyArray<string>;
+
     sequential: {
       scheme: ReadonlyArray<ReadonlyArray<string>>;
       interpolator: (val: number) => string;
     }
   };
-  /** x-axis theme config */
+
+  /** Global style settings for the charts */
+  globalStyle: GlobalTheme;
+
+  /** X-axis theme config */
   xAxis: AxisTheme;
-  /** y-axis theme config */
+
+  /** Y-axis theme config */
   yAxis: AxisTheme;
+
+  /** <HeaderBox> theme config */
+  headerBox: HeaderBoxTheme;
 }
 
 export type HoveringState = boolean;

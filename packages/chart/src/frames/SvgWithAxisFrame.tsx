@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   // from AxisLayer
   AxisLayer,
+  // from Overlays
+  HeaderBox,
+  HeaderBoxProps,
   // from common types
   AxisScale,
   Margin,
   GraphDimension,
+  AxisEncoding,
+  // theme
+  ThemeContext,
+  GlobalTheme,
+  // styled-components
+  styled,
 } from '@ichef/transcharts-graph';
 
-/**
- * It manages the size of the chart container, SVG, and the axes
- * that generally used across different charts.
- */
-export interface SvgFrameProps {
+export interface FrameContentProps {
   /** Width and height of the outer container including the margin */
   outerDimension: GraphDimension;
 
   /** Width and height of the graph to be drawed inside the SVG group */
   graphDimension: GraphDimension;
+
+  /** Axis encoding of x-axis */
+  x: AxisEncoding;
+
+  /** Axis encoding of y-axis */
+  y: AxisEncoding;
 
   /** Margin between the inner graph area and the outer svg */
   margin: Margin;
@@ -45,6 +56,19 @@ export interface SvgFrameProps {
   /** Elements to be drawed inside of the SVG */
   children: React.ReactNode;
 }
+export interface SvgFrameProps extends FrameContentProps {
+  /** Ref to <HeaderBox> */
+  titleRef: React.RefObject<HTMLDivElement>;
+
+  /** Title of <HeaderBox> */
+  title?: HeaderBoxProps['title'];
+
+  /** Description of <HeaderBox> */
+  titleDesc?: HeaderBoxProps['desc'];
+
+  /** Text align of the header box */
+  titleAlign?: HeaderBoxProps['align'];
+}
 
 const defaultProps = {
   showLeftAxis: true,
@@ -52,9 +76,18 @@ const defaultProps = {
   axisInBackground: true,
 };
 
+const Wrapper = styled.div<GlobalTheme>`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  color: ${({ fontColor }) => fontColor};
+`;
+
 const FrameContent = ({
   outerDimension,
   graphDimension,
+  x,
+  y,
   margin,
   data,
   scalesConfig,
@@ -63,7 +96,7 @@ const FrameContent = ({
   axisInBackground,
   svgOverlay,
   children,
-}: SvgFrameProps) => {
+}: FrameContentProps) => {
   const { width: outerWidth, height: outerHeight } = outerDimension;
   const { width: graphWidth, height: graphHeight } = graphDimension;
   const axisLayer = (
@@ -73,8 +106,10 @@ const FrameContent = ({
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
       data={data}
-      xAxis={scalesConfig.x}
-      yAxis={scalesConfig.y}
+      x={x}
+      y={y}
+      xAxisScale={scalesConfig.x.scale}
+      yAxisScale={scalesConfig.y.scale}
     />
   );
 
@@ -91,14 +126,35 @@ const FrameContent = ({
 };
 FrameContent.defaultProps = defaultProps;
 
+/**
+ * It manages the size of the chart container, SVG, and the axes
+ * that generally used across different charts.
+ */
 export const SvgWithAxisFrame = React.forwardRef<
   HTMLDivElement,
   JSX.LibraryManagedAttributes<typeof FrameContent, SvgFrameProps>
->((props, ref) => (
-  <div
-    ref={ref}
-    style={{ width: '100%', height: '100%', position: 'relative' }}
-  >
-    <FrameContent {...props} />
-  </div>
-));
+>(({
+  titleRef,
+  title,
+  titleDesc,
+  titleAlign,
+  ...restProps
+}, ref) => {
+  const theme = useContext(ThemeContext);
+  const { globalStyle } = theme;
+
+  return (
+    <Wrapper
+      ref={ref}
+      {...globalStyle}
+    >
+      <FrameContent {...restProps} />
+      <HeaderBox
+        ref={titleRef}
+        title={title}
+        desc={titleDesc}
+        align={titleAlign}
+      />
+    </Wrapper>
+  );
+});

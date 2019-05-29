@@ -6,12 +6,14 @@ const DEFAULT_LENGTH = 300;
  * Returns the inner width and height of the graph
  * @param dimension - the outer width and height of the graph
  * @param margin - the lengths of top, right, bottom, and left margin
+ * @param headerDimension - the width and height of the header box
  * @param legendDimension - the width and height of the legend
  * @param legendOrient - orient of legend
  */
 export function getInnerGraphDimensionAndMargin(
   dimension: GraphDimension,
   margin: Margin,
+  headerDimension: GraphDimension,
   legendDimension: GraphDimension,
   legendOrient: LegendConfig['orient'],
 ) {
@@ -20,6 +22,8 @@ export function getInnerGraphDimensionAndMargin(
   let graphWidth = DEFAULT_LENGTH;
   let graphHeight = DEFAULT_LENGTH;
   const graphMargin = { ...margin };
+
+  // deal with the legend
   switch (legendOrient) {
     case 'left':
     case 'right': {
@@ -47,6 +51,10 @@ export function getInnerGraphDimensionAndMargin(
       break;
     }
   }
+
+  // deal with the header box
+  graphMargin.top += headerDimension.height;
+  graphHeight -= headerDimension.height;
 
   return {
     graphMargin,

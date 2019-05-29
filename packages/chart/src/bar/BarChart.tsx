@@ -10,9 +10,7 @@ import {
   // from Legend,
   LegendGroup,
   // from common types
-  Margin,
   AxisEncoding,
-  ColorEncoding,
   // from themes
   Theme,
   ThemeContext,
@@ -22,6 +20,7 @@ import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
 import { DEFAULT_VALS } from '../common/config';
+import { CommonChartProps } from '../common/types';
 
 /** A line and a dot for the point being hovered */
 const HoveringIndicator = ({ hovering, x, y, width, height }: {
@@ -47,23 +46,9 @@ const HoveringIndicator = ({ hovering, x, y, width, height }: {
   );
 };
 
-export interface BarChartProps {
-  /** Margin between the inner graph area and the outer svg */
-  margin?: Margin;
-
-  /** Should show the axis on the left or not */
-  showLeftAxis?: boolean;
-
-  /** Should show the axis on the bottom or not */
-  showBottomAxis?: boolean;
-
+export interface BarChartProps extends CommonChartProps {
   /** Ratio of the paddings between bars */
   paddingInner: number;
-
-  data: object[];
-  x: AxisEncoding;
-  y: AxisEncoding;
-  color?: ColorEncoding;
 }
 
 const defaultProps = {
@@ -83,12 +68,21 @@ export const BarChart = ({
   x,
   y,
   color,
+  title,
+  titleDesc,
+  titleAlign,
   showLeftAxis,
   showBottomAxis,
   paddingInner = 0.1,
 }: BarChartProps) => {
   const theme = useContext<Theme>(ThemeContext);
-  const { chartRef, legendRef, outerDimension, graphDimension } = useChartDimensions(margin);
+  const {
+    chartRef,
+    titleRef,
+    legendRef,
+    outerDimension,
+    graphDimension,
+  } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
   const xEncoding: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
@@ -205,10 +199,16 @@ export const BarChart = ({
   return (
     <SvgWithAxisFrame
       ref={chartRef}
+      titleRef={titleRef}
+      title={title}
+      titleDesc={titleDesc}
+      titleAlign={titleAlign}
       outerDimension={outerDimension}
       graphDimension={graphDimension}
       showLeftAxis={showLeftAxis}
       showBottomAxis={showBottomAxis}
+      x={x}
+      y={y}
       // put the axes on top of the bars
       axisInBackground={false}
       margin={margin}

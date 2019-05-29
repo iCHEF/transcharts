@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add auto release script and github action. (#28)
 - Add `useWorkspaces` in Lerna's config to allow lerna bootstrap to run. (#35)
 - Add the deployment script to publish the compiled `docz` docs. (#36)
+- Add `<HeaderBox>` to display the chart title and chart descriptions. (#39)
 
 # Changed
 - Clean compiled files before the docz server started. (#34)
@@ -18,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename the collisionComponents as hoverDetectionComponents to made the name more intelligible. (#33)
 - Upgrade `docz` to `1.0.4` to increase the build speed when developing the project. (#35)
 - Prevent Jest tests from being checked by `ForkTSCheckerWebpackPlugin` of docz when developing. (#35)
+- Display labels of the fields along with the axes. (#39)
+- Re-organize the structure of the document, and add the introduction of the project. (#39)
 
 # Fixed
 - Fix the typing problems raised by `@types/styled-components` and `react-spring`. (#35)

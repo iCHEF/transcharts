@@ -34,6 +34,16 @@ export default {
       }]
     }
   },
+  // order of the menu
+  menu: [
+    'Introduction',
+    'Charts',
+    'Chart Settings',
+    'Graph Components',
+    'Graph Hooks',
+    'Animations',
+    'Themes',
+  ],
   modifyBundlerConfig,
   themeConfig: {
     // See: https://github.com/pedronauck/docz/tree/master/core/docz-theme-default
