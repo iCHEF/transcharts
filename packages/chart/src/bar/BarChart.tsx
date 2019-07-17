@@ -226,7 +226,7 @@ export const BarChart = ({
             margin={margin}
             xOffset={bandWidth / 2}
           />
-          {/* Draw the legned */}
+          {/* Draw the legend */}
           <LegendGroup
             color={color && {
               ...color,
