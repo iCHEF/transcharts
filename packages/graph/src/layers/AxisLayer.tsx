@@ -41,6 +41,9 @@ export interface AxisLayerProps {
   /** Should show the axis on the bottom or not */
   showBottomAxis: boolean;
 
+  /** Should show the zero line */
+  showZeroLine?: boolean;
+
   /** Data of the chart */
   data: object[];
 
@@ -56,6 +59,20 @@ export interface AxisLayerProps {
   /** Y-axis configurations produced by `getAxisScale` */
   yAxisScale: AxisScale['scale'];
 }
+
+const getZeroLineProps = (
+  xAxisScale: AxisScale['scale'],
+  yAxisScale: AxisScale['scale'],
+) => {
+  const yPos = yAxisScale(0);
+
+  return {
+    x1: 0,
+    y1: yPos,
+    x2: xAxisScale.range()[1],
+    y2: yPos,
+  };
+};
 
 const getXtickLabelProps = (styles: {
   tickFontSize: number,
@@ -91,6 +108,8 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   showLeftAxis = true,
   // it should always show the bottom axis by default
   showBottomAxis = true,
+  // it should always show the zero line if its domain crosses zero
+  showZeroLine = true,
   data,
   xAxisScale,
   yAxisScale,
@@ -102,8 +121,26 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   const xAxisLabel = useMemo(() => getAxisLabel(x), [x]);
   const yAxisLabel = useMemo(() => getAxisLabel(y), [y]);
 
+  const zeroLineProps = useMemo(
+    () => (
+      getZeroLineProps(xAxisScale, yAxisScale)
+    ),
+    [xAxisScale, yAxisScale]
+  );
+
+  const yDomain = yAxisScale.domain();
+  const shouldShowZeroline = showZeroLine && yDomain[0] * yDomain[1] < 0;
+
   return (
       <>
+        {/* Zero value line */}
+        {shouldShowZeroline && (
+          <line
+            {...zeroLineProps}
+            style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
+          />
+        )}
+
         {/* Y Axis */}
         {showLeftAxis && (
           <AxisLeft
@@ -129,6 +166,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
             // )}
           />
         )}
+
         {/* X Axis */}
         {showBottomAxis && (
           <AxisBottom
