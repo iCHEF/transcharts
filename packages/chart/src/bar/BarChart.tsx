@@ -17,8 +17,9 @@ import {
 } from '@ichef/transcharts-graph';
 
 import {
+  getAccumXCalculator,
   getAccumYCalculator,
-} from '../utils/getBarPositions';
+} from '../utils/getBarChartPos';
 import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
@@ -169,26 +170,44 @@ export const BarChart = ({
 
   const graphGroup = useMemo(
     () => {
-      const baseY = linearScale(0);
-      const getAccumY = getAccumYCalculator(baseY);
+      const baseVal = linearScale(0);
+      const accumCalculator = drawFromXAxis ? getAccumYCalculator : getAccumXCalculator;
+      const getAccumVal = accumCalculator(baseVal);
 
       return dataGroups.map(
         (rows: object[], groupIdx: number) => {
           return rows.map((row: object, rowIdx: number) => {
             const colorString: string = rowValSelectors.color.getString(rows[0]);
-            const xPos = rowValSelectors.x.getScaledVal(row);
+            const scaledX = rowValSelectors.x.getScaledVal(row);
             const scaledY = rowValSelectors.y.getScaledVal(row);
-            const height = scaledY >= 0
-              ? baseY - scaledY
-              : baseY - graphHeight - scaledY;
+
+            console.log(row, scaledX)
+
+            let barPos;
+            if (drawFromXAxis) {
+              const height = scaledY >= 0
+              ? baseVal - scaledY
+              : baseVal - graphHeight - scaledY;
+
+              barPos = {
+                x: scaledX,
+                y: getAccumVal(scaledX, height),
+                width: bandWidth,
+                height: Math.abs(height),
+              };
+            } else {
+              barPos = {
+                x: getAccumVal(scaledY, baseVal),
+                y: scaledY,
+                width: scaledX,
+                height: bandWidth,
+              };
+            }
 
             return (
               <rect
+                {...barPos}
                 key={`bar-${rowIdx}`}
-                x={xPos}
-                y={getAccumY(xPos, height)}
-                width={bandWidth}
-                height={Math.abs(height)}
                 fill={colorString}
               />
             );
