@@ -106,7 +106,7 @@ export const useCartesianEncodings = (
   // check if it is necessary to transpose the drawing basis
   const drawFromXAxis = useMemo(
     () => {
-      return x.scale !== 'linear';
+      return x.type !== 'quantitative';
     },
     [x, y],
   );
