@@ -88,10 +88,27 @@ export const BarChart = ({
   } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
-  const xEncoding: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
-    paddingInner,
-  }};
+  /**
+   * Whether the graph should be drawn from the x-axis.
+   * False if it should be drawn from the y-axis.
+   */
+  const drawFromXAxis = useMemo(
+    () => {
+      return x.type !== 'quantitative';
+    },
+    [x, y],
+  );
+
+  const xEncoding: AxisEncoding = { ...x, scale: 'band' };
   const yEncoding: AxisEncoding = { ...y, scale: 'linear' };
+  if (drawFromXAxis) {
+    xEncoding.scaleConfig = { paddingInner };
+  } else {
+    xEncoding.scale = 'linear';
+    yEncoding.scale = 'band';
+    yEncoding.scaleConfig = { paddingInner };
+  }
+
   const {
     dataGroups,
     scalesConfig,
@@ -100,8 +117,8 @@ export const BarChart = ({
   } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
 
-  const bandScale = scalesConfig.x.scale as ScaleBand<any>;
-  const linearScale = scalesConfig.y.scale as ScaleLinear<any, any>;
+  const bandScale = scalesConfig[drawFromXAxis ? 'x' : 'y'].scale as ScaleBand<any>;
+  const linearScale = scalesConfig[drawFromXAxis ? 'y' : 'x'].scale as ScaleLinear<any, any>;
   const bandWidth = bandScale.bandwidth();
 
   /**

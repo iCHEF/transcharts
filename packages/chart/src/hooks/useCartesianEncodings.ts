@@ -103,14 +103,6 @@ export const useCartesianEncodings = (
     [color, sortedData],
   );
 
-  // check if it is necessary to transpose the drawing basis
-  const drawFromXAxis = useMemo(
-    () => {
-      return x.type !== 'quantitative';
-    },
-    [x, y],
-  );
-
   // the scales and configs of the axis based on its encodings
   const xAxis = useMemo(
     () => {
@@ -189,12 +181,6 @@ export const useCartesianEncodings = (
   return {
     /** Array of data grouped by fields of colors  */
     dataGroups,
-
-    /**
-     * Whether the graph should be drawn from the x-axis.
-     * False if it should be drawn from the y-axis.
-     */
-    drawFromXAxis,
 
     /**
      * The y-values in the `dataGroups` grouped by projected x values.
