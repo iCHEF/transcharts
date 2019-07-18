@@ -16,6 +16,9 @@ import {
   ThemeContext,
 } from '@ichef/transcharts-graph';
 
+import {
+  getAccumYCalculator,
+} from '../utils/getBarPositions';
 import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
@@ -150,24 +153,7 @@ export const BarChart = ({
   const graphGroup = useMemo(
     () => {
       const baseY = linearScale(0);
-
-      // calculate the accumulated y position of certain points
-      const positiveY = {};
-      const nonPositiveY = {};
-      const getAccumY = (xPos: number, scaledY: number) => {
-        if (scaledY >= 0) {
-          if (!positiveY[xPos]) {
-            positiveY[xPos] = baseY;
-          }
-          positiveY[xPos] -= scaledY;
-          return positiveY[xPos];
-        }
-
-        // scaledY < 0
-        const yPos = !nonPositiveY[xPos] ? baseY : nonPositiveY[xPos];
-        nonPositiveY[xPos] = yPos - scaledY;
-        return yPos;
-      };
+      const getAccumY = getAccumYCalculator(baseY);
 
       return dataGroups.map(
         (rows: object[], groupIdx: number) => {
