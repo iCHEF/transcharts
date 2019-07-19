@@ -75,6 +75,13 @@ export const useCartesianEncodings = (
 
   /** Fields and definitions for colors */
   color?: ColorEncoding,
+
+  /**
+   * Whether the graph is drawn from the x-axis, i.e., vertical graph.
+   * In a transposed (horizontal) graph, you have to set it as false,
+   * in order to get the right `axisProjectedValues` value.
+   */
+  drawFromXAxis?: boolean = true,
 ) => {
   // get the inner width and height of the graph
   const { width, height } = graphDimension;
@@ -173,6 +180,9 @@ export const useCartesianEncodings = (
 
   const axisProjectedValues: AxisProjectedValue[] = useMemo(
     () => {
+      if (!drawFromXAxis) {
+        return getAxisProjectedValues(dataGroups, ySelector, xSelector, getColorString);
+      }
       return getAxisProjectedValues(dataGroups, xSelector, ySelector, getColorString);
     },
     [dataGroups, xSelector, ySelector, getColorString],
@@ -185,17 +195,17 @@ export const useCartesianEncodings = (
     /**
      * The y-values in the `dataGroups` grouped by projected x values.
      * -  Structure of groupedY: "groupedY":[ { "index of dataGroup": "value" }, ... ]
-     * @example
-     * [{
-     *  "xPos": 0,
-     *  "xStrVal": "0",
-     *  "groupedY": [{"groupIdx": 0, "yStrVal": 9, "yPos": 18, "color": "#deebf7"}],
-     *  },
-     * {
-     *  "xPos": 109.12812500000001,
-     *  "xStrVal": "2",
-     *  "groupedY": [{"groupIdx": 0, "yStrVal": 3, "yPos": 6, "color": "#deebf7"}, ...],
-     * }]
+    * @example
+    * [{
+      *  "basePos": 0,
+      *  "baseStrVal": "0",
+      *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 9, "projectedPos": 18, "color": "#deebf7"}],
+      *  },
+      * {
+      *  "basePos": 109.12812500000001,
+      *  "baseStrVal": "2",
+      *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 3, "projectedPos": 6, "color": "#deebf7"}, ...],
+      * }]
      */
     axisProjectedValues,
 

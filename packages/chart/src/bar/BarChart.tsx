@@ -116,7 +116,15 @@ export const BarChart = ({
     scalesConfig,
     rowValSelectors,
     axisProjectedValues,
-  } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
+  } = useCartesianEncodings(
+    graphDimension,
+    theme,
+    data,
+    xEncoding,
+    yEncoding,
+    color,
+    drawFromXAxis,
+  );
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
 
   const bandScale = scalesConfig[drawFromXAxis ? 'x' : 'y'].scale as ScaleBand<any>;
@@ -131,17 +139,28 @@ export const BarChart = ({
     (idx: number) => {
       const paddingVal = bandWidth * paddingInner;
 
-      const xPos = idx === 0
+      const basePos = idx === 0
         ? 0
         : axisProjectedValues[idx].basePos - paddingVal / 2;
       const width = idx === 0 || idx === data.length - 1
             ? bandWidth + paddingVal / 2
             : bandWidth + paddingVal;
 
+      // transposed (horizontal) graph
+      if (!drawFromXAxis) {
+        return {
+          width: graphWidth,
+          height: width,
+          x: 0,
+          y: basePos,
+        }
+      }
+
+      // vertical graph
       return {
         width,
         height: graphHeight,
-        x: xPos,
+        x: basePos,
         y: 0,
       };
     },
