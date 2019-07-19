@@ -32,7 +32,7 @@ function getXPosByIndex(arr: AxisProjectedValue[], idx: number) {
   if (idx >= arr.length) {
     arrIdx = arr.length - 1;
   }
-  return arr[arrIdx].xPos;
+  return arr[arrIdx].basePos;
 }
 
 export type LineChartProps = CommonChartProps;
@@ -47,11 +47,11 @@ const HoveringIndicator = ({ hovering, projectedPoints, height }: {
     return null;
   }
 
-  const circles = projectedPoints.groupedY.map(pointY => (
+  const circles = projectedPoints.projectedVals.map(pointY => (
     <circle
-      key={`c-${pointY.yStrVal}`}
-      cx={projectedPoints.xPos}
-      cy={pointY.yPos}
+      key={`c-${pointY.projectedStrVal}`}
+      cx={projectedPoints.basePos}
+      cy={pointY.projectedPos}
       r={4.5}
       fill={pointY.color}
     />
@@ -60,9 +60,9 @@ const HoveringIndicator = ({ hovering, projectedPoints, height }: {
   return(
     <>
       <line
-        x1={projectedPoints.xPos}
+        x1={projectedPoints.basePos}
         y1={0}
-        x2={projectedPoints.xPos}
+        x2={projectedPoints.basePos}
         y2={height}
         style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
       />
@@ -163,10 +163,10 @@ export const LineChart = ({
     () => (
       axisProjectedValues.map(
         (row, idx) => {
-          const rectX = (row.xPos + getXPosByIndex(axisProjectedValues, idx - 1)) / 2;
+          const rectX = (row.basePos + getXPosByIndex(axisProjectedValues, idx - 1)) / 2;
 
           const rectWidth = (
-            (row.xPos + getXPosByIndex(axisProjectedValues, idx + 1)) / 2
+            (row.basePos + getXPosByIndex(axisProjectedValues, idx + 1)) / 2
           ) - rectX;
 
           return (

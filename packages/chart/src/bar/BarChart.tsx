@@ -100,6 +100,7 @@ export const BarChart = ({
     [x, y],
   );
 
+  // assign the scale according to the data type
   const xEncoding: AxisEncoding = { ...x, scale: 'band' };
   const yEncoding: AxisEncoding = { ...y, scale: 'linear' };
   if (drawFromXAxis) {
@@ -129,9 +130,10 @@ export const BarChart = ({
   const getHoveringRectPos = useCallback(
     (idx: number) => {
       const paddingVal = bandWidth * paddingInner;
+
       const xPos = idx === 0
         ? 0
-        : axisProjectedValues[idx].xPos - paddingVal / 2;
+        : axisProjectedValues[idx].basePos - paddingVal / 2;
       const width = idx === 0 || idx === data.length - 1
             ? bandWidth + paddingVal / 2
             : bandWidth + paddingVal;
@@ -154,10 +156,6 @@ export const BarChart = ({
             <rect
               // #TODO: use unique keys rather than array index
               key={`colli-${idx}`}
-              x={row.xPos}
-              y={0}
-              height={graphHeight}
-              width={bandWidth}
               opacity={0}
               {...{ ...getHoveringRectPos(idx) }}
             />
@@ -180,8 +178,6 @@ export const BarChart = ({
             const colorString: string = rowValSelectors.color.getString(rows[0]);
             const scaledX = rowValSelectors.x.getScaledVal(row);
             const scaledY = rowValSelectors.y.getScaledVal(row);
-
-            console.log(row, scaledX)
 
             let barPos;
             if (drawFromXAxis) {
