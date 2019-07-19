@@ -114,7 +114,6 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   xAxisScale,
   yAxisScale,
 }) => {
-
   const theme = useContext(ThemeContext);
   const { xAxis: xAxisTheme, yAxis: yAxisTheme } = theme;
 
@@ -128,64 +127,82 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
     [xAxisScale, yAxisScale]
   );
 
-  const yDomain = yAxisScale.domain();
-  const shouldShowZeroline = showZeroLine && yDomain[0] * yDomain[1] < 0;
+  const axisLayer = useMemo(
+    () => {
+      const yDomain = yAxisScale.domain();
+      const shouldShowZeroline = showZeroLine && yDomain[0] * yDomain[1] < 0;
 
-  return (
-      <>
-        {/* Zero value line */}
-        {shouldShowZeroline && (
-          <line
-            {...zeroLineProps}
-            style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
-          />
-        )}
+      return (
+        <>
+          {/* Zero value line */}
+          {shouldShowZeroline && (
+            <line
+              {...zeroLineProps}
+              style={{ stroke:'rgba(124, 137, 147, 0.25)', strokeWidth: 2 }}
+            />
+          )}
 
-        {/* Y Axis */}
-        {showLeftAxis && (
-          <AxisLeft
-            top={0}
-            left={0}
-            scale={yAxisScale}
-            label={yAxisLabel}
-            labelProps={{
-              fill: yAxisTheme.labelColor,
-              fontSize: yAxisTheme.labelFontSize,
-              textAnchor: yAxisTheme.labelTextAnchor,
-            }}
-            stroke={yAxisTheme.strokeColor}
-            strokeWidth={yAxisTheme.strokeWidth}
-            tickStroke={yAxisTheme.tickStrokeColor}
-            // TODO: modify it as a function
-            numTicks={getNumberOfTicks(height, data)}
-            tickLabelProps={getXtickLabelProps(yAxisTheme)}
-            tickFormat={tickFormat}
-            // TODO: format the ticks based on the axis types
-            // tickComponent={({ formattedValue, ...tickProps }) => (
-            //   <text {...tickProps}>{formattedValue}</text>
-            // )}
-          />
-        )}
+          {/* Y Axis */}
+          {showLeftAxis && (
+            <AxisLeft
+              top={0}
+              left={0}
+              scale={yAxisScale}
+              label={yAxisLabel}
+              labelProps={{
+                fill: yAxisTheme.labelColor,
+                fontSize: yAxisTheme.labelFontSize,
+                textAnchor: yAxisTheme.labelTextAnchor,
+              }}
+              stroke={yAxisTheme.strokeColor}
+              strokeWidth={yAxisTheme.strokeWidth}
+              tickStroke={yAxisTheme.tickStrokeColor}
+              // TODO: modify it as a function
+              numTicks={getNumberOfTicks(height, data)}
+              tickLabelProps={getXtickLabelProps(yAxisTheme)}
+              tickFormat={tickFormat}
+              // TODO: format the ticks based on the axis types
+              // tickComponent={({ formattedValue, ...tickProps }) => (
+              //   <text {...tickProps}>{formattedValue}</text>
+              // )}
+            />
+          )}
 
-        {/* X Axis */}
-        {showBottomAxis && (
-          <AxisBottom
-            top={height}
-            scale={xAxisScale}
-            label={xAxisLabel}
-            labelProps={{
-              fill: xAxisTheme.labelColor,
-              fontSize: xAxisTheme.labelFontSize,
-              textAnchor: xAxisTheme.labelTextAnchor,
-            }}
-            stroke={xAxisTheme.strokeColor}
-            strokeWidth={xAxisTheme.strokeWidth}
-            tickStroke={xAxisTheme.tickStrokeColor}
-            numTicks={getNumberOfTicks(width, data)}
-            tickFormat={tickFormat}
-            tickLabelProps={getYtickLabelProps(xAxisTheme)}
-          />
-        )}
-      </>
+          {/* X Axis */}
+          {showBottomAxis && (
+            <AxisBottom
+              top={height}
+              scale={xAxisScale}
+              label={xAxisLabel}
+              labelProps={{
+                fill: xAxisTheme.labelColor,
+                fontSize: xAxisTheme.labelFontSize,
+                textAnchor: xAxisTheme.labelTextAnchor,
+              }}
+              stroke={xAxisTheme.strokeColor}
+              strokeWidth={xAxisTheme.strokeWidth}
+              tickStroke={xAxisTheme.tickStrokeColor}
+              numTicks={getNumberOfTicks(width, data)}
+              tickFormat={tickFormat}
+              tickLabelProps={getYtickLabelProps(xAxisTheme)}
+            />
+          )}
+        </>
+      );
+    },
+    [
+      width,
+      height,
+      x,
+      y,
+      showLeftAxis = true,
+      showBottomAxis = true,
+      showZeroLine = true,
+      data,
+      xAxisScale,
+      yAxisScale,
+    ]
   );
+
+  return axisLayer;
 };
