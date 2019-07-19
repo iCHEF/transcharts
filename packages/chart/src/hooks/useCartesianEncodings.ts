@@ -89,8 +89,9 @@ export const useCartesianEncodings = (
   // sort the data
   const sortedData = useMemo(
     () => {
-      const getValue = getValByScaleType(x.scale);
-      const getOriginalVal = (record: object) => getValue(record[x.field]);
+      const baseAxis = drawFromXAxis ? x : y;
+      const getValue = getValByScaleType(baseAxis.scale);
+      const getOriginalVal = (record: object) => getValue(record[baseAxis.field]);
 
       return (
         data.sort(
