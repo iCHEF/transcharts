@@ -8,7 +8,7 @@ export function getAccumXCalculator(baseX: number) {
       if (!nonPositiveX[yPos]) {
         nonPositiveX[yPos] = baseX;
       }
-      nonPositiveX[yPos] -= scaledX;
+      nonPositiveX[yPos] += scaledX;
       return nonPositiveX[yPos];
     }
 

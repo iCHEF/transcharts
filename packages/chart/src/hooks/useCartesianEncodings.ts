@@ -81,7 +81,7 @@ export const useCartesianEncodings = (
    * In a transposed (horizontal) graph, you have to set it as false,
    * in order to get the right `axisProjectedValues` value.
    */
-  drawFromXAxis?: boolean = true,
+  drawFromXAxis: boolean = true,
 ) => {
   // get the inner width and height of the graph
   const { width, height } = graphDimension;
@@ -121,7 +121,9 @@ export const useCartesianEncodings = (
 
       // update the domain if the domains of x-y scales is band-linear
       if (x.scale === 'linear' && y.scale === 'band') {
-        axisScale.scale.domain(getLinearDomainFromDataGroup(dataGroups, y.field, x.field));
+        const domain = getLinearDomainFromDataGroup(dataGroups, y.field, x.field);
+        axisScale.domain = domain;
+        axisScale.scale.domain(domain);
       }
       return axisScale;
     },
@@ -137,7 +139,9 @@ export const useCartesianEncodings = (
 
       // update the domain if the domains of x-y scales is linear-band
       if (x.scale === 'band' && y.scale === 'linear') {
-        axisScale.scale.domain(getLinearDomainFromDataGroup(dataGroups, x.field, y.field));
+        const domain = getLinearDomainFromDataGroup(dataGroups, x.field, y.field);
+        axisScale.domain = domain;
+        axisScale.scale.domain(domain);
       }
       return axisScale;
     },

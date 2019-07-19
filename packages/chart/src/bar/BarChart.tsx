@@ -185,6 +185,9 @@ export const BarChart = ({
     [axisProjectedValues, graphHeight, bandWidth, getHoveringRectPos]
   );
 
+  /**
+   * Draw the bars of the bar chart
+   */
   const graphGroup = useMemo(
     () => {
       const baseVal = linearScale(0);
@@ -201,8 +204,8 @@ export const BarChart = ({
             let barPos;
             if (drawFromXAxis) {
               const height = scaledY >= 0
-              ? baseVal - scaledY
-              : baseVal - graphHeight - scaledY;
+                ? baseVal - scaledY
+                : baseVal - graphHeight - scaledY;
 
               barPos = {
                 x: scaledX,
@@ -211,10 +214,13 @@ export const BarChart = ({
                 height: Math.abs(height),
               };
             } else {
+              // transposed (horizontal) graph
+              const diffFromBase = scaledX - baseVal;
+
               barPos = {
-                x: getAccumVal(scaledY, baseVal),
+                x: getAccumVal(scaledY, diffFromBase),
                 y: scaledY,
-                width: scaledX,
+                width: Math.abs(diffFromBase),
                 height: bandWidth,
               };
             }
