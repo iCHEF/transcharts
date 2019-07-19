@@ -61,7 +61,8 @@
       {
         "code": 100,
         "tabWidth": 2,
-        "ignoreUrls": true
+        "ignoreUrls": true,
+        "comments": false,
       }
     ],
     // ============= from tslint-react =============
