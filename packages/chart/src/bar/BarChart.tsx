@@ -153,7 +153,7 @@ export const BarChart = ({
           height: width,
           x: 0,
           y: basePos,
-        }
+        };
       }
 
       // vertical graph
@@ -164,7 +164,7 @@ export const BarChart = ({
         y: 0,
       };
     },
-    [bandWidth, paddingInner],
+    [bandWidth, paddingInner, graphWidth, graphHeight],
   );
 
   const hoverDetectionComponents = useMemo(
