@@ -200,17 +200,17 @@ export const useCartesianEncodings = (
     /**
      * The y-values in the `dataGroups` grouped by projected x values.
      * -  Structure of groupedY: "groupedY":[ { "index of dataGroup": "value" }, ... ]
-    * @example
-    * [{
-    *  "basePos": 0,
-    *  "baseStrVal": "0",
-    *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 9, "projectedPos": 18, "color": "#deebf7"}],
-    *  },
-    * {
-    *  "basePos": 109.12812500000001,
-    *  "baseStrVal": "2",
-    *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 3, "projectedPos": 6, "color": "#deebf7"}, ...],
-    * }]
+     * @example
+     * [{
+     *  "basePos": 0,
+     *  "baseStrVal": "0",
+     *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 9, "projectedPos": 18, "color": "#deebf7"}],
+     *  },
+     * {
+     *  "basePos": 109.12812500000001,
+     *  "baseStrVal": "2",
+     *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 3, "projectedPos": 6, "color": "#deebf7"}, ...],
+     * }]
      */
     axisProjectedValues,
 
