@@ -43,6 +43,8 @@ const lineData = [
 
 ### Linear + Linear (transposed)
 
+You can easily transpose the XY axis by just switching the x and y prop of `<BarChart>`.
+
 <Playground>
   <div style={{ width: '100%', height: '320px' }}>
     <BarChart
@@ -132,6 +134,12 @@ You can use the same properties of multi-series line charts to create stacked ba
 
 
 ### Quantitative color field (transposed)
+
+You can easily transpose the XY axis by just switching the x and y prop of `<BarChart>`.
+
+For example, the vertical chart above become the horizontal one in the below by simply switching `x` and `y`.
+
+This feature is realized by the checkings of the data types of the axis configs of `<BarChart>`.
 
 <Playground>
   <div style={{ width: '100%', height: '320px' }}>
