@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 import { useTransition, animated } from 'react-spring';
 
 import { styled } from '../utils/styled-components';
-import { Margin } from '../common/types';
 
 export interface TooltipProps {
   position: {
@@ -13,7 +12,6 @@ export interface TooltipProps {
   children: React.ReactNode;
   graphWidth: number;
   graphHeight: number;
-  graphMargin: Margin;
 }
 
 const TooltipWrapper = styled.div`
@@ -44,16 +42,15 @@ const TooltipWrapper = styled.div`
 function getTooltipPosition(
   graphWidth: TooltipProps['graphWidth'],
   graphHeight: TooltipProps['graphHeight'],
-  graphMargin: Margin,
   position: TooltipProps['position'],
 ) {
   const onRightHalf = (position.x / graphWidth) > 0.5;
   const percentX = onRightHalf ? -100 : 0;
-  const percentY = Math.round(-100 * (position.y / graphHeight));
-  const leftOffset = onRightHalf ? -20 : 20;
+  const percentY = Math.round(-80 * (position.y / graphHeight));
+  const xOffset = onRightHalf ? -10 : 10;
   return {
-    top: `${graphMargin.top + position.y}px`,
-    left: `${graphMargin.left + position.x + leftOffset}px`,
+    top: `${position.y}px`,
+    left: `${position.x + xOffset}px`,
     transform: `translate(${percentX}%, ${percentY}%)`,
     transition: 'all 150ms ease',
   };
@@ -65,18 +62,12 @@ export const Tooltip: FunctionComponent<TooltipProps> = ({
   show = false,
   graphWidth,
   graphHeight,
-  graphMargin = {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
 }) => {
   if (!position) {
     return null;
   }
 
-  const tooltipStyle = getTooltipPosition(graphWidth, graphHeight, graphMargin, position);
+  const tooltipStyle = getTooltipPosition(graphWidth, graphHeight, position);
 
   const transition = useTransition(show, null, {
     from: { opacity: 0 },
@@ -99,5 +90,4 @@ export const Tooltip: FunctionComponent<TooltipProps> = ({
       ))}
     </>
   );
-
 };

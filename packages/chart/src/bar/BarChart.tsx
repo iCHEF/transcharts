@@ -129,7 +129,18 @@ export const BarChart = ({
 
   const bandScale = scalesConfig[drawFromXAxis ? 'x' : 'y'].scale as ScaleBand<any>;
   const linearScale = scalesConfig[drawFromXAxis ? 'y' : 'x'].scale as ScaleLinear<any, any>;
-  const bandWidth = bandScale.bandwidth();
+  const bandWidth = useMemo(
+    () => {
+      return bandScale.bandwidth();
+    },
+    [bandScale]
+  );
+  const xOffset = useMemo(
+    () => {
+      return drawFromXAxis ? bandWidth / 2 : 0;
+    },
+    [drawFromXAxis, bandWidth]
+  );
 
   /**
    * Returns the size and position of the hovering detection rectangle
@@ -267,7 +278,8 @@ export const BarChart = ({
             graphWidth={graphWidth}
             graphHeight={graphHeight}
             margin={margin}
-            xOffset={bandWidth / 2}
+            drawFromXAxis={drawFromXAxis}
+            xOffset={xOffset}
           />
           {/* Draw the legend */}
           <LegendGroup

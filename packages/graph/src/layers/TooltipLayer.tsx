@@ -30,6 +30,7 @@ export interface AxisProjectedValue {
 export interface TooltipLayerProps {
   hovering: HoveringState;
   hoveredPoint: HoveredPointState;
+  drawFromXAxis?: boolean;
   axisProjectedValues: AxisProjectedValue[];
   graphWidth: number;
   graphHeight: number;
@@ -52,12 +53,17 @@ export interface TooltipLayerProps {
 export const TooltipLayer = ({
   hovering,
   hoveredPoint,
+  drawFromXAxis = true,
   axisProjectedValues,
   graphWidth,
   graphHeight,
   margin,
-  x = axisProjectedValues[hoveredPoint.index].basePos,
-  y = hoveredPoint.position.y,
+  x = drawFromXAxis
+    ? axisProjectedValues[hoveredPoint.index].basePos + margin.left
+    : hoveredPoint.position.x,
+  y = drawFromXAxis
+    ? hoveredPoint.position.y
+    : axisProjectedValues[hoveredPoint.index].basePos + margin.top,
   xOffset = 0,
   yOffset = 0,
 }: TooltipLayerProps) => {
@@ -74,7 +80,6 @@ export const TooltipLayer = ({
     <Tooltip
       graphWidth={graphWidth}
       graphHeight={graphHeight}
-      graphMargin={margin}
       position={{
         x: x + xOffset,
         y: y + yOffset,
