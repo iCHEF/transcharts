@@ -30,6 +30,9 @@ export interface FrameContentProps {
   /** Axis encoding of y-axis */
   y: AxisEncoding;
 
+  /** Whether it is a vertical chart. True for most charts. */
+  drawFromXAxis: boolean;
+
   /** Margin between the inner graph area and the outer svg */
   margin: Margin;
 
@@ -74,6 +77,7 @@ const defaultProps = {
   showLeftAxis: true,
   showBottomAxis: true,
   axisInBackground: true,
+  drawFromXAxis: true,
 };
 
 const Wrapper = styled.div<GlobalTheme>`
@@ -88,6 +92,7 @@ const FrameContent = ({
   graphDimension,
   x,
   y,
+  drawFromXAxis,
   margin,
   data,
   scalesConfig,
@@ -111,6 +116,7 @@ const FrameContent = ({
           data={data}
           x={x}
           y={y}
+          drawFromXAxis={drawFromXAxis}
           xAxisScale={scalesConfig.x.scale}
           yAxisScale={scalesConfig.y.scale}
         />

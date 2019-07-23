@@ -263,6 +263,7 @@ export const BarChart = ({
       showBottomAxis={showBottomAxis}
       x={x}
       y={y}
+      drawFromXAxis={drawFromXAxis}
       // put the axes on top of the bars
       axisInBackground={false}
       margin={margin}
