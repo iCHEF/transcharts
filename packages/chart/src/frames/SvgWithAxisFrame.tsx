@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import {
   // from AxisLayer
   AxisLayer,
@@ -97,32 +97,53 @@ const FrameContent = ({
   svgOverlay,
   children,
 }: FrameContentProps) => {
-  const { width: outerWidth, height: outerHeight } = outerDimension;
-  const { width: graphWidth, height: graphHeight } = graphDimension;
-  const axisLayer = (
-    <AxisLayer
-      width={graphWidth}
-      height={graphHeight}
-      showLeftAxis={showLeftAxis}
-      showBottomAxis={showBottomAxis}
-      data={data}
-      x={x}
-      y={y}
-      xAxisScale={scalesConfig.x.scale}
-      yAxisScale={scalesConfig.y.scale}
-    />
+  // memoize the frame to increase the performance when rendering tooltips
+  const momoizedFrame = useMemo(
+    () => {
+      const { width: outerWidth, height: outerHeight } = outerDimension;
+      const { width: graphWidth, height: graphHeight } = graphDimension;
+      const axisLayer = (
+        <AxisLayer
+          width={graphWidth}
+          height={graphHeight}
+          showLeftAxis={showLeftAxis}
+          showBottomAxis={showBottomAxis}
+          data={data}
+          x={x}
+          y={y}
+          xAxisScale={scalesConfig.x.scale}
+          yAxisScale={scalesConfig.y.scale}
+        />
+      );
+
+      return (
+        <>
+          <svg width={outerWidth} height={outerHeight}>
+            <g transform={`translate(${margin.left}, ${margin.top})`}>
+              {axisInBackground ? (<>{axisLayer}{children}</>) : (<>{children}{axisLayer}</>)}
+            </g>
+          </svg>
+          {svgOverlay}
+        </>
+      );
+    },
+    [
+      outerDimension,
+      graphDimension,
+      x,
+      y,
+      margin,
+      data,
+      scalesConfig,
+      showLeftAxis,
+      showBottomAxis,
+      axisInBackground,
+      svgOverlay,
+      children,
+    ]
   );
 
-  return (
-    <>
-      <svg width={outerWidth} height={outerHeight}>
-        <g transform={`translate(${margin.left}, ${margin.top})`}>
-          {axisInBackground ? (<>{axisLayer}{children}</>) : (<>{children}{axisLayer}</>)}
-        </g>
-      </svg>
-      {svgOverlay}
-    </>
-  );
+  return momoizedFrame;
 };
 FrameContent.defaultProps = defaultProps;
 
