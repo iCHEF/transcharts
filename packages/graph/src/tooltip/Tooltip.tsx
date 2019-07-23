@@ -47,7 +47,7 @@ function getTooltipPosition(
   const onRightHalf = (position.x / graphWidth) > 0.5;
   const percentX = onRightHalf ? -100 : 0;
   const percentY = Math.round(-80 * (position.y / graphHeight));
-  const xOffset = onRightHalf ? -10 : 10;
+  const xOffset = onRightHalf ? -16 : 16;
   return {
     top: `${position.y}px`,
     left: `${position.x + xOffset}px`,
