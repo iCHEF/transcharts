@@ -135,7 +135,7 @@ export const AxisLayer: React.SFC<AxisLayerProps> = ({
   const xAxisLabel = useMemo(() => getAxisLabel(x), [x]);
   const yAxisLabel = useMemo(() => getAxisLabel(y), [y]);
 
-  // props for the zero value assisting
+  // props for the zero value auxiliary line
   const zeroLineProps = useMemo(
     () => {
       let crossedPosNeg = false;
