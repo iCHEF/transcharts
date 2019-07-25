@@ -16,8 +16,8 @@ The `useChartDimensions` lets you get the `outerDimension` and `graphDimension`.
 By attaching the ref to the outer chart (`chartRef`), the ref to the title box (`titleRef`), the legend (`legendRef`), and the inner margin of the chart,
 it calcultates the following dimensions:
 
-- Full dimension of the chart (`outerDimension`: see the blue text on the graph below)
-- Inner dimension of the chart (`graphDimension`: see the orange text on the graph below)
+- Full dimension of the chart: `outerDimension` (see the blue text on the graph below)
+- Inner dimension of the chart: `graphDimension` (see the orange text on the graph below)
 
 ```js
   const {
@@ -33,7 +33,22 @@ it calcultates the following dimensions:
 
 It calculates the width and height of a component using `useContainerDimension` hook of the graph package.
 
-### `<SvgWithAxisFrame>`
+
+### SvgWithAxisFrame
+
+`<SvgWithAxisFrame>` is the component that draws the following basics components of a chart for you:
+
+- The title and description of the chart (`<HeaderBox>`)
+- The SVG to draw the chart along with the X and Y axes (the axes are drawn using `<AxisLayer>`).
+- The transformed inner SVG element container `<g>` to draw the main SVG components  (yello area on the chart above).
+
+Pass the following props to draw a chart:
+
+- `children`: the main SVG components like the bars, lines, or dots to be drawn on the transformed inner SVG element container `<g>` (yello area on the chart above).
+- `svgOverlay`: the non-SVG components like the tooltip and legend.
+
+You may refer to the source code of `<LineChart>` or `<BarChart>` as an example.
+
 
 ### Add Tooltips
 
