@@ -43,6 +43,7 @@ export default {
     'Graph Hooks',
     'Animations',
     'Themes',
+    'API Reference',
   ],
   modifyBundlerConfig,
   themeConfig: {
@@ -60,6 +61,13 @@ export default {
       theadColor: '#555e6d',
     },
     styles: {
+      body: css`
+        font-family: 'Source Sans Pro',helvetica,'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif;
+        line-height: 1.6;
+        img {
+          max-width: 100%;
+        }
+      `,
       playground: css`
         background: #ffffff;
         padding: 1rem;
