@@ -1,0 +1,40 @@
+---
+name: Making Your Own Charts
+route: /api_reference/overview
+menu: API Reference
+---
+
+# Making Your Own Charts
+
+You can utilize the `@ichef/transcharts-graph` and `@ichef/transcharts-chart` packages to create charts with X and Y axis.
+
+
+### Calculate Chart Dimensions
+
+The `useChartDimensions` lets you get the `outerDimension` and `graphDimension`.
+
+By attaching the ref to the outer chart (`chartRef`), the ref to the title box (`titleRef`), the legend (`legendRef`), and the inner margin of the chart,
+it calcultates the following dimensions:
+
+- Full dimension of the chart (`outerDimension`: see the blue text on the graph below)
+- Inner dimension of the chart (`graphDimension`: see the orange text on the graph below)
+
+```js
+  const {
+    chartRef,
+    titleRef,
+    legendRef,
+    outerDimension,
+    graphDimension,
+  } = useChartDimensions(margin);
+```
+
+![Transchart_Dimension](https://user-images.githubusercontent.com/1139698/61859951-b64c7880-aefb-11e9-9f5a-f6e4b1929c23.png)
+
+It calculates the width and height of a component using `useContainerDimension` hook of the graph package.
+
+### `<SvgWithAxisFrame>`
+
+### Add Tooltips
+
+
