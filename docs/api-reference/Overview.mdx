@@ -9,7 +9,7 @@ menu: API Reference
 You can utilize the `@ichef/transcharts-graph` and `@ichef/transcharts-chart` packages to create charts with X and Y axis.
 
 
-### Calculate Chart Dimensions
+## Calculate Chart Dimensions
 
 The `useChartDimensions` lets you get the `outerDimension` and `graphDimension`.
 
@@ -34,7 +34,7 @@ it calcultates the following dimensions:
 It calculates the width and height of a component using `useContainerDimension` hook of the graph package.
 
 
-### SvgWithAxisFrame
+## SvgWithAxisFrame
 
 `<SvgWithAxisFrame>` is the component that draws the following basics components of a chart for you:
 
@@ -50,6 +50,21 @@ Pass the following props to draw a chart:
 You may refer to the source code of `<LineChart>` or `<BarChart>` as an example.
 
 
-### Add Tooltips
+## Add Tooltips/Hovering Effects
 
+![Tooltip_transchart](https://user-images.githubusercontent.com/1139698/61932715-aa71bc80-afb6-11e9-9606-4e71acecfff7.png)
 
+To detect the mouse and touch events, you can add a `<HoverLayer>` component
+in which you can put `hoverDetectionComponents` which are an array of transparent svg elements to be attached with the mouse and touch events.
+
+`<HoverLayer>` detects the X and Y position and the index of the `hoverDetectionComponents` array are being hovered,
+and sets such information using the passed in prop `setHoveredPosAndIndex(...)`.
+It also calls the passed in `clearHovering()` to clear the hovering index when users hover/touch out of the regions of `hoverDetectionComponents`.
+
+The `setHoveredPosAndIndex(...)` and `clearHovering()` can be gotten from `useHoverState` hook
+which also lets you get `hovering` (whether users are hovering/touching the `hoverDetectionComponents`)
+and `hoveredPoint` (the index of `hoverDetectionComponents` and the X and Y position).
+
+You can use `hovering` and `hoverDetectionComponents` to create visual hovering effect or add tooltips.
+
+To draw the tooltip, there is `<TooltipLayer>` to help you create it with ease.
