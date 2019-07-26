@@ -1,0 +1,92 @@
+---
+name: Data Encodings
+route: /chart_settings/data_encodings
+menu: Chart Settings
+---
+
+import { Playground, Props } from 'docz'
+import { BarChart } from '@ichef/transcharts-chart'
+import drinkData from '../sampleData/drinkData';
+
+# Data Encodings
+
+The data encodings let you select data field to be drawn in an axis or as a dimension of color.
+
+```ts
+Encoding {
+  field: string;
+  type: 'nominal' | 'ordinal' | 'quantitative' | 'temporal';
+}
+```
+
+You must specify the data type of the encoding,
+and different charts will select the d3 scale functions best-suited for drawing the chart.
+
+### Data Types
+
+- **Nominal**: The categorical data, such as names or blood types.
+- **Ordinal**: Data with meaningful sorted order, such as the degree of satisfaction.
+- **Quantitative**: Numerical data.
+- **Temporal**: Datetime data.
+
+
+## How different charts deal with data encodings?
+
+### Bar Chart
+
+`<BarChart>` takes the types of the encodings of X and Y axis to determine whether it is a vertical or a horizontal chart.
+If the encoding data type of X-axis is not `quantitative`, it will draw the default vertical bar chart;
+otherwise, it draws the horizontal bar chart.
+
+The data assigned to the axis with `quantitative` will be converted to the `linear` scale of d3,
+while the other will be converted as the `band` scale.
+
+#### Vertical Chart
+
+```js
+<BarChart
+  ...
+  x={{ type: 'nominal', field: 'restaurant' }}
+  y={{ type: 'quantitative', field: 'sales' }}
+  color={{ field: "type", type: "nominal" }}
+/>
+```
+
+<div style={{ width: '100%', height: '350px' }}>
+  <BarChart
+    title="Sales of Drink"
+    titleAlign="center"
+    data={drinkData}
+    x={{ type: 'nominal', field: 'restaurant' }}
+    y={{ type: 'quantitative', field: 'sales' }}
+    color={{ field: "type", type: "nominal" }}
+  />
+</div>
+
+
+#### Horizontal Chart
+
+```js
+<BarChart
+  ...
+  x={{ type: 'quantitative', field: 'sales' }}
+  y={{ type: 'nominal', field: 'restaurant' }}
+  color={{ field: "type", type: "nominal" }}
+/>
+```
+
+<div style={{ width: '100%', height: '350px' }}>
+  <BarChart
+    title="Sales of Drink"
+    titleAlign="center"
+    data={drinkData}
+    x={{ type: 'quantitative', field: 'sales' }}
+    y={{ type: 'nominal', field: 'restaurant' }}
+    color={{ field: "type", type: "nominal" }}
+  />
+</div>
+
+
+
+
+## useCartesianEncodings
