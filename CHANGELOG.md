@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `<HeaderBox>` to display the chart title and chart descriptions. (#39)
 - Support drawing the horizontal bar chart. (#40)
 - Add a gray auxiliary line at zero-value. (#40)
+- Add docs for building custom charts. (#41)
 
 # Changed
 - Clean compiled files before the docz server started. (#34)
