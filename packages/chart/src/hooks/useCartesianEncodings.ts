@@ -61,7 +61,7 @@ export const useCartesianEncodings = (
   /** Width and height of the inner graph (does not contain axes, legend, etc...) */
   graphDimension: GraphDimension,
 
-  /** Theme of the chart */
+  /** Theme of the chart, used for the generation of the color scale */
   theme: Theme,
 
   /** Array of rows of data */
