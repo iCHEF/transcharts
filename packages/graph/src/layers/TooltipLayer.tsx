@@ -68,9 +68,9 @@ export const TooltipLayer = ({
   yOffset = 0,
 }: TooltipLayerProps) => {
   const projected = axisProjectedValues[hoveredPoint.index];
-  const tooltipItems = projected.projectedVals.map(pointY => (
+  const tooltipItems = projected.projectedVals.map((pointY, key) => (
     <TooltipItem
-      key={`t-${pointY.projectedStrVal}`}
+      key={`t${key}-${pointY.color}`}
       color={pointY.color}
       text={`${pointY.projectedStrVal}`}
     />
