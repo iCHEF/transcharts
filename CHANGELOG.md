@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Fixed
 - Fix the typing problems raised by `@types/styled-components` and `react-spring`. (#35)
+- Fix the visual details of charts (#42):
+  - Fix the margin of bar charts with the title bar.
+  - Make the tooltips fit the size of the content.
+  - Remove the white background of the legend.
 
 ## [0.0.2]
 
