@@ -15,6 +15,7 @@ export interface TooltipProps {
 }
 
 const TooltipWrapper = styled.div`
+  display: table;
   position: absolute;
   min-width: 3rem;
   background-color: rgba(255, 255, 255, 0.8);
