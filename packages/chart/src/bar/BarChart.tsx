@@ -86,7 +86,8 @@ export const BarChart = ({
     legendRef,
     outerDimension,
     graphDimension,
-  } = useChartDimensions(margin);
+    graphMargin,
+  } = useChartDimensions(margin, color);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
   /**
@@ -266,7 +267,7 @@ export const BarChart = ({
       drawFromXAxis={drawFromXAxis}
       // put the axes on top of the bars
       axisInBackground={false}
-      margin={margin}
+      margin={graphMargin}
       data={data}
       scalesConfig={scalesConfig}
       svgOverlay={
