@@ -1,0 +1,279 @@
+---
+name: Making Your Own Charts
+route: /api_reference/overview
+menu: API Reference
+---
+
+# Making Your Own Charts
+
+You can utilize the `@ichef/transcharts-graph` and `@ichef/transcharts-chart` packages to create charts with X and Y axis.
+
+
+## Calculate Chart Dimensions
+
+The `useChartDimensions` lets you get the `outerDimension` and `graphDimension`.
+
+By attaching the ref to the outer chart (`chartRef`), the ref to the title box (`titleRef`), the legend (`legendRef`), and the inner margin of the chart,
+it calcultates the following dimensions:
+
+- Full dimension of the chart: `outerDimension` (see the blue text on the graph below)
+- Inner dimension of the chart: `graphDimension` (see the orange text on the graph below)
+
+```js
+  const {
+    chartRef,
+    titleRef,
+    legendRef,
+    outerDimension,
+    graphDimension,
+  } = useChartDimensions(margin);
+```
+
+![Transchart_Dimension](https://user-images.githubusercontent.com/1139698/61859951-b64c7880-aefb-11e9-9f5a-f6e4b1929c23.png)
+
+It calculates the width and height of a component using `useContainerDimension` hook of the graph package.
+
+
+## SvgWithAxisFrame
+
+`<SvgWithAxisFrame>` is the component that draws the following basics components of a chart for you:
+
+- The title and description of the chart (`<HeaderBox>`)
+- The SVG to draw the chart along with the X and Y axes (the axes are drawn using `<AxisLayer>`).
+- The transformed inner SVG element container `<g>` to draw the main SVG components  (yellow area on the chart above).
+
+Pass the following props to draw a chart:
+
+- `children`: the main SVG components like the bars, lines, or dots to be drawn on the transformed inner SVG element container `<g>` (yellow area on the chart above).
+- `svgOverlay`: the non-SVG components like the tooltip and legend.
+
+You may refer to the source code of `<LineChart>` or `<BarChart>` as an example.
+
+
+## Add Tooltips/Hovering Effects
+
+![Tooltip_transchart](https://user-images.githubusercontent.com/1139698/61932715-aa71bc80-afb6-11e9-9606-4e71acecfff7.png)
+
+To detect the mouse and touch events, you can add a `<HoverLayer>` component
+in which you can put `hoverDetectionComponents` which are an array of transparent svg elements to be attached with the mouse and touch events.
+
+`<HoverLayer>` detects the X and Y position and the index of the `hoverDetectionComponents` array are being hovered,
+and sets such information using the passed in prop `setHoveredPosAndIndex(...)`.
+It also calls the passed in `clearHovering()` to clear the hovering index when users hover/touch out of the regions of `hoverDetectionComponents`.
+
+The `setHoveredPosAndIndex(...)` and `clearHovering()` can be gotten from `useHoverState` hook
+which also lets you get `hovering` (whether users are hovering/touching the `hoverDetectionComponents`)
+and `hoveredPoint` (the index of `hoverDetectionComponents` and the X and Y position).
+
+You can use `hovering` and `hoverDetectionComponents` to create the visual hovering effect or add tooltips.
+
+To draw the tooltip, there is `<TooltipLayer>` to help you create it with ease.
+
+
+### useCartesianEncodings
+
+`useCartesianEncodings` is a hook of the `chart` library aimed to isolating the data transformation and computing
+shared across most charts with the X and Y axes.
+
+It groups the data based on the provided color encoding and computes the d3 scale functions
+for the X and Y axis along with the color scale.
+
+It is currently used by `<LineChart>` and `<BarChart>`.
+
+#### Input of useCartesianEncodings
+
+- **graphDimension**: Width and height of the inner graph (does not contain axes, legend, etc...)
+- **theme**: Theme of the chart, used for the generation of the color scale
+- **data**: Array of rows of data
+- **x**: Field and data type of x-axis
+- **y**: Field and data type of y-axis
+- **color?**: Fields and definitions for colors; pass in `undefined` if you are intended to draw single color.
+- **drawFromXAxis**: Whether the graph is drawn from the x-axis, i.e., vertical graph. In a transposed (horizontal) graph, you have to set it as false, in order to get the right `axisProjectedValues` value.
+
+#### Output of useCartesianEncodings
+
+- **dataGroups**: Array of data grouped by fields of colors.
+
+Example:
+
+```json
+[
+  [
+    {
+      "restaurant": "Cafe",
+      "type": "Beer",
+      "sales": 100
+    },
+    {
+      "restaurant": "Tea Time",
+      "type": "Beer",
+      "sales": 150
+    }
+  ],
+  [
+    {
+      "restaurant": "Tea Time",
+      "type": "Black Tea",
+      "sales": 300
+    },
+    {
+      "restaurant": "Bistro",
+      "type": "Black Tea",
+      "sales": 500
+    }
+  ],
+  ...
+]
+```
+
+
+- **axisProjectedValues**: The y-values in the `dataGroups` grouped by projected x values. It is useful for displaying the tooltips.
+
+Example:
+
+```json
+[
+  {
+    "basePos": 0,
+    "baseStrVal": "Bistro",
+    "projectedVals": [
+      {
+        "groupIdx": 1,
+        "projectedStrVal": 500,
+        "projectedPos": 281.0807291666667,
+        "color": "#ff7f0e"
+      },
+      {
+        "groupIdx": 2,
+        "projectedStrVal": 700,
+        "projectedPos": 393.51302083333337,
+        "color": "#2ca02c"
+      }
+    ]
+  },
+  {
+    "basePos": 88.27586206896552,
+    "baseStrVal": "Tea Time",
+    "projectedVals": [
+      {
+        "groupIdx": 0,
+        "projectedStrVal": 150,
+        "projectedPos": 84.32421875,
+        "color": "#1f77b4"
+      },
+      {
+        "groupIdx": 1,
+        "projectedStrVal": 300,
+        "projectedPos": 168.6484375,
+        "color": "#ff7f0e"
+      },
+      {
+        "groupIdx": 2,
+        "projectedStrVal": 200,
+        "projectedPos": 112.43229166666666,
+        "color": "#2ca02c"
+      }
+    ]
+  },
+  ...
+]
+```
+
+
+- **scalesConfig**: d3 scale functions and other related configurations computed for various encodings.
+It contains keys of objects of the encodings of `x` and `y` axes as well as the `color` (if exists).
+
+  The inner keys of the encodings:
+  - **field**: Name of the selected column from the data.
+  - **type**: The data encoding type passed in from the props of the chart (`'nominal' | 'ordinal' | 'quantitative' | 'temporal'`).
+  - **scaleType**: Converted d3 scaled name which is determined by the chart component.
+  - **domain**: Calculated domain based on the `scaleType`.
+  - **range**: Range related to the visual space.
+
+
+Exmaple:
+
+```json
+{
+  "x": {
+    "field": "restaurant",
+    "range": [
+      0,
+      674.734375
+    ],
+    "domain": [
+      "Cafe",
+      "Tea Time",
+      "Bistro",
+      "Cafe",
+      "Tea Time",
+      "Tea Time",
+      "Bistro"
+    ],
+    "scaleType": "band",
+    "type": "nominal"
+  },
+  "y": {
+    "field": "sales",
+    "range": [
+      256,
+      0
+    ],
+    "domain": [
+      0,
+      1200
+    ],
+    "scaleType": "linear",
+    "type": "quantitative"
+  },
+  "color": {
+    "domain": [
+      "Beer",
+      "Black Tea",
+      "Black Tea",
+      "Wine",
+      "Wine",
+      "Beer",
+      "Wine"
+    ],
+    "type": "nominal",
+    "field": "type",
+    "range": [
+      "#1f77b4",
+      "#ff7f0e",
+      "#2ca02c",
+      "#d62728",
+      "#9467bd",
+      "#8c564b",
+      "#e377c2",
+      "#7f7f7f",
+      "#bcbd22",
+      "#17becf"
+    ],
+    "scaleType": "ordinal"
+  }
+}
+```
+
+- **rowValSelectors**: Contains functions to select values from a data row.
+
+  The inner keys of the x and y encodings contains the following:
+  - **getFormattedStringVal**: Funtion helps you get the string to be displayed on tooltips from a data row.
+  - **getOriginalVal**: Funtion helps you get the original data from a data row.
+  - **getScaledVal**: Given a record of data, it returns the mapped value (computed by d3 scale function) of the specified field.
+
+
+Exmaple:
+
+```json
+{
+  "color": {
+    "getString": function,
+  },
+  "x": {
+    "getFormattedStringVal": function,
+    "getOriginalVal": function,
+    "getScaledVal" function
+  }
+}
+```
