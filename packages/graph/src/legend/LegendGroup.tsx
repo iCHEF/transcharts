@@ -10,7 +10,6 @@ interface LegendGroupProps {
 }
 
 const LegendGroupWrapper = styled.div`
-  background: #fff;
   position: absolute;
 `;
 
