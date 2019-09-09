@@ -7,29 +7,30 @@ export interface GroupedY {
   /** Index of `dataGroups` */
   groupIdx: number;
 
-  /** Original value on Y */
-  yStrVal: number;
+  /** Original value (normally on y-axis) */
+  projectedStrVal: number;
 
-  /** Projected position of Y */
-  yPos: number;
+  /** Projected position (normally on y-axis) */
+  projectedPos: number;
 
   /** Color string of the point */
   color: string;
 }
 export interface AxisProjectedValue {
-  /** Projected position of X */
-  xPos: number;
+  /** Projected position of the base axis (normally x-axis) */
+  basePos: number;
 
-  /** Original value on X */
-  xStrVal: number;
+  /** Original value on the base axis (normally x-axis) */
+  baseStrVal: number;
 
   /** Corresponding data in `dataGroups` */
-  groupedY: GroupedY[];
+  projectedVals: GroupedY[];
 }
 
 export interface TooltipLayerProps {
   hovering: HoveringState;
   hoveredPoint: HoveredPointState;
+  drawFromXAxis?: boolean;
   axisProjectedValues: AxisProjectedValue[];
   graphWidth: number;
   graphHeight: number;
@@ -52,21 +53,26 @@ export interface TooltipLayerProps {
 export const TooltipLayer = ({
   hovering,
   hoveredPoint,
+  drawFromXAxis = true,
   axisProjectedValues,
   graphWidth,
   graphHeight,
   margin,
-  x = axisProjectedValues[hoveredPoint.index].xPos,
-  y = hoveredPoint.position.y,
+  x = drawFromXAxis
+    ? axisProjectedValues[hoveredPoint.index].basePos + margin.left
+    : hoveredPoint.position.x,
+  y = drawFromXAxis
+    ? hoveredPoint.position.y
+    : axisProjectedValues[hoveredPoint.index].basePos + margin.top,
   xOffset = 0,
   yOffset = 0,
 }: TooltipLayerProps) => {
   const projected = axisProjectedValues[hoveredPoint.index];
-  const tooltipItems = projected.groupedY.map(pointY => (
+  const tooltipItems = projected.projectedVals.map((pointY, key) => (
     <TooltipItem
-      key={`t-${pointY.yStrVal}`}
+      key={`t${key}-${pointY.color}`}
       color={pointY.color}
-      text={`${pointY.yStrVal}`}
+      text={`${pointY.projectedStrVal}`}
     />
   ));
 
@@ -74,14 +80,13 @@ export const TooltipLayer = ({
     <Tooltip
       graphWidth={graphWidth}
       graphHeight={graphHeight}
-      graphMargin={margin}
       position={{
         x: x + xOffset,
         y: y + yOffset,
       }}
       show={hovering}
     >
-      <h3>{`${projected.xStrVal}`}</h3>
+      <h3>{`${projected.baseStrVal}`}</h3>
       {tooltipItems}
     </Tooltip>
   );

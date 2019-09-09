@@ -14,7 +14,7 @@ export function getRecordFieldSelector(
   const { field, scale, scaleType } = axis;
   const getValue = getValByScaleType(scaleType);
 
-  /** Given a record of data, it returns the orginal value of the specified field */
+  /** Given a record of data, it returns the original value of the specified field */
   const getOriginalVal = (record: object) => getValue(record[field]);
 
   return {

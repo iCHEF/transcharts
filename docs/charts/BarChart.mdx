@@ -35,8 +35,22 @@ const lineData = [
   <div style={{ width: '100%', height: '320px' }}>
     <BarChart
       data={lineData}
-      x={{ field: 'x', type: 'quantitative', scale: 'linear' }}
-      y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
+      x={{ field: 'x', type: 'ordinal' }}
+      y={{ field: 'y', type: 'quantitative' }}
+    />
+  </div>
+</Playground>
+
+### Linear + Linear (transposed)
+
+You can easily transpose the XY axis by just switching the x and y prop of `<BarChart>`.
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={lineData}
+      y={{ field: 'x', type: 'ordinal' }}
+      x={{ field: 'y', type: 'quantitative' }}
     />
   </div>
 </Playground>
@@ -47,8 +61,8 @@ const lineData = [
   <div style={{ width: '100%', height: '320px' }}>
     <BarChart
       data={lineData}
-      x={{ field: 'date', type: 'quantitative', scale: 'time' }}
-      y={{ field: 'x', type: 'quantitative', scale: 'linear' }}
+      x={{ field: 'date', type: 'ordinal' }}
+      y={{ field: 'x', type: 'quantitative' }}
     />
   </div>
 </Playground>
@@ -59,8 +73,8 @@ const lineData = [
   <div style={{ width: '100%', height: '320px' }}>
     <BarChart
       data={lineData}
-      x={{ field: 'weekday', type: 'quantitative', scale: 'point' }}
-      y={{ field: 'y', type: 'quantitative', scale: 'linear' }}
+      x={{ field: 'weekday', type: 'ordinal' }}
+      y={{ field: 'y', type: 'quantitative' }}
     />
   </div>
 </Playground>
@@ -75,7 +89,7 @@ You can use the same properties of multi-series line charts to create stacked ba
   <div style={{ width: '100%', height: '320px' }}>
     <BarChart
       data={multiLinesData}
-      x={{ type: 'quantitative', field: 'x' }}
+      x={{ type: 'ordinal', field: 'x' }}
       y={{ type: 'quantitative', field: 'y' }}
       color={{
         field: "type",
@@ -108,8 +122,48 @@ You can use the same properties of multi-series line charts to create stacked ba
         { x: 4, y: 4, size: 8 },
         { x: 10, y: 7, size: 8 },
       ]}
-      x={{ type: 'quantitative', field: 'x' }}
+      x={{ type: 'ordinal', field: 'x' }}
       y={{ type: 'quantitative', field: 'y' }}
+      color={{
+        field: "size",
+        type: "ordinal",
+      }}
+    />
+  </div>
+</Playground>
+
+
+### Quantitative color field (transposed)
+
+You can easily transpose the XY axis by just switching the x and y prop of `<BarChart>`.
+
+For example, the vertical chart above become the horizontal one in the below by simply switching `x` and `y`.
+
+This feature is realized by the checkings of the data types of the axis configs of `<BarChart>`.
+
+<Playground>
+  <div style={{ width: '100%', height: '320px' }}>
+    <BarChart
+      data={[
+        { x: 1, y: 5, size: 3 },
+        { x: 3, y: -7, size: 3 },
+        { x: 3, y: -3, size: 5 },
+        { x: 3, y: -5, size: 8 },
+        { x: 9, y: 7, size: 3 },
+        { x: 7, y: 1, size: 3 },
+        { x: 7, y: -5, size: 4 },
+        { x: 4, y: -2, size: 5 },
+        { x: 1, y: 10, size: 5 },
+        { x: 6, y: 4, size: 5 },
+        { x: 8, y: 9, size: 5 },
+        { x: 9, y: 0, size: 5 },
+        { x: 5, y: 3, size: 8 },
+        { x: 3, y: 8, size: 8 },
+        { x: 4, y: 4, size: 8 },
+        { x: 10, y: 7, size: 8 },
+      ]}
+      y={{ type: 'ordinal', field: 'x' }}
+      x={{ type: 'quantitative', field: 'y' }}
       color={{
         field: "size",
         type: "ordinal",

@@ -16,6 +16,10 @@ import {
   ThemeContext,
 } from '@ichef/transcharts-graph';
 
+import {
+  getAccumXCalculator,
+  getAccumYCalculator,
+} from '../utils/getBarChartPos';
 import { useChartDimensions } from '../hooks/useChartDimensions';
 import { useCartesianEncodings } from '../hooks/useCartesianEncodings';
 import { SvgWithAxisFrame } from '../frames/SvgWithAxisFrame';
@@ -85,21 +89,58 @@ export const BarChart = ({
   } = useChartDimensions(margin);
   const { width: graphWidth, height: graphHeight } = graphDimension;
 
-  const xEncoding: AxisEncoding = { ...x, scale: 'band', scaleConfig: {
-    paddingInner,
-  }};
+  /**
+   * Whether the graph should be drawn from the x-axis.
+   * False if it should be drawn from the y-axis.
+   */
+  const drawFromXAxis = useMemo(
+    () => {
+      return x.type !== 'quantitative';
+    },
+    [x, y],
+  );
+
+  // assign the scale according to the data type
+  const xEncoding: AxisEncoding = { ...x, scale: 'band' };
   const yEncoding: AxisEncoding = { ...y, scale: 'linear' };
+  if (drawFromXAxis) {
+    xEncoding.scaleConfig = { paddingInner };
+  } else {
+    xEncoding.scale = 'linear';
+    yEncoding.scale = 'band';
+    yEncoding.scaleConfig = { paddingInner };
+  }
+
   const {
     dataGroups,
     scalesConfig,
     rowValSelectors,
     axisProjectedValues,
-  } = useCartesianEncodings(graphDimension, theme, data, xEncoding, yEncoding, color);
+  } = useCartesianEncodings(
+    graphDimension,
+    theme,
+    data,
+    xEncoding,
+    yEncoding,
+    color,
+    drawFromXAxis,
+  );
   const { clearHovering, hovering, hoveredPoint, setHoveredPosAndIndex } = useHoverState();
 
-  const bandScale = scalesConfig.x.scale as ScaleBand<any>;
-  const linearScale = scalesConfig.y.scale as ScaleLinear<any, any>;
-  const bandWidth = bandScale.bandwidth();
+  const bandScale = scalesConfig[drawFromXAxis ? 'x' : 'y'].scale as ScaleBand<any>;
+  const linearScale = scalesConfig[drawFromXAxis ? 'y' : 'x'].scale as ScaleLinear<any, any>;
+  const bandWidth = useMemo(
+    () => {
+      return bandScale.bandwidth();
+    },
+    [bandScale]
+  );
+  const xOffset = useMemo(
+    () => {
+      return drawFromXAxis ? bandWidth / 2 : 0;
+    },
+    [drawFromXAxis, bandWidth]
+  );
 
   /**
    * Returns the size and position of the hovering detection rectangle
@@ -108,21 +149,33 @@ export const BarChart = ({
   const getHoveringRectPos = useCallback(
     (idx: number) => {
       const paddingVal = bandWidth * paddingInner;
-      const xPos = idx === 0
+
+      const basePos = idx === 0
         ? 0
-        : axisProjectedValues[idx].xPos - paddingVal / 2;
+        : axisProjectedValues[idx].basePos - paddingVal / 2;
       const width = idx === 0 || idx === data.length - 1
             ? bandWidth + paddingVal / 2
             : bandWidth + paddingVal;
 
+      // transposed (horizontal) graph
+      if (!drawFromXAxis) {
+        return {
+          width: graphWidth,
+          height: width,
+          x: 0,
+          y: basePos,
+        };
+      }
+
+      // vertical graph
       return {
         width,
         height: graphHeight,
-        x: xPos,
+        x: basePos,
         y: 0,
       };
     },
-    [bandWidth, paddingInner],
+    [bandWidth, paddingInner, graphWidth, graphHeight],
   );
 
   const hoverDetectionComponents = useMemo(
@@ -133,10 +186,6 @@ export const BarChart = ({
             <rect
               // #TODO: use unique keys rather than array index
               key={`colli-${idx}`}
-              x={row.xPos}
-              y={0}
-              height={graphHeight}
-              width={bandWidth}
               opacity={0}
               {...{ ...getHoveringRectPos(idx) }}
             />
@@ -147,45 +196,50 @@ export const BarChart = ({
     [axisProjectedValues, graphHeight, bandWidth, getHoveringRectPos]
   );
 
+  /**
+   * Draw the bars of the bar chart
+   */
   const graphGroup = useMemo(
     () => {
-      const baseY = linearScale(0);
-
-      // calculate the accumulated y position of certain points
-      const positiveY = {};
-      const nonPositiveY = {};
-      const getAccumY = (xPos: number, scaledY: number) => {
-        if (scaledY >= 0) {
-          if (!positiveY[xPos]) {
-            positiveY[xPos] = baseY;
-          }
-          positiveY[xPos] -= scaledY;
-          return positiveY[xPos];
-        }
-
-        // scaledY < 0
-        const yPos = !nonPositiveY[xPos] ? baseY : nonPositiveY[xPos];
-        nonPositiveY[xPos] = yPos - scaledY;
-        return yPos;
-      };
+      const baseVal = linearScale(0);
+      const accumCalculator = drawFromXAxis ? getAccumYCalculator : getAccumXCalculator;
+      const getAccumVal = accumCalculator(baseVal);
 
       return dataGroups.map(
         (rows: object[], groupIdx: number) => {
           return rows.map((row: object, rowIdx: number) => {
             const colorString: string = rowValSelectors.color.getString(rows[0]);
-            const xPos = rowValSelectors.x.getScaledVal(row);
+            const scaledX = rowValSelectors.x.getScaledVal(row);
             const scaledY = rowValSelectors.y.getScaledVal(row);
-            const height = scaledY >= 0
-              ? baseY - scaledY
-              : baseY - graphHeight - scaledY;
+
+            let barPos;
+            if (drawFromXAxis) {
+              const height = scaledY >= 0
+                ? baseVal - scaledY
+                : baseVal - graphHeight - scaledY;
+
+              barPos = {
+                x: scaledX,
+                y: getAccumVal(scaledX, height),
+                width: bandWidth,
+                height: Math.abs(height),
+              };
+            } else {
+              // transposed (horizontal) graph
+              const diffFromBase = scaledX - baseVal;
+
+              barPos = {
+                x: getAccumVal(scaledY, diffFromBase),
+                y: scaledY,
+                width: Math.abs(diffFromBase),
+                height: bandWidth,
+              };
+            }
 
             return (
               <rect
+                {...barPos}
                 key={`bar-${rowIdx}`}
-                x={xPos}
-                y={getAccumY(xPos, height)}
-                width={bandWidth}
-                height={Math.abs(height)}
                 fill={colorString}
               />
             );
@@ -209,6 +263,7 @@ export const BarChart = ({
       showBottomAxis={showBottomAxis}
       x={x}
       y={y}
+      drawFromXAxis={drawFromXAxis}
       // put the axes on top of the bars
       axisInBackground={false}
       margin={margin}
@@ -224,9 +279,10 @@ export const BarChart = ({
             graphWidth={graphWidth}
             graphHeight={graphHeight}
             margin={margin}
-            xOffset={bandWidth / 2}
+            drawFromXAxis={drawFromXAxis}
+            xOffset={xOffset}
           />
-          {/* Draw the legned */}
+          {/* Draw the legend */}
           <LegendGroup
             color={color && {
               ...color,

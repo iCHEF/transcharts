@@ -56,12 +56,14 @@
     ],
     // ============= from tslint-eslint-rules =============
     "object-curly-spacing": [true, "always"],
+    "max-line-length": [false],
     "ter-max-len": [
       true,
       {
         "code": 100,
         "tabWidth": 2,
-        "ignoreUrls": true
+        "ignoreUrls": true,
+        "ignoreComments": true
       }
     ],
     // ============= from tslint-react =============

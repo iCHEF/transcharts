@@ -61,7 +61,7 @@ export const useCartesianEncodings = (
   /** Width and height of the inner graph (does not contain axes, legend, etc...) */
   graphDimension: GraphDimension,
 
-  /** Theme of the chart */
+  /** Theme of the chart, used for the generation of the color scale */
   theme: Theme,
 
   /** Array of rows of data */
@@ -75,6 +75,13 @@ export const useCartesianEncodings = (
 
   /** Fields and definitions for colors */
   color?: ColorEncoding,
+
+  /**
+   * Whether the graph is drawn from the x-axis, i.e., vertical graph.
+   * In a transposed (horizontal) graph, you have to set it as false,
+   * in order to get the right `axisProjectedValues` value.
+   */
+  drawFromXAxis: boolean = true,
 ) => {
   // get the inner width and height of the graph
   const { width, height } = graphDimension;
@@ -82,8 +89,9 @@ export const useCartesianEncodings = (
   // sort the data
   const sortedData = useMemo(
     () => {
-      const getValue = getValByScaleType(x.scale);
-      const getOriginalVal = (record: object) => getValue(record[x.field]);
+      const baseAxis = drawFromXAxis ? x : y;
+      const getValue = getValByScaleType(baseAxis.scale);
+      const getOriginalVal = (record: object) => getValue(record[baseAxis.field]);
 
       return (
         data.sort(
@@ -114,7 +122,9 @@ export const useCartesianEncodings = (
 
       // update the domain if the domains of x-y scales is band-linear
       if (x.scale === 'linear' && y.scale === 'band') {
-        axisScale.scale.domain(getLinearDomainFromDataGroup(dataGroups, y.field, x.field));
+        const domain = getLinearDomainFromDataGroup(dataGroups, y.field, x.field);
+        axisScale.domain = domain;
+        axisScale.scale.domain(domain);
       }
       return axisScale;
     },
@@ -130,7 +140,9 @@ export const useCartesianEncodings = (
 
       // update the domain if the domains of x-y scales is linear-band
       if (x.scale === 'band' && y.scale === 'linear') {
-        axisScale.scale.domain(getLinearDomainFromDataGroup(dataGroups, x.field, y.field));
+        const domain = getLinearDomainFromDataGroup(dataGroups, x.field, y.field);
+        axisScale.domain = domain;
+        axisScale.scale.domain(domain);
       }
       return axisScale;
     },
@@ -173,6 +185,9 @@ export const useCartesianEncodings = (
 
   const axisProjectedValues: AxisProjectedValue[] = useMemo(
     () => {
+      if (!drawFromXAxis) {
+        return getAxisProjectedValues(dataGroups, ySelector, xSelector, getColorString);
+      }
       return getAxisProjectedValues(dataGroups, xSelector, ySelector, getColorString);
     },
     [dataGroups, xSelector, ySelector, getColorString],
@@ -187,14 +202,14 @@ export const useCartesianEncodings = (
      * -  Structure of groupedY: "groupedY":[ { "index of dataGroup": "value" }, ... ]
      * @example
      * [{
-     *  "xPos": 0,
-     *  "xStrVal": "0",
-     *  "groupedY": [{"groupIdx": 0, "yStrVal": 9, "yPos": 18, "color": "#deebf7"}],
+     *  "basePos": 0,
+     *  "baseStrVal": "0",
+     *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 9, "projectedPos": 18, "color": "#deebf7"}],
      *  },
      * {
-     *  "xPos": 109.12812500000001,
-     *  "xStrVal": "2",
-     *  "groupedY": [{"groupIdx": 0, "yStrVal": 3, "yPos": 6, "color": "#deebf7"}, ...],
+     *  "basePos": 109.12812500000001,
+     *  "baseStrVal": "2",
+     *  "projectedVals": [{"groupIdx": 0, "projectedStrVal": 3, "projectedPos": 6, "color": "#deebf7"}, ...],
      * }]
      */
     axisProjectedValues,

@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `useWorkspaces` in Lerna's config to allow lerna bootstrap to run. (#35)
 - Add the deployment script to publish the compiled `docz` docs. (#36)
 - Add `<HeaderBox>` to display the chart title and chart descriptions. (#39)
+- Support drawing the horizontal bar chart. (#40)
+- Add a gray auxiliary line at zero-value. (#40)
+- Add docs for building custom charts. (#41)
 
 # Changed
 - Clean compiled files before the docz server started. (#34)
@@ -21,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent Jest tests from being checked by `ForkTSCheckerWebpackPlugin` of docz when developing. (#35)
 - Display labels of the fields along with the axes. (#39)
 - Re-organize the structure of the document, and add the introduction of the project. (#39)
+- Disable tslint on the length of the comments. (#40)
+- Disable the checking of unused variables on development. (#40)
 
 # Fixed
 - Fix the typing problems raised by `@types/styled-components` and `react-spring`. (#35)
